@@ -2,23 +2,65 @@ package Configurator
 
 import (
 	"os"
+	"runtime"
+	"strings"
+	"sync"
+
 	"github.com/DimKush/guestbook/tree/main/backend/internal/Logger"
 )
 
+type Configurator interface {
+	Init() error
+	GetLogLevel() string
+	GetLogPath() string
+}
+
 type configurator struct {
-	host     int
-	port     int
-	logLevel string
+	host      int
+	port      int
+	log_level string
+	log_path  string
+}
+
+var instance *configurator = nil
+var once sync.Once
+
+func Instance() Configurator {
+	once.Do(func() {
+		if instance == nil {
+			instance = new(configurator)
+		}
+	})
+
+	return instance
 }
 
 func (data *configurator) Init() (status error) {
-	default_path_to_conf := "/opt/dimkush_guestbook/conf/config.yaml"
+	// a little bit js style
+
+	path_to_conf_foo := func() string {
+		if runtime.GOOS == "windows" {
+			var strb strings.Builder
+			strb.WriteString("c:\\dimkush_guestbook\\conf\\config.yaml")
+			return strb.String()
+		}
+		return "/opt/dimkush_guestbook/conf/config.yaml"
+	}
+
+	default_path_to_conf := path_to_conf_foo()
 
 	_, err := os.Stat(default_path_to_conf)
 	if err != nil {
-		Logger.Write(Logger.ERROR, err.Error())
+		Logger.Instance().Write(Logger.ERROR, err.Error())
 	}
+
+	return nil
 }
 
-var Configurator = configurator{}
-C
+func (data *configurator) GetLogLevel() (level string) {
+	return instance.log_level
+}
+
+func (data *configurator) GetLogPath() (pathToLog string) {
+	return instance.log_path
+}
