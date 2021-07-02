@@ -2,6 +2,7 @@ package Configurator
 
 import (
 	"os"
+	"github.com/DimKush/guestbook/tree/main/backend/internal/Logger"
 )
 
 type configurator struct {
