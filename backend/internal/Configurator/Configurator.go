@@ -56,9 +56,9 @@ func (data *configurator) Init() (status error) {
 }
 
 func (data *configurator) GetLogLevel() (level string) {
-	return instance.log_level
+	return data.log_level
 }
 
 func (data *configurator) GetLogPath() (pathToLog string) {
-	return instance.log_path
+	return data.log_path
 }
