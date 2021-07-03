@@ -3,7 +3,6 @@ package Configurator
 import (
 	"os"
 	"runtime"
-	"strings"
 	"sync"
 
 	"github.com/DimKush/guestbook/tree/main/backend/internal/Logger"
@@ -40,10 +39,9 @@ func (data *configurator) Init() (status error) {
 
 	path_to_conf_foo := func() string {
 		if runtime.GOOS == "windows" {
-			var strb strings.Builder
-			strb.WriteString("c:\\dimkush_guestbook\\conf\\config.yaml")
-			return strb.String()
+			return "c:\\dimkush_guestbook\\conf\\config.yaml"
 		}
+
 		return "/opt/dimkush_guestbook/conf/config.yaml"
 	}
 
