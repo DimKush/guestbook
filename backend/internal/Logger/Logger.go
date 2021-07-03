@@ -1,6 +1,7 @@
 package Logger
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -33,6 +34,7 @@ type logger struct {
 
 var instance *logger = nil
 var once sync.Once
+var onceWrite sync.Once
 
 func Instance() Logger {
 	once.Do(func() {
@@ -46,11 +48,9 @@ func Instance() Logger {
 }
 
 func (data *logger) Write(Severity int, message string) {
-	once.Do(func() {
-		// check log file
+	writeInLog := func() {
 		data.checkLogDateFile()
-
-		if Severity >= data.current_log_level {
+		if Severity > data.current_log_level {
 			return
 		}
 		var severityStr string
@@ -76,28 +76,16 @@ func (data *logger) Write(Severity int, message string) {
 				severityStr = "TRACE"
 			}
 		}
-
+		fmt.Print("D2\n")
 		log.Printf("[%s] %s", severityStr, message)
-	})
+	}
 
+	onceWrite.Do(writeInLog)
 }
 
-//guestbook_YYYY-MM-DD.log
 func (data *logger) createLogNewDate() {
-	current_dt := time.Now()
-
 	var strb strings.Builder
-	strb.WriteString("guestbook_")
 
-	current_date_str := current_dt.Format("2009-01-31")
-
-	strb.WriteString(current_date_str)
-
-	strb.WriteString(".log")
-
-	data.today_log_file = strb.String()
-
-	strb.Reset()
 	log_path_dir_foo := func() string {
 		if runtime.GOOS == "windows" {
 			return "\\"
@@ -114,28 +102,25 @@ func (data *logger) createLogNewDate() {
 	log_file, err := os.Create(strb.String())
 
 	if err != nil {
-		log.Fatalf("Cannot create file %s", strb.String())
+		log.Fatalf("Cannot create the file %s", strb.String())
 	}
 
 	log_file.Close()
 }
 
-func (data *logger) checkLogDateFile() {
-	files, err := ioutil.ReadDir("path_to_logs")
+func (data *logger) checkLogDateFile() bool {
+	files, err := ioutil.ReadDir(data.path_to_logs)
 	if err != nil {
 		log.Fatalf("Cannot open the directory with logs %s", data.path_to_logs)
 	}
 
-	todayLogFileExists := false
 	for _, file := range files {
 		if file.Name() == data.today_log_file {
-			todayLogFileExists = true
+			return true
 		}
 	}
 
-	if !todayLogFileExists {
-		data.createLogNewDate()
-	}
+	return false
 }
 
 func (data *logger) Init() {
@@ -168,37 +153,44 @@ func (data *logger) Init() {
 		}
 	}
 
-	// mask of the log file name is YYYY-MM-DD.log
 	if Configurator.Instance().GetLogPath() == "" {
 		log_path_dir_foo := func() string {
 			if runtime.GOOS == "windows" {
 				return "c:\\dimkush_guestbook\\log\\"
 			}
 
-			return "/opt/dimkush_guestbook/log"
+			return "/opt/dimkush_guestbook/log/"
 		}
 		data.path_to_logs = log_path_dir_foo()
 	} else {
 		data.path_to_logs = Configurator.Instance().GetLogPath()
 	}
 
-	var strb strings.Builder
-	log_path_dir_foo := func() string {
-		if runtime.GOOS == "windows" {
-			return "\\"
-		}
+	current_dt := time.Now()
 
-		return "/"
+	var strb strings.Builder
+	strb.WriteString("guestbook_")
+
+	current_date_str := current_dt.Format("2006-Jan-02")
+
+	strb.WriteString(current_date_str)
+
+	strb.WriteString(".log")
+
+	data.today_log_file = strb.String()
+
+	if !data.checkLogDateFile() {
+		data.createLogNewDate()
 	}
-	var separator string = log_path_dir_foo()
+
+	strb.Reset()
 
 	strb.WriteString(data.path_to_logs)
-	strb.WriteString(separator)
 	strb.WriteString(data.today_log_file)
 
 	file, err := os.OpenFile(strb.String(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
-		log.Fatalf("Cannot open log path %s", strb.String())
+		log.Fatalf("Cannot open the log file %s", strb.String())
 	}
 
 	log.SetOutput(file)

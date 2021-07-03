@@ -1,11 +1,10 @@
 package Configurator
 
 import (
+	"log"
 	"os"
 	"runtime"
 	"sync"
-
-	"github.com/DimKush/guestbook/tree/main/backend/internal/Logger"
 )
 
 type Configurator interface {
@@ -49,7 +48,7 @@ func (data *configurator) Init() (status error) {
 
 	_, err := os.Stat(default_path_to_conf)
 	if err != nil {
-		Logger.Instance().Write(Logger.ERROR, err.Error())
+		log.Fatalf("Cannot find the config file on path %s", default_path_to_conf)
 	}
 
 	return nil
