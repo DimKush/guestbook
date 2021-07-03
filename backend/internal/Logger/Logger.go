@@ -1,9 +1,13 @@
 package Logger
 
 import (
+	"io/ioutil"
+	"log"
+	"os"
 	"runtime"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/DimKush/guestbook/tree/main/backend/internal/Configurator"
 )
@@ -24,6 +28,7 @@ type Logger interface {
 type logger struct {
 	current_log_level int
 	path_to_logs      string
+	today_log_file    string
 }
 
 var instance *logger = nil
@@ -41,10 +46,95 @@ func Instance() Logger {
 }
 
 func (data *logger) Write(Severity int, message string) {
-	if Severity > instance.current_log_level {
-		return
-	} else {
+	once.Do(func() {
+		// check log file
+		data.checkLogDateFile()
 
+		if Severity >= data.current_log_level {
+			return
+		}
+		var severityStr string
+		switch Severity {
+		case ERROR:
+			{
+				severityStr = "ERROR"
+			}
+		case WARNING:
+			{
+				severityStr = "WARNING"
+			}
+		case INFO:
+			{
+				severityStr = "INFO"
+			}
+		case DEBUG:
+			{
+				severityStr = "DEBUG"
+			}
+		case TRACE:
+			{
+				severityStr = "TRACE"
+			}
+		}
+
+		log.Printf("[%s] %s", severityStr, message)
+	})
+
+}
+
+//guestbook_YYYY-MM-DD.log
+func (data *logger) createLogNewDate() {
+	current_dt := time.Now()
+
+	var strb strings.Builder
+	strb.WriteString("guestbook_")
+
+	current_date_str := current_dt.Format("2009-01-31")
+
+	strb.WriteString(current_date_str)
+
+	strb.WriteString(".log")
+
+	data.today_log_file = strb.String()
+
+	strb.Reset()
+	log_path_dir_foo := func() string {
+		if runtime.GOOS == "windows" {
+			return "\\"
+		}
+
+		return "/"
+	}
+	var separator string = log_path_dir_foo()
+
+	strb.WriteString(data.path_to_logs)
+	strb.WriteString(separator)
+	strb.WriteString(data.today_log_file)
+
+	log_file, err := os.Create(strb.String())
+
+	if err != nil {
+		log.Fatalf("Cannot create file %s", strb.String())
+	}
+
+	log_file.Close()
+}
+
+func (data *logger) checkLogDateFile() {
+	files, err := ioutil.ReadDir("path_to_logs")
+	if err != nil {
+		log.Fatalf("Cannot open the directory with logs %s", data.path_to_logs)
+	}
+
+	todayLogFileExists := false
+	for _, file := range files {
+		if file.Name() == data.today_log_file {
+			todayLogFileExists = true
+		}
+	}
+
+	if !todayLogFileExists {
+		data.createLogNewDate()
 	}
 }
 
@@ -54,27 +144,27 @@ func (data *logger) Init() {
 	switch strLevel {
 	case "ERROR":
 		{
-			instance.current_log_level = ERROR
+			data.current_log_level = ERROR
 		}
 	case "WARNING":
 		{
-			instance.current_log_level = WARNING
+			data.current_log_level = WARNING
 		}
 	case "INFO":
 		{
-			instance.current_log_level = INFO
+			data.current_log_level = INFO
 		}
 	case "DEBUG":
 		{
-			instance.current_log_level = DEBUG
+			data.current_log_level = DEBUG
 		}
 	case "TRACE":
 		{
-			instance.current_log_level = TRACE
+			data.current_log_level = TRACE
 		}
 	default:
 		{
-			instance.current_log_level = ERROR
+			data.current_log_level = ERROR
 		}
 	}
 
@@ -87,8 +177,29 @@ func (data *logger) Init() {
 
 			return "/opt/dimkush_guestbook/log"
 		}
-		instance.path_to_logs = log_path_dir_foo()
+		data.path_to_logs = log_path_dir_foo()
 	} else {
-		instance.path_to_logs = Configurator.Instance().GetLogPath()
+		data.path_to_logs = Configurator.Instance().GetLogPath()
 	}
+
+	var strb strings.Builder
+	log_path_dir_foo := func() string {
+		if runtime.GOOS == "windows" {
+			return "\\"
+		}
+
+		return "/"
+	}
+	var separator string = log_path_dir_foo()
+
+	strb.WriteString(data.path_to_logs)
+	strb.WriteString(separator)
+	strb.WriteString(data.today_log_file)
+
+	file, err := os.OpenFile(strb.String(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	if err != nil {
+		log.Fatalf("Cannot open log path %s", strb.String())
+	}
+
+	log.SetOutput(file)
 }
