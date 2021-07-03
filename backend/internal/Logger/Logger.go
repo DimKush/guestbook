@@ -1,6 +1,7 @@
 package Logger
 
 import (
+	"runtime"
 	"strings"
 	"sync"
 
@@ -79,7 +80,14 @@ func (data *logger) Init() {
 
 	// mask of the log file name is YYYY-MM-DD.log
 	if Configurator.Instance().GetLogPath() == "" {
-		instance.path_to_logs = "/opt/dimkush_guestbook/log/"
+		log_path_dir_foo := func() string {
+			if runtime.GOOS == "windows" {
+				return "c:\\dimkush_guestbook\\log\\"
+			}
+
+			return "/opt/dimkush_guestbook/log"
+		}
+		instance.path_to_logs = log_path_dir_foo()
 	} else {
 		instance.path_to_logs = Configurator.Instance().GetLogPath()
 	}
