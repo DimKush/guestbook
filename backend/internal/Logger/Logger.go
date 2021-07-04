@@ -22,28 +22,38 @@ const (
 	TRACE   = iota
 )
 
-type Logger struct {
+type Logger interface {
+	Log() *zerolog.Logger
+}
+
+type log_struct struct {
 	current_log_level int
 	path_to_logs      string
 	today_log_file    string
-	inst              *zerolog.Logger
+	zLog              *zerolog.Logger
 }
 
 var once sync.Once
 var onceWrite sync.Once
+var instance *log_struct = nil
+var logger_data *log_struct = nil
 
-func (data *Logger) Instance() *zerolog.Logger {
+func Instance() Logger {
 	once.Do(func() {
-		if data.inst == nil {
-			logger := data.init()
-			data.inst = &logger
+		if instance == nil {
+			instance = new(log_struct)
+			instance.init()
 		}
 	})
 
-	return data.inst
+	return instance
 }
 
-func (data *Logger) createLogNewDate() {
+func (data *log_struct) Log() *zerolog.Logger {
+	return data.zLog
+}
+
+func (data *log_struct) createLogNewDate() {
 	var strb strings.Builder
 
 	log_path_dir_foo := func() string {
@@ -62,16 +72,16 @@ func (data *Logger) createLogNewDate() {
 	log_file, err := os.Create(strb.String())
 
 	if err != nil {
-		log.Fatal().Msg(fmt.Sprintf("Cannot create the file %s", strb.String()))
+		data.zLog.Fatal().Msg(fmt.Sprintf("Cannot create the file %s", strb.String()))
 	}
 
 	log_file.Close()
 }
 
-func (data *Logger) checkLogDateFile() bool {
+func (data *log_struct) checkLogDateFile() bool {
 	files, err := ioutil.ReadDir(data.path_to_logs)
 	if err != nil {
-		log.Fatal().Msg(fmt.Sprintf("Cannot open the directory with logs %s", data.path_to_logs))
+		data.zLog.Fatal().Msg(fmt.Sprintf("Cannot open the directory with logs %s", data.path_to_logs))
 	}
 
 	for _, file := range files {
@@ -83,35 +93,8 @@ func (data *Logger) checkLogDateFile() bool {
 	return false
 }
 
-func (data *Logger) init() zerolog.Logger {
+func (data *log_struct) init() {
 	strLevel := strings.ToUpper(Configurator.Instance().GetLogLevel())
-
-	switch strLevel {
-	case "ERROR":
-		{
-			log.Level(zerolog.ErrorLevel)
-		}
-	case "WARNING":
-		{
-			log.Level(zerolog.WarnLevel)
-		}
-	case "INFO":
-		{
-			log.Level(zerolog.WarnLevel)
-		}
-	case "DEBUG":
-		{
-			data.current_log_level = DEBUG
-		}
-	case "TRACE":
-		{
-			data.current_log_level = TRACE
-		}
-	default:
-		{
-			data.current_log_level = ERROR
-		}
-	}
 
 	if Configurator.Instance().GetLogPath() == "" {
 		log_path_dir_foo := func() string {
@@ -150,10 +133,38 @@ func (data *Logger) init() zerolog.Logger {
 
 	file, err := os.OpenFile(strb.String(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
-		log.Fatal().Msg(fmt.Sprintf("Cannot open the log file %s", strb.String()))
+		data.zLog.Fatal().Msg(fmt.Sprintf("Cannot open the log file %s", strb.String()))
 	}
 
 	log.Output(file)
-	//log.SetOutput(file)
-	return log.Logger
+	zlogger := zerolog.New(file).With().Caller().Timestamp().Logger()
+	data.zLog = &zlogger
+
+	switch strLevel {
+	case "ERROR":
+		{
+			zerolog.SetGlobalLevel(zerolog.ErrorLevel)
+		}
+	case "WARNING":
+		{
+			zerolog.SetGlobalLevel(zerolog.WarnLevel)
+		}
+	case "INFO":
+		{
+			zerolog.SetGlobalLevel(zerolog.InfoLevel)
+		}
+	case "DEBUG":
+		{
+			zerolog.SetGlobalLevel(zerolog.DebugLevel)
+		}
+	case "TRACE":
+		{
+			zerolog.SetGlobalLevel(zerolog.TraceLevel)
+		}
+	default:
+		{
+			fmt.Println("DB1")
+			zerolog.SetGlobalLevel(zerolog.ErrorLevel)
+		}
+	}
 }
