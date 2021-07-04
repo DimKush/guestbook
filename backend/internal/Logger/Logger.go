@@ -3,7 +3,6 @@ package Logger
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"runtime"
 	"strings"
@@ -11,6 +10,8 @@ import (
 	"time"
 
 	"github.com/DimKush/guestbook/tree/main/backend/internal/Configurator"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 )
 
 const (
@@ -21,69 +22,28 @@ const (
 	TRACE   = iota
 )
 
-type Logger interface {
-	Init()
-	Write(Severity int, message string)
-}
-
-type logger struct {
+type Logger struct {
 	current_log_level int
 	path_to_logs      string
 	today_log_file    string
+	inst              *zerolog.Logger
 }
 
-var instance *logger = nil
 var once sync.Once
 var onceWrite sync.Once
 
-func Instance() Logger {
+func (data *Logger) Instance() *zerolog.Logger {
 	once.Do(func() {
-		if instance == nil {
-			instance = new(logger)
-			instance.Init()
+		if data.inst == nil {
+			logger := data.init()
+			data.inst = &logger
 		}
 	})
 
-	return instance
+	return data.inst
 }
 
-func (data *logger) Write(Severity int, message string) {
-	writeInLog := func() {
-		data.checkLogDateFile()
-		if Severity > data.current_log_level {
-			return
-		}
-		var severityStr string
-		switch Severity {
-		case ERROR:
-			{
-				severityStr = "ERROR"
-			}
-		case WARNING:
-			{
-				severityStr = "WARNING"
-			}
-		case INFO:
-			{
-				severityStr = "INFO"
-			}
-		case DEBUG:
-			{
-				severityStr = "DEBUG"
-			}
-		case TRACE:
-			{
-				severityStr = "TRACE"
-			}
-		}
-		fmt.Print("D2\n")
-		log.Printf("[%s] %s", severityStr, message)
-	}
-
-	onceWrite.Do(writeInLog)
-}
-
-func (data *logger) createLogNewDate() {
+func (data *Logger) createLogNewDate() {
 	var strb strings.Builder
 
 	log_path_dir_foo := func() string {
@@ -102,16 +62,16 @@ func (data *logger) createLogNewDate() {
 	log_file, err := os.Create(strb.String())
 
 	if err != nil {
-		log.Fatalf("Cannot create the file %s", strb.String())
+		log.Fatal().Msg(fmt.Sprintf("Cannot create the file %s", strb.String()))
 	}
 
 	log_file.Close()
 }
 
-func (data *logger) checkLogDateFile() bool {
+func (data *Logger) checkLogDateFile() bool {
 	files, err := ioutil.ReadDir(data.path_to_logs)
 	if err != nil {
-		log.Fatalf("Cannot open the directory with logs %s", data.path_to_logs)
+		log.Fatal().Msg(fmt.Sprintf("Cannot open the directory with logs %s", data.path_to_logs))
 	}
 
 	for _, file := range files {
@@ -123,21 +83,21 @@ func (data *logger) checkLogDateFile() bool {
 	return false
 }
 
-func (data *logger) Init() {
+func (data *Logger) init() zerolog.Logger {
 	strLevel := strings.ToUpper(Configurator.Instance().GetLogLevel())
 
 	switch strLevel {
 	case "ERROR":
 		{
-			data.current_log_level = ERROR
+			log.Level(zerolog.ErrorLevel)
 		}
 	case "WARNING":
 		{
-			data.current_log_level = WARNING
+			log.Level(zerolog.WarnLevel)
 		}
 	case "INFO":
 		{
-			data.current_log_level = INFO
+			log.Level(zerolog.WarnLevel)
 		}
 	case "DEBUG":
 		{
@@ -190,8 +150,10 @@ func (data *logger) Init() {
 
 	file, err := os.OpenFile(strb.String(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
-		log.Fatalf("Cannot open the log file %s", strb.String())
+		log.Fatal().Msg(fmt.Sprintf("Cannot open the log file %s", strb.String()))
 	}
 
-	log.SetOutput(file)
+	log.Output(file)
+	//log.SetOutput(file)
+	return log.Logger
 }
