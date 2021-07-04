@@ -3,6 +3,7 @@ package Logger
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"runtime"
 	"strings"
@@ -11,7 +12,6 @@ import (
 
 	"github.com/DimKush/guestbook/tree/main/backend/internal/Configurator"
 	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 )
 
 const (
@@ -72,7 +72,7 @@ func (data *log_struct) createLogNewDate() {
 	log_file, err := os.Create(strb.String())
 
 	if err != nil {
-		data.zLog.Fatal().Msg(fmt.Sprintf("Cannot create the file %s", strb.String()))
+		log.Fatalf("Cannot create the file %s", strb.String())
 	}
 
 	log_file.Close()
@@ -81,7 +81,7 @@ func (data *log_struct) createLogNewDate() {
 func (data *log_struct) checkLogDateFile() bool {
 	files, err := ioutil.ReadDir(data.path_to_logs)
 	if err != nil {
-		data.zLog.Fatal().Msg(fmt.Sprintf("Cannot open the directory with logs %s", data.path_to_logs))
+		log.Fatalf("Cannot open the directory with logs %s", data.path_to_logs)
 	}
 
 	for _, file := range files {
@@ -133,13 +133,12 @@ func (data *log_struct) init() {
 
 	file, err := os.OpenFile(strb.String(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
-		data.zLog.Fatal().Msg(fmt.Sprintf("Cannot open the log file %s", strb.String()))
+		log.Fatalf("Cannot open the log file %s", strb.String())
 	}
 
-	log.Output(file)
-	zlogger := zerolog.New(file).With().Caller().Timestamp().Logger()
+	zlogger := zerolog.New(file).With().Caller().Timestamp().Logger().Output(file)
 	data.zLog = &zlogger
-
+	fmt.Printf("%v", data)
 	switch strLevel {
 	case "ERROR":
 		{
@@ -163,7 +162,6 @@ func (data *log_struct) init() {
 		}
 	default:
 		{
-			fmt.Println("DB1")
 			zerolog.SetGlobalLevel(zerolog.ErrorLevel)
 		}
 	}

@@ -1,23 +1,25 @@
 package Configurator
 
 import (
+	"io/ioutil"
 	"log"
-	"os"
 	"runtime"
 	"sync"
+
+	"gopkg.in/yaml.v2"
 )
 
 type Configurator interface {
-	Init() error
+	//Init() error
 	GetLogLevel() string
 	GetLogPath() string
 }
 
 type configurator struct {
-	host      int
-	port      int
-	log_level string
-	log_path  string
+	Host      string `yaml:"host"`
+	Port      int    `yaml:"port"`
+	Log_level string `yaml:"log_level"`
+	Log_path  string `yaml:"log_path"`
 }
 
 var instance *configurator = nil
@@ -27,13 +29,14 @@ func Instance() Configurator {
 	once.Do(func() {
 		if instance == nil {
 			instance = new(configurator)
+			instance.init_inside()
 		}
 	})
 
 	return instance
 }
 
-func (data *configurator) Init() (status error) {
+func (data *configurator) init_inside() {
 	// a little bit js style
 
 	path_to_conf_foo := func() string {
@@ -46,18 +49,21 @@ func (data *configurator) Init() (status error) {
 
 	default_path_to_conf := path_to_conf_foo()
 
-	_, err := os.Stat(default_path_to_conf)
+	yamlFile, err := ioutil.ReadFile(default_path_to_conf)
 	if err != nil {
 		log.Fatalf("Cannot find the config file on path %s", default_path_to_conf)
 	}
 
-	return nil
+	err = yaml.Unmarshal(yamlFile, data)
+	if err != nil {
+		log.Fatalf("Cannot unmarshall the config file on path %s", default_path_to_conf)
+	}
 }
 
 func (data *configurator) GetLogLevel() (level string) {
-	return data.log_level
+	return data.Log_level
 }
 
 func (data *configurator) GetLogPath() (pathToLog string) {
-	return data.log_path
+	return data.Log_path
 }
