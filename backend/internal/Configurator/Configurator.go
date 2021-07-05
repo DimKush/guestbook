@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"log"
 	"runtime"
+	"strings"
 	"sync"
 
 	"gopkg.in/yaml.v2"
@@ -11,13 +12,16 @@ import (
 
 type Configurator interface {
 	//Init() error
+	GetFullAddress() string
 	GetLogLevel() string
 	GetLogPath() string
+	GetHost() string
+	GetPort() string
 }
 
 type configurator struct {
 	Host      string `yaml:"host"`
-	Port      int    `yaml:"port"`
+	Port      string `yaml:"port"`
 	Log_level string `yaml:"log_level"`
 	Log_path  string `yaml:"log_path"`
 }
@@ -66,4 +70,21 @@ func (data *configurator) GetLogLevel() (level string) {
 
 func (data *configurator) GetLogPath() (pathToLog string) {
 	return data.Log_path
+}
+
+func (data *configurator) GetHost() string {
+	return data.Host
+}
+
+func (data *configurator) GetPort() string {
+	return data.Port
+}
+
+func (data *configurator) GetFullAddress() string {
+	var strb strings.Builder
+	strb.WriteString(data.Host)
+	strb.WriteString(":")
+	strb.WriteString(data.Port)
+
+	return strb.String()
 }
