@@ -9,6 +9,10 @@ import (
 	"github.com/DimKush/guestbook/tree/main/backend/internal/utils"
 )
 
+type Controller interface {
+	Execute(writer http.ResponseWriter, reader *http.Request)
+}
+
 type Ping struct {
 	Service_name string
 }
@@ -37,5 +41,8 @@ func (data *Ping) Execute(writer http.ResponseWriter, reader *http.Request) {
 		}
 		writer.Write(bytes)
 	}
+}
 
+func NewPing() Controller {
+	return &Ping{}
 }
