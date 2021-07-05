@@ -7,11 +7,11 @@ import (
 	"github.com/DimKush/guestbook/tree/main/backend/internal/Logger"
 )
 
-type GetHealth struct {
-	service_name string
+type Ping struct {
+	Service_name string
 }
 
-func (data *GetHealth) Execute(writer http.ResponseWriter, reader *http.Request) {
+func (data *Ping) Execute(writer http.ResponseWriter, reader *http.Request) {
 	Logger.Instance().Log().Debug().Msg("Execute process request")
 
 	err := json.NewDecoder(reader.Body).Decode(&data)
@@ -20,5 +20,4 @@ func (data *GetHealth) Execute(writer http.ResponseWriter, reader *http.Request)
 		return
 	}
 
-	Logger.Instance().Log().Debug().Msgf("%v", data)
 }

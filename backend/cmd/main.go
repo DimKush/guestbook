@@ -21,7 +21,8 @@ func main() {
 		IdleTimeout:  1 * time.Second,
 	}
 
-	r.HandleFunc("/getHealth", GetHealth.Execute)
+	var hrd Ping.Ping
+	r.HandleFunc("/getHealth", hrd.Execute)
 
 	Logger.Instance().Log().Info().Msgf("Base context %v", s.BaseContext)
 	if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
