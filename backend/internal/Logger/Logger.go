@@ -1,7 +1,6 @@
 package Logger
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -96,6 +95,19 @@ func (data *log_struct) checkLogDateFile() bool {
 func (data *log_struct) init() {
 	strLevel := strings.ToUpper(Configurator.Instance().GetLogLevel())
 
+	var complete_path = func(data string) string {
+		var strb strings.Builder
+		if runtime.GOOS == "windows" {
+			strb.WriteString(data)
+			strb.WriteString("\\")
+			return strb.String()
+		} else {
+			strb.WriteString(data)
+			strb.WriteString("/")
+			return strb.String()
+		}
+	}
+
 	if Configurator.Instance().GetLogPath() == "" {
 		log_path_dir_foo := func() string {
 			if runtime.GOOS == "windows" {
@@ -106,7 +118,7 @@ func (data *log_struct) init() {
 		}
 		data.path_to_logs = log_path_dir_foo()
 	} else {
-		data.path_to_logs = Configurator.Instance().GetLogPath()
+		data.path_to_logs = complete_path(Configurator.Instance().GetLogPath())
 	}
 
 	current_dt := time.Now()
@@ -138,7 +150,7 @@ func (data *log_struct) init() {
 
 	zlogger := zerolog.New(file).With().Caller().Timestamp().Logger().Output(file)
 	data.zLog = &zlogger
-	fmt.Printf("%v", data)
+
 	switch strLevel {
 	case "ERROR":
 		{
