@@ -21,7 +21,7 @@ func main() {
 		IdleTimeout:  1 * time.Second,
 	}
 
-	r.HandleFunc("/", Hello)
+	r.HandleFunc("/getHealth", GetHealth.Execute)
 
 	Logger.Instance().Log().Info().Msgf("Base context %v", s.BaseContext)
 	if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
@@ -32,5 +32,5 @@ func main() {
 }
 
 func Hello(w http.ResponseWriter, r *http.Request) {
-	Logger.Instance().Log().Info().Msgf("Server starts %v", w)
+	Logger.Instance().Log().Info().Msgf("Server Hello %v", r)
 }
