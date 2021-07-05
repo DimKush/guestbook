@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/DimKush/guestbook/tree/main/backend/internal/Configurator"
+	"github.com/DimKush/guestbook/tree/main/backend/internal/Contrtollers/Ping"
 	"github.com/DimKush/guestbook/tree/main/backend/internal/Logger"
 	"github.com/gorilla/mux"
 )
@@ -22,9 +23,8 @@ func main() {
 	}
 
 	var hrd Ping.Ping
-	r.HandleFunc("/getHealth", hrd.Execute)
+	r.HandleFunc("/main/Ping", hrd.Execute)
 
-	Logger.Instance().Log().Info().Msgf("Base context %v", s.BaseContext)
 	if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		Logger.Instance().Log().Fatal().Msgf("Error during starting the server %s", err.Error())
 	} else {
