@@ -20,15 +20,10 @@ func main() {
 		IdleTimeout:  1 * time.Second,
 	}
 
-	Router.Instance().Route()
-
 	if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		Logger.Instance().Log().Fatal().Msgf("Error during starting the server %s", err.Error())
 	} else {
 		Logger.Instance().Log().Info().Msgf("Server starts %v", s)
 	}
-}
 
-func Hello(w http.ResponseWriter, r *http.Request) {
-	Logger.Instance().Log().Info().Msgf("Server Hello %v", r)
 }

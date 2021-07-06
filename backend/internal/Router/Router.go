@@ -9,7 +9,6 @@ import (
 )
 
 type Router interface {
-	Route()
 	ReturnRouter() *mux.Router
 }
 
@@ -33,14 +32,17 @@ func Instance() Router {
 }
 
 func (data *router) init() {
+	Logger.Instance().Log().Info().Msgf("Start proccess request init()")
 	data.router = mux.NewRouter()
+	data.handlersRegist()
 }
 
-func (data *router) Route() {
+func (data *router) handlersRegist() {
 	// registration
 	Logger.Instance().Log().Info().Msgf("Start proccess request Route()")
 
-	data.router.HandleFunc("main/Ping", Ping.NewPing().Execute)
+	data.router.HandleFunc("/main/Ping", Ping.NewPing().Execute).GetError()
+
 }
 
 func (data *router) ReturnRouter() *mux.Router {
