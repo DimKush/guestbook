@@ -11,19 +11,26 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+const (
+	DB_POSTGRES = iota
+	DB_MYSQL    = iota
+	DB_SQLITE   = iota
+)
+
 type Configurator interface {
 	//Init() error
 	GetFullAddress() string
 	GetLogLevel() string
 	GetLogPath() string
 	GetPort() string
+	GetDbConnectGorm(core int) string
 }
 
 type configurator struct {
 	Port      string `yaml:"port"`
 	Log_level string `yaml:"log_level"`
 	Log_path  string `yaml:"log_path"`
-	Database  struct {
+	database  struct {
 		Db_name     string `yaml:"db_name"`
 		Db_core     string `yaml:"db_core"`
 		Db_user     string `yaml:"db_user"`
@@ -92,25 +99,24 @@ func (data *configurator) GetFullAddress() string {
 	return strb.String()
 }
 
-/*
+func (data *configurator) GetDbConnectGorm(core int) string {
+	var gormStr string
+	switch core {
+	case DB_POSTGRES:
+		{
+			gormStr = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai",
+				"localhost",
+				data.database.Db_port,
+				data.database.Db_user,
+				data.database.Db_name,
+				data.database.Db_password,
+			)
+		}
+	default:
+		{
+			//panic()
+		}
+	}
 
-func (data *configurator) GetDbName() string {
-	return data.Db_conf.Db_name
+	return gormStr
 }
-
-func (data *configurator) GetDbCore() string {
-	return data.Db_conf.Db_core
-}
-
-func (data *configurator) GetDbUser() string {
-	return data.Db_conf.Db_user
-}
-
-func (data *configurator) GetDbPassword() string {
-	return data.Db_conf.Db_password
-}
-
-func (data *configurator) GetDbPort() string {
-	return data.Db_conf.Db_port
-}
-*/
