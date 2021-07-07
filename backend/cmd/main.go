@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	Logger.Instance().Log().Info().Msgf("Starting server %s:%s", Configurator.Instance().GetHost(), Configurator.Instance().GetPort())
+	Logger.Instance().Log().Info().Msgf("Starting server localhost:%s", Configurator.Instance().GetPort())
 
 	s := &http.Server{
 		Addr:         Configurator.Instance().GetFullAddress(),

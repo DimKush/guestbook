@@ -1,4 +1,10 @@
-host: 127.0.0.1
 port: 5002
 log_level: debug
 log_path: /opt/dimkush_guestbook/log/
+
+database:
+    db_core: postgres.
+    db_user: postgres
+    db_name: test
+    db_password: postgres
+    db_port: 5432

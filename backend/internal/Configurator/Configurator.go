@@ -1,6 +1,7 @@
 package Configurator
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"runtime"
@@ -15,15 +16,20 @@ type Configurator interface {
 	GetFullAddress() string
 	GetLogLevel() string
 	GetLogPath() string
-	GetHost() string
 	GetPort() string
 }
 
 type configurator struct {
-	Host      string `yaml:"host"`
 	Port      string `yaml:"port"`
 	Log_level string `yaml:"log_level"`
 	Log_path  string `yaml:"log_path"`
+	Database  struct {
+		Db_name     string `yaml:"db_name"`
+		Db_core     string `yaml:"db_core"`
+		Db_user     string `yaml:"db_user"`
+		Db_password string `yaml:"db_password"`
+		Db_port     string `yaml:"db_port"`
+	}
 }
 
 var instance *configurator = nil
@@ -62,6 +68,8 @@ func (data *configurator) init_inside() {
 	if err != nil {
 		log.Fatalf("Cannot unmarshall the config file on path %s", default_path_to_conf)
 	}
+
+	fmt.Printf("%v", data)
 }
 
 func (data *configurator) GetLogLevel() (level string) {
@@ -72,19 +80,37 @@ func (data *configurator) GetLogPath() (pathToLog string) {
 	return data.Log_path
 }
 
-func (data *configurator) GetHost() string {
-	return data.Host
-}
-
 func (data *configurator) GetPort() string {
 	return data.Port
 }
 
 func (data *configurator) GetFullAddress() string {
 	var strb strings.Builder
-	strb.WriteString(data.Host)
 	strb.WriteString(":")
 	strb.WriteString(data.Port)
 
 	return strb.String()
 }
+
+/*
+
+func (data *configurator) GetDbName() string {
+	return data.Db_conf.Db_name
+}
+
+func (data *configurator) GetDbCore() string {
+	return data.Db_conf.Db_core
+}
+
+func (data *configurator) GetDbUser() string {
+	return data.Db_conf.Db_user
+}
+
+func (data *configurator) GetDbPassword() string {
+	return data.Db_conf.Db_password
+}
+
+func (data *configurator) GetDbPort() string {
+	return data.Db_conf.Db_port
+}
+*/
