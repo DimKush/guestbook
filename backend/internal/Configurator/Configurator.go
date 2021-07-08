@@ -24,6 +24,7 @@ type Configurator interface {
 	GetLogPath() string
 	GetPort() string
 	GetDbConnectGorm(core int) string
+	GetDbConnectionPool() int
 }
 
 type configurator struct {
@@ -31,11 +32,12 @@ type configurator struct {
 	Log_level string `yaml:"log_level"`
 	Log_path  string `yaml:"log_path"`
 	database  struct {
-		Db_name     string `yaml:"db_name"`
-		Db_core     string `yaml:"db_core"`
-		Db_user     string `yaml:"db_user"`
-		Db_password string `yaml:"db_password"`
-		Db_port     string `yaml:"db_port"`
+		Db_name             string `yaml:"db_name"`
+		Db_core             string `yaml:"db_core"`
+		Db_user             string `yaml:"db_user"`
+		Db_password         string `yaml:"db_password"`
+		Db_port             string `yaml:"db_port"`
+		Db_connections_pool int    `yaml:"db_connections_pool"`
 	}
 }
 
@@ -119,4 +121,8 @@ func (data *configurator) GetDbConnectGorm(core int) string {
 	}
 
 	return gormStr
+}
+
+func (data *configurator) GetDbConnectionPool() int {
+	return data.database.Db_connections_pool
 }

@@ -7,6 +7,7 @@ import (
 )
 
 type PgConnector struct {
+	pgdb *gorm.DB // database connector
 }
 
 func (data *PgConnector) Open() {
@@ -15,5 +16,18 @@ func (data *PgConnector) Open() {
 		PreferSimpleProtocol: true, // // disables implicit prepared statement usage. By default pgx automatically uses the extended protocol
 	})
 
-	db, err := gorm.Open(dialector, &gorm.Config{})
+	var err error
+
+	data.pgdb, err = gorm.Open(dialector, &gorm.Config{})
+	
+	
+	if err != nil {
+		// TODO when will be another databases turn off panic and try to connect to another db
+		//panic()
+	} else {
+		data.pgdb = new(gorm.DB)
+	}
+
+	//check if all alright
+	data.pgdb.DB()
 }
