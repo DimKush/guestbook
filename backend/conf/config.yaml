@@ -8,3 +8,4 @@ database:
     db_name: test
     db_password: postgres
     db_port: 5432
+    db_connections_pool: 10
