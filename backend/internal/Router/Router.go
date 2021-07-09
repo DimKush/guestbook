@@ -18,18 +18,6 @@ type router struct {
 }
 
 var once sync.Once
-var instance *router = nil
-
-func Instance() Router {
-	once.Do(func() {
-		if instance == nil {
-			instance = new(router)
-			instance.init()
-		}
-	})
-
-	return instance
-}
 
 func (data *router) init() {
 	Logger.Instance().Log().Info().Msgf("Start proccess request init()")
@@ -40,7 +28,6 @@ func (data *router) init() {
 func (data *router) handlersRegist() {
 	// registration
 	Logger.Instance().Log().Info().Msgf("Start proccess request Route()")
-
 	data.router.HandleFunc("/main/Ping", Ping.NewPing().Execute).GetError()
 
 }
