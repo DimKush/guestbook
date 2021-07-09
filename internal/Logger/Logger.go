@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/DimKush/guestbook/tree/main/backend/internal/Configurator"
+	"github.com/DimKush/guestbook/tree/main/internal/Configurator"
 	"github.com/rs/zerolog"
 )
 

@@ -28,21 +28,21 @@ type Configurator interface {
 }
 
 type configurator struct {
-	main struct {
+	Main struct {
 		Port      string `yaml:"port"`
 		Log_level string `yaml:"log_level"`
 		Log_path  string `yaml:"log_path"`
 	}
-	audit struct {
+	Audit struct {
 		Port        string `yaml:"port"`
-		Audit_level string `yaml:"audit_level"`
+		Audit_level string `yaml:"Audit_level"`
 		Log_level   string `yaml:"log_level"`
 	}
-	database struct {
-		Db_name             string `yaml:"db_name"`
+	Database struct {
 		Db_core             string `yaml:"db_core"`
 		Db_user             string `yaml:"db_user"`
 		Db_password         string `yaml:"db_password"`
+		Db_name             string `yaml:"db_name"`
 		Db_port             string `yaml:"db_port"`
 		Db_connections_pool int    `yaml:"db_connections_pool"`
 	}
@@ -86,18 +86,18 @@ func (data *configurator) Init(service string) {
 		log.Fatalf("Cannot unmarshall the config file on path %s", default_path_to_conf)
 	}
 
-	fmt.Printf("%v", data)
+	//fmt.Printf("%v", data)
 }
 
 func (data *configurator) GetLogLevel() (level string) {
 	switch data.serviceName {
 	case "main":
 		{
-			return data.main.Log_level
+			return data.Main.Log_level
 		}
 	case "audit":
 		{
-			return data.audit.Log_level
+			return data.Audit.Log_level
 		}
 
 	default:
@@ -108,18 +108,18 @@ func (data *configurator) GetLogLevel() (level string) {
 }
 
 func (data *configurator) GetLogPath() (pathToLog string) {
-	return data.main.Log_path
+	return data.Main.Log_path
 }
 
 func (data *configurator) GetPort() (string, error) {
 	switch data.serviceName {
 	case "main":
 		{
-			return data.main.Port, nil
+			return data.Main.Port, nil
 		}
 	case "audit":
 		{
-			return data.audit.Port, nil
+			return data.Audit.Port, nil
 		}
 	default:
 		{
@@ -135,10 +135,10 @@ func (data *configurator) GetDbConnectGorm(core int) string {
 		{
 			gormStr = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai",
 				"localhost",
-				data.database.Db_port,
-				data.database.Db_user,
-				data.database.Db_name,
-				data.database.Db_password,
+				data.Database.Db_port,
+				data.Database.Db_user,
+				data.Database.Db_name,
+				data.Database.Db_password,
 			)
 		}
 	default:
@@ -151,7 +151,7 @@ func (data *configurator) GetDbConnectGorm(core int) string {
 }
 
 func (data *configurator) GetDbConnectionPool() int {
-	return data.database.Db_connections_pool
+	return data.Database.Db_connections_pool
 }
 
 func (data *configurator) GetServiceName() string {
