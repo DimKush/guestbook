@@ -22,16 +22,23 @@ type Configurator interface {
 	GetFullAddress() string
 	GetLogLevel() string
 	GetLogPath() string
-	GetPort() string
+	GetPort(string) string
 	GetDbConnectGorm(core int) string
 	GetDbConnectionPool() int
 }
 
 type configurator struct {
-	Port      string `yaml:"port"`
-	Log_level string `yaml:"log_level"`
-	Log_path  string `yaml:"log_path"`
-	database  struct {
+	main struct {
+		Port      string `yaml:"port"`
+		Log_level string `yaml:"log_level"`
+		Log_path  string `yaml:"log_path"`
+	}
+	audit struct {
+		Port        string `yaml:"port"`
+		Audit_level string `yaml:"audit_level"`
+		Log_level   string `yaml:"log_level"`
+	}
+	database struct {
 		Db_name             string `yaml:"db_name"`
 		Db_core             string `yaml:"db_core"`
 		Db_user             string `yaml:"db_user"`
@@ -39,6 +46,8 @@ type configurator struct {
 		Db_port             string `yaml:"db_port"`
 		Db_connections_pool int    `yaml:"db_connections_pool"`
 	}
+
+	serviceName string
 }
 
 var instance *configurator = nil
@@ -48,15 +57,14 @@ func Instance() Configurator {
 	once.Do(func() {
 		if instance == nil {
 			instance = new(configurator)
-			instance.init_inside()
 		}
 	})
 
 	return instance
 }
 
-func (data *configurator) init_inside() {
-	// a little bit js style
+func (data *configurator) Init(service string) {
+	data.serviceName = strings.ToLower(service)
 
 	path_to_conf_foo := func() string {
 		if runtime.GOOS == "windows" {
@@ -82,15 +90,39 @@ func (data *configurator) init_inside() {
 }
 
 func (data *configurator) GetLogLevel() (level string) {
-	return data.Log_level
+
+	switch data.serviceName {
+
+	case "main":
+		{
+			return data.main.Log_level
+		}
+	case "audit":
+		{
+			return data.audit.Log_level
+		}
+
+	default:
+		{
+			return string("")
+		}
+	}
 }
 
 func (data *configurator) GetLogPath() (pathToLog string) {
-	return data.Log_path
+	return data.main.Log_path
 }
 
-func (data *configurator) GetPort() string {
-	return data.Port
+func (data *configurator) GetPort(service string) string {
+	serviceStr := strings.ToUpper(service)
+
+	switch serviceStr {
+	case "main":
+		{
+
+		}
+	}
+
 }
 
 func (data *configurator) GetFullAddress() string {

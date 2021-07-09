@@ -1,4 +1,4 @@
-module github.com/DimKush/guestbook/tree/main/backend
+module github.com/DimKush/guestbook/tree/main/
 
 go 1.16
 
