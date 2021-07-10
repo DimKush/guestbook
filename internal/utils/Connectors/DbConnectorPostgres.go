@@ -12,7 +12,7 @@ type PgConnector struct {
 	connector BasicConnector
 }
 
-func (data *PgConnector) Open() {
+func (data *PgConnector) Open() error {
 	dialector := postgres.New(postgres.Config{
 		DSN:                  Configurator.Instance().GetDbConnectGorm(Configurator.DB_POSTGRES),
 		PreferSimpleProtocol: true, // // disables implicit prepared statement usage. By default pgx automatically uses the extended protocol
@@ -23,13 +23,21 @@ func (data *PgConnector) Open() {
 	data.connector.DbConnector, err = gorm.Open(dialector, &gorm.Config{})
 
 	if err != nil {
-		// TODO when will be another databases turn off panic and try to connect to another db
-		//panic()
+		return err
 	} else {
 		data.connector.DbConnector = new(gorm.DB)
+		return nil
 	}
+
 }
 
-func (data *PgConnector) NewPgConnection() {
+func NewPgConnection() (PgConnector, error) {
+	var connect PgConnector
+	err := connect.Open()
 
+	if err != nil {
+		return PgConnector{}, err
+	} else {
+		return connect, nil
+	}
 }
