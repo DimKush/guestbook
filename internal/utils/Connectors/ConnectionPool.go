@@ -1,8 +1,11 @@
 package DbConnectors
 
 import (
-	"strings"
+	"fmt"
 	"sync"
+
+	"github.com/DimKush/guestbook/tree/main/internal/Configurator"
+	"github.com/DimKush/guestbook/tree/main/internal/Logger"
 )
 
 type ConnectionPool interface{}
@@ -23,13 +26,32 @@ func Instance() ConnectionPool {
 type connections struct {
 }
 
-func SetConnection(connectionStr string) (ConnectionUnits, error) {
-	connectStrLow := strings.ToLower(connectionStr)
+func SetConnection(connectionType int) (ConnectionUnits, error) {
+	if connectionType < Configurator.DB_POSTGRES || connectionType > Configurator.DB_SQLITE {
+		err := fmt.Errorf("Incorrect type of database connection.")
+		Logger.Instance().Log().Fatal().Msg(err.Error())
 
-	switch connectStrLow {
-	case "postgres":
+		return nil, err
+	}
+
+	switch connectionType {
+	case Configurator.DB_POSTGRES:
 		{
+			pg_connection, err := NewPgConnection()
 
+			if err != nil {
+				Logger.Instance().Log().Fatal().Msg(err.Error())
+				return nil, fmt.Errorf("")
+			}
+
+			return pg_connection, nil
+		}
+	default:
+		{
+			err := fmt.Errorf("Error, Cannot create connection.")
+			Logger.Instance().Log().Fatal().Msg(err.Error())
+
+			return nil, err
 		}
 	}
 }
