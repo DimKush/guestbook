@@ -1,13 +1,15 @@
-package connectors
+package DbConnectors
 
 import (
-	"github.com/DimKush/guestbook/tree/main/backend/internal/Configurator"
+	"github.com/DimKush/guestbook/tree/main/internal/Configurator"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
+type ConnectionUnits interface{}
+
 type PgConnector struct {
-	pgdb *gorm.DB // database connector
+	connector BasicConnector
 }
 
 func (data *PgConnector) Open() {
@@ -18,16 +20,16 @@ func (data *PgConnector) Open() {
 
 	var err error
 
-	data.pgdb, err = gorm.Open(dialector, &gorm.Config{})
-	
-	
+	data.connector.DbConnector, err = gorm.Open(dialector, &gorm.Config{})
+
 	if err != nil {
 		// TODO when will be another databases turn off panic and try to connect to another db
 		//panic()
 	} else {
-		data.pgdb = new(gorm.DB)
+		data.connector.DbConnector = new(gorm.DB)
 	}
+}
 
-	//check if all alright
-	data.pgdb.DB()
+func (data *PgConnector) NewPgConnection() {
+
 }
