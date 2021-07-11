@@ -36,7 +36,7 @@ type configurator struct {
 	}
 	Audit struct {
 		Port        string `yaml:"port"`
-		Audit_level string `yaml:"Audit_level"`
+		Audit_level string `yaml:"audit_level"`
 		Log_level   string `yaml:"log_level"`
 	}
 	Database struct {
@@ -160,5 +160,7 @@ func (data *configurator) GetServiceName() string {
 }
 
 func (data *configurator) GetAuditLevel() string {
+	//fmt.Printf("\n%v", data)
+	fmt.Printf("\n data.Audit.Audit_level %s", data.Audit.Audit_level)
 	return data.Audit.Audit_level
 }
