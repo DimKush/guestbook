@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/DimKush/guestbook/tree/main/internal/Audit"
 	"github.com/DimKush/guestbook/tree/main/internal/Configurator"
 	"github.com/DimKush/guestbook/tree/main/internal/Contrtollers/main/Ping"
 	"github.com/DimKush/guestbook/tree/main/internal/Logger"
@@ -15,6 +16,7 @@ func registerRouter() *mux.Router {
 	router := new(mux.Router)
 
 	router.HandleFunc("/audit/Ping", Ping.NewPing().Execute).GetError()
+	router.HandleFunc("/audit/NewEvent", Audit.NewAudit().Execute)
 
 	return router
 }
