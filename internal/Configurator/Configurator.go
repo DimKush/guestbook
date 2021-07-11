@@ -25,6 +25,7 @@ type Configurator interface {
 	GetLogPath() string
 	GetPort() (string, error)
 	Init(string)
+	GetAuditLevel() string
 }
 
 type configurator struct {
@@ -156,4 +157,8 @@ func (data *configurator) GetDbConnectionPool() int {
 
 func (data *configurator) GetServiceName() string {
 	return data.serviceName
+}
+
+func (data *configurator) GetAuditLevel() string {
+	return data.Audit.Audit_level
 }
