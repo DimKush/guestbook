@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/DimKush/guestbook/tree/main/internal/Configurator"
 	"github.com/DimKush/guestbook/tree/main/internal/Logger"
@@ -24,10 +25,11 @@ type Controller interface {
 }
 
 type Audit struct {
-	EventType   string `json:"EventType"`
-	ServiceName string `json:"ServiceName"`
-	IsPanic     bool   `json:"IsPanic"`
-	Description string `json:"Description"`
+	EventType   string    `json:"EventType"`
+	EventDate   time.Time `json:"EventDate"`
+	ServiceName string    `json:"ServiceName"`
+	IsPanic     bool      `json:"IsPanic"`
+	Description string    `json:"Description"`
 }
 
 func (data *Audit) Execute(writer http.ResponseWriter, reader *http.Request) {
