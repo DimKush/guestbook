@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/DimKush/guestbook/tree/main/internal/Logger"
 )
 
 type AuditFacade struct {
 	EventType   string
-	EventDate   string
+	EventDate   time.Time
 	ServiceName string
 	IsPanic     bool
 	Description string
@@ -35,7 +36,7 @@ func writeAuditEvent(event AuditFacade) error {
 	return nil
 }
 
-func WriteEvent(eventType string, eventDate string, serviceName string, isPanic bool, description string) error {
+func WriteEvent(eventType string, eventDate time.Time, serviceName string, isPanic bool, description string) error {
 	event := AuditFacade{
 		EventType:   eventType,
 		EventDate:   eventDate,
