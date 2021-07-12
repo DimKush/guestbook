@@ -1,4 +1,4 @@
-package AuditEvent
+package AuditFacade
 
 import (
 	"bytes"
