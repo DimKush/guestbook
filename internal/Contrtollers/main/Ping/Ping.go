@@ -23,8 +23,8 @@ func (data *Ping) Execute(writer http.ResponseWriter, reader *http.Request) {
 	Logger.Instance().Log().Info().Msg("Execute process request")
 
 	// TODO : for test
-
-	AuditFacade.WriteEvent("debug", time.Now(), "main", false, "test descr")
+	// TODO : need a parallel execution
+	go AuditFacade.WriteEvent("debug", time.Now(), "main", false, "test descr")
 
 	writer.Header().Set("Content-Type", "application/json")
 	err := json.NewDecoder(reader.Body).Decode(&data)
