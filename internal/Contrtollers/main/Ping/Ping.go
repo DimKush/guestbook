@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/DimKush/guestbook/tree/main/internal/AuditFacade"
+	"github.com/DimKush/guestbook/tree/main/internal/AuditProxy"
 	"github.com/DimKush/guestbook/tree/main/internal/Logger"
 	"github.com/DimKush/guestbook/tree/main/internal/utils"
 )
@@ -24,7 +24,7 @@ func (data *Ping) Execute(writer http.ResponseWriter, reader *http.Request) {
 
 	// TODO : for test
 	// TODO : need a parallel execution
-	go AuditFacade.WriteEvent("debug", time.Now(), "main", false, "test descr")
+	go AuditProxy.WriteEvent("debug", time.Now(), "main", false, "test descr")
 
 	writer.Header().Set("Content-Type", "application/json")
 	err := json.NewDecoder(reader.Body).Decode(&data)
