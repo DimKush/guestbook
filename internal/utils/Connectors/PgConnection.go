@@ -1,4 +1,4 @@
-package DbConnectors
+package DbConnections
 
 import (
 	"github.com/DimKush/guestbook/tree/main/internal/Configurator"
@@ -6,13 +6,14 @@ import (
 	"gorm.io/gorm"
 )
 
-type ConnectionUnits interface{}
-
-type PgConnector struct {
-	connector BasicConnector
+type Connection interface {
 }
 
-func (data *PgConnector) Open() error {
+type pgConnection struct {
+	connector BasicConnection
+}
+
+func (data *pgConnection) open() error {
 	dialector := postgres.New(postgres.Config{
 		DSN:                  Configurator.Instance().GetDbConnectGorm(Configurator.DB_POSTGRES),
 		PreferSimpleProtocol: true, // // disables implicit prepared statement usage. By default pgx automatically uses the extended protocol
@@ -21,22 +22,20 @@ func (data *PgConnector) Open() error {
 	var err error
 
 	data.connector.DbConnector, err = gorm.Open(dialector, &gorm.Config{})
-
 	if err != nil {
 		return err
 	} else {
 		data.connector.DbConnector = new(gorm.DB)
 		return nil
 	}
-
 }
 
-func NewPgConnection() (PgConnector, error) {
-	var connect PgConnector
-	err := connect.Open()
+func newPgConnection() (pgConnection, error) {
+	var connect pgConnection
+	err := connect.open()
 
 	if err != nil {
-		return PgConnector{}, err
+		return pgConnection{}, err
 	} else {
 		return connect, nil
 	}

@@ -1,4 +1,4 @@
-package AuditFacade
+package AuditProxy
 
 import (
 	"bytes"
@@ -9,7 +9,7 @@ import (
 	"github.com/DimKush/guestbook/tree/main/internal/Logger"
 )
 
-type AuditFacade struct {
+type AuditProxy struct {
 	EventType   string
 	EventDate   time.Time
 	ServiceName string
@@ -17,7 +17,7 @@ type AuditFacade struct {
 	Description string
 }
 
-func writeAuditEvent(event AuditFacade) error {
+func writeAuditEvent(event AuditProxy) error {
 	requestBody, err := json.Marshal(map[string]interface{}{
 		"EventType":   event.EventType,
 		"EventDate":   event.EventDate,
@@ -37,7 +37,7 @@ func writeAuditEvent(event AuditFacade) error {
 }
 
 func WriteEvent(eventType string, eventDate time.Time, serviceName string, isPanic bool, description string) error {
-	event := AuditFacade{
+	event := AuditProxy{
 		EventType:   eventType,
 		EventDate:   eventDate,
 		ServiceName: serviceName,
