@@ -6,9 +6,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type Connection interface {
-}
-
 type pgConnection struct {
 	connector BasicConnection
 }
@@ -20,8 +17,9 @@ func (data *pgConnection) open() error {
 	})
 
 	var err error
-
+	data.connector.DbType = "postgres"
 	data.connector.DbConnector, err = gorm.Open(dialector, &gorm.Config{})
+
 	if err != nil {
 		return err
 	} else {
@@ -30,13 +28,18 @@ func (data *pgConnection) open() error {
 	}
 }
 
-func newPgConnection() (pgConnection, error) {
+func (data *pgConnection) GetDbConnection() *gorm.DB {
+	return data.GetDbConnection()
+}
+
+func newPgConnection() Connection {
 	var connect pgConnection
 	err := connect.open()
 
 	if err != nil {
-		return pgConnection{}, err
+		return &connect
 	} else {
-		return connect, nil
+		return &BasicConnection{}
 	}
+
 }
