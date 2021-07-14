@@ -86,6 +86,10 @@ func (data *Audit) returnEventType(typeStr string) int {
 	}
 }
 
+func (data *Audit) ExecuteQuery() {
+	DbConnections.Instance()
+}
+
 func NewAudit() Controller {
 	return &Audit{}
 }
