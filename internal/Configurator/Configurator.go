@@ -26,6 +26,7 @@ type Configurator interface {
 	GetPort() (string, error)
 	Init(string)
 	GetAuditLevel() string
+	GetDbCore() string
 }
 
 type configurator struct {
@@ -163,4 +164,8 @@ func (data *configurator) GetAuditLevel() string {
 	//fmt.Printf("\n%v", data)
 	fmt.Printf("\n data.Audit.Audit_level %s", data.Audit.Audit_level)
 	return data.Audit.Audit_level
+}
+
+func (data *configurator) GetDbCore() string {
+	return data.Database.Db_core
 }
