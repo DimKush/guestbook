@@ -137,10 +137,10 @@ func (data *configurator) GetDbConnectGorm(core int) string {
 		{
 			gormStr = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai",
 				"localhost",
-				data.Database.Db_port,
 				data.Database.Db_user,
-				data.Database.Db_name,
 				data.Database.Db_password,
+				data.Database.Db_name,
+				data.Database.Db_port,
 			)
 		}
 	default:
@@ -161,7 +161,7 @@ func (data *configurator) GetServiceName() string {
 }
 
 func (data *configurator) GetAuditLevel() string {
-	//fmt.Printf("\n%v", data)
+	fmt.Printf("\n%v", data)
 	fmt.Printf("\n data.Audit.Audit_level %s", data.Audit.Audit_level)
 	return data.Audit.Audit_level
 }

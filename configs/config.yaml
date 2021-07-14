@@ -12,6 +12,6 @@ database:
     db_core: postgres
     db_user: postgres
     db_password: postgres
-    db_name: test
+    db_name: dkguestbook
     db_port: 5432
     db_connections_pool: 10
