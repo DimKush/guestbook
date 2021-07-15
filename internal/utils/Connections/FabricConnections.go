@@ -7,7 +7,9 @@ import (
 	"gorm.io/gorm"
 )
 
-type Connector interface{}
+type Connector interface {
+	GetPgConnection() *gorm.DB
+}
 
 var instance *multiConnector = nil
 var once sync.Once
@@ -32,7 +34,6 @@ func Instance() Connector {
 
 func (data *multiConnector) GetPgConnection() *gorm.DB {
 	return data.connections["postgres"].GetDbConnection()
-
 }
 
 func (data *multiConnector) setPgConnector() {

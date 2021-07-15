@@ -37,9 +37,10 @@ func newPgConnection() Connection {
 	err := connect.open()
 
 	if err != nil {
-		return &connect
-	} else {
 		return &BasicConnection{}
+
+	} else {
+		return &connect
 	}
 
 }

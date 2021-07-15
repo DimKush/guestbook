@@ -9,6 +9,7 @@ import (
 
 	"github.com/DimKush/guestbook/tree/main/internal/Configurator"
 	"github.com/DimKush/guestbook/tree/main/internal/Logger"
+	DbConnections "github.com/DimKush/guestbook/tree/main/internal/utils/Connections"
 )
 
 const (
@@ -47,8 +48,10 @@ func (data *Audit) Execute(writer http.ResponseWriter, reader *http.Request) {
 		fmt.Printf("%d > %d", currentEventType, confEventType)
 		return
 	}
-
+	fmt.Printf("%s", "\nString\n")
 	fmt.Printf("%v", data)
+	data.ExecuteQuery()
+	fmt.Printf("%s", "Done database")
 }
 
 func (data *Audit) returnEventType(typeStr string) int {
@@ -87,7 +90,9 @@ func (data *Audit) returnEventType(typeStr string) int {
 }
 
 func (data *Audit) ExecuteQuery() {
-	DbConnections.Instance()
+	//TODO :  assignment to entry in nil map
+	connecter := DbConnections.Instance().GetPgConnection()
+	connecter.Table("audit_event").Create(&data)
 }
 
 func NewAudit() Controller {
