@@ -24,7 +24,7 @@ func (data *Ping) Execute(writer http.ResponseWriter, reader *http.Request) {
 
 	// TODO : for test
 	// TODO : need a parallel execution
-	go AuditProxy.WriteEvent("debug", time.Now(), "main", false, "test descr")
+	AuditProxy.WriteEvent("debug", time.Now(), "main", false, "test descr")
 
 	writer.Header().Set("Content-Type", "application/json")
 	err := json.NewDecoder(reader.Body).Decode(&data)

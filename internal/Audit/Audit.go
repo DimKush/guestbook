@@ -26,11 +26,11 @@ type Controller interface {
 }
 
 type Audit struct {
-	EventType   string    `json:"EventType"`
-	EventDate   time.Time `json:"EventDate"`
-	ServiceName string    `json:"ServiceName"`
-	IsPanic     bool      `json:"IsPanic"`
-	Description string    `json:"Description"`
+	EventType   string    `gorm:"column:eventtype"`
+	EventDate   time.Time `gorm:"column:eventdate"`
+	ServiceName string    `gorm:"column:servicename"`
+	IsPanic     bool      `gorm:"column:is_panic"`
+	Description string    `gorm:"column:description"`
 }
 
 func (data *Audit) Execute(writer http.ResponseWriter, reader *http.Request) {
@@ -50,6 +50,8 @@ func (data *Audit) Execute(writer http.ResponseWriter, reader *http.Request) {
 	}
 	fmt.Printf("%s", "\nString\n")
 	fmt.Printf("%v", data)
+
+	//TODO : for test
 	data.ExecuteQuery()
 	fmt.Printf("%s", "Done database")
 }
@@ -92,7 +94,7 @@ func (data *Audit) returnEventType(typeStr string) int {
 func (data *Audit) ExecuteQuery() {
 	//TODO :  assignment to entry in nil map
 	connecter := DbConnections.Instance().GetPgConnection()
-	connecter.Table("audit_event").Create(&data)
+	connecter.Table("public.audit_events").Create(&data)
 }
 
 func NewAudit() Controller {
