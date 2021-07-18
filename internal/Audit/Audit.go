@@ -7,18 +7,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/DimKush/guestbook/tree/main/internal/AuditProxy"
 	"github.com/DimKush/guestbook/tree/main/internal/Configurator"
 	"github.com/DimKush/guestbook/tree/main/internal/Logger"
 	DbConnections "github.com/DimKush/guestbook/tree/main/internal/utils/Connections"
-)
-
-const (
-	AUDIT_FATAL   = iota
-	AUDIT_ERROR   = iota
-	AUDIT_WARNING = iota
-	AUDIT_INFO    = iota
-	AUDIT_DEBUG   = iota
-	AUDIT_TRACE   = iota
 )
 
 type Controller interface {
@@ -59,31 +51,31 @@ func (data *Audit) returnEventType(typeStr string) int {
 	switch config_audit_level {
 	case "fatal":
 		{
-			return AUDIT_FATAL
+			return AuditProxy.AUDIT_FATAL
 		}
 	case "error":
 		{
-			return AUDIT_ERROR
+			return AuditProxy.AUDIT_ERROR
 		}
 	case "warning":
 		{
-			return AUDIT_WARNING
+			return AuditProxy.AUDIT_WARNING
 		}
 	case "info":
 		{
-			return AUDIT_INFO
+			return AuditProxy.AUDIT_INFO
 		}
 	case "debug":
 		{
-			return AUDIT_DEBUG
+			return AuditProxy.AUDIT_DEBUG
 		}
 	case "trace":
 		{
-			return AUDIT_TRACE
+			return AuditProxy.AUDIT_TRACE
 		}
 	default:
 		{
-			return AUDIT_ERROR
+			return AuditProxy.AUDIT_ERROR
 		}
 	}
 }

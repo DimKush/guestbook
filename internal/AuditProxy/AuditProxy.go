@@ -9,6 +9,15 @@ import (
 	"github.com/DimKush/guestbook/tree/main/internal/Logger"
 )
 
+const (
+	AUDIT_FATAL   = iota
+	AUDIT_ERROR   = iota
+	AUDIT_WARNING = iota
+	AUDIT_INFO    = iota
+	AUDIT_DEBUG   = iota
+	AUDIT_TRACE   = iota
+)
+
 type AuditProxy struct {
 	EventType   string
 	EventDate   time.Time
