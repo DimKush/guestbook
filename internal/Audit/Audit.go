@@ -48,12 +48,9 @@ func (data *Audit) Execute(writer http.ResponseWriter, reader *http.Request) {
 		fmt.Printf("%d > %d", currentEventType, confEventType)
 		return
 	}
-	fmt.Printf("%s", "\nString\n")
-	fmt.Printf("%v", data)
 
 	//TODO : for test
 	data.ExecuteQuery()
-	fmt.Printf("%s", "Done database")
 }
 
 func (data *Audit) returnEventType(typeStr string) int {
