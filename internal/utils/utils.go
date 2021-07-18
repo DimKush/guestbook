@@ -24,7 +24,7 @@ func SendOkResponce(returnMsg string) ([]byte, error) {
 
 func SenErrorMessage(returnMsg string, errReason string) ([]byte, error) {
 	responce := responceErr{
-		Status:    "OK",
+		Status:    "ERROR",
 		ReturnMsg: returnMsg,
 		ErrMesage: errReason,
 	}

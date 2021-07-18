@@ -15,7 +15,7 @@ import (
 func registerRouter() *mux.Router {
 	router := new(mux.Router)
 
-	router.HandleFunc("/audit/Ping", Ping.NewPing().Execute).GetError()
+	router.HandleFunc("/audit/ping", Ping.NewPing().Execute).GetError()
 	router.HandleFunc("/audit/NewEvent", Audit.NewAudit().Execute)
 
 	return router

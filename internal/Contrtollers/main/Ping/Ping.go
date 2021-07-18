@@ -17,6 +17,7 @@ type Controller interface {
 
 type Ping struct {
 	Service_name string `json:"service_name"`
+	Service_port string `json:"service_port"`
 }
 
 func (data *Ping) Execute(writer http.ResponseWriter, reader *http.Request) {
@@ -39,14 +40,21 @@ func (data *Ping) Execute(writer http.ResponseWriter, reader *http.Request) {
 		}
 
 		writer.Write(bytes)
+		return
+	}
 
-	} else {
-		bytes, err := utils.SendOkResponce("Service is online")
+	if data.Service_name == "" || data.Service_port == "" {
+		bytes, err := utils.SenErrorMessage("Error, Incorrect input params", err.Error())
+
 		if err != nil {
 			Logger.Instance().Log().Error().Msg(err.Error())
 		}
+
 		writer.Write(bytes)
+		return
 	}
+	// build request string
+	//getStr := "localhost:"
 }
 
 func NewPing() Controller {
