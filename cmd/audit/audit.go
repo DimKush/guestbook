@@ -15,7 +15,7 @@ import (
 func registerRouter() *mux.Router {
 	router := new(mux.Router)
 
-	router.HandleFunc("/audit/Alive", Alive.NewAlive()).GetError()
+	router.HandleFunc("/audit/Alive", Alive.NewAlive().Execute)
 	router.HandleFunc("/audit/NewEvent", Audit.NewAudit().Execute)
 
 	return router

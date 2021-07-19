@@ -61,5 +61,4 @@ func WriteEvent(eventType string, eventDate time.Time, serviceName string, isPan
 	}
 
 	return nil
-
 }
