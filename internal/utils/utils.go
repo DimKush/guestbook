@@ -8,9 +8,9 @@ type responceOk struct {
 }
 
 type responceErr struct {
-	Status    string
-	ReturnMsg string
-	ErrMesage string
+	Status     string
+	ReturnMsg  string
+	ErrMessage string
 }
 
 func SendOkResponce(returnMsg string) ([]byte, error) {
@@ -24,9 +24,9 @@ func SendOkResponce(returnMsg string) ([]byte, error) {
 
 func SenErrorMessage(returnMsg string, errReason string) ([]byte, error) {
 	responce := responceErr{
-		Status:    "ERROR",
-		ReturnMsg: returnMsg,
-		ErrMesage: errReason,
+		Status:     "ERROR",
+		ReturnMsg:  returnMsg,
+		ErrMessage: errReason,
 	}
 
 	return json.Marshal(responce)

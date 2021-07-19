@@ -7,7 +7,7 @@ import (
 
 	"github.com/DimKush/guestbook/tree/main/internal/Audit"
 	"github.com/DimKush/guestbook/tree/main/internal/Configurator"
-	"github.com/DimKush/guestbook/tree/main/internal/Contrtollers/main/Ping"
+	"github.com/DimKush/guestbook/tree/main/internal/Contrtollers/Alive"
 	"github.com/DimKush/guestbook/tree/main/internal/Logger"
 	"github.com/gorilla/mux"
 )
@@ -15,7 +15,7 @@ import (
 func registerRouter() *mux.Router {
 	router := new(mux.Router)
 
-	router.HandleFunc("/audit/ping", Ping.NewPing().Execute).GetError()
+	router.HandleFunc("/audit/Alive", Alive.NewAlive()).GetError()
 	router.HandleFunc("/audit/NewEvent", Audit.NewAudit().Execute)
 
 	return router

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/DimKush/guestbook/tree/main/internal/AuditProxy"
@@ -17,7 +18,11 @@ type Controller interface {
 
 type Ping struct {
 	Service_name string `json:"service_name"`
-	Service_port string `json:"service_port"`
+	Service_port int    `json:"service_port"`
+}
+
+type AliveAnswer struct {
+	Status string `json:"Status"`
 }
 
 func (data *Ping) Execute(writer http.ResponseWriter, reader *http.Request) {
@@ -43,7 +48,7 @@ func (data *Ping) Execute(writer http.ResponseWriter, reader *http.Request) {
 		return
 	}
 
-	if data.Service_name == "" || data.Service_port == "" {
+	if data.Service_name == "" || data.Service_port == 0 {
 		bytes, err := utils.SenErrorMessage("Error, Incorrect input params", err.Error())
 
 		if err != nil {
@@ -53,8 +58,23 @@ func (data *Ping) Execute(writer http.ResponseWriter, reader *http.Request) {
 		writer.Write(bytes)
 		return
 	}
-	// build request string
-	//getStr := "localhost:"
+	//TODO build request string
+	getStr := "localhost:" + strconv.Itoa(data.Service_port) + "/" + data.Service_name + "/Alive"
+
+	fmt.Println(getStr)
+	resp, err := http.Get(getStr)
+	respData := AliveAnswer{}
+
+	fmt.Println("1")
+	err = json.NewDecoder(resp.Body).Decode(&respData)
+
+	fmt.Println("2")
+	if respData.Status == "OK" {
+		bytes, _ := utils.SendOkResponce(fmt.Sprintf("Service %s is alive", data.Service_name))
+
+		writer.Write(bytes)
+	}
+	fmt.Println("3")
 }
 
 func NewPing() Controller {

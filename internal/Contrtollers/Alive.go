@@ -28,3 +28,7 @@ func (data *Alive) Execute(writer http.ResponseWriter, reader http.Request) {
 	writer.Header().Set("Content-Type", "application/json")
 	writer.Write(bytes)
 }
+
+func NewAlive() Controller {
+	return &Alive{}
+}
