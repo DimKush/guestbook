@@ -13,8 +13,8 @@ import (
 
 const (
 	DB_POSTGRES = iota
-	DB_MYSQL    = iota
-	DB_SQLITE   = iota
+	DB_MYSQL
+	DB_SQLITE
 )
 
 type Configurator interface {

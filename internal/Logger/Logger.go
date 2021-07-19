@@ -14,11 +14,11 @@ import (
 )
 
 const (
-	ERROR   = 0
-	WARNING = iota
-	INFO    = iota
-	DEBUG   = iota
-	TRACE   = iota
+	ERROR = iota
+	WARNING
+	INFO
+	DEBUG
+	TRACE
 )
 
 type Logger interface {

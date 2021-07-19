@@ -10,12 +10,12 @@ import (
 )
 
 const (
-	AUDIT_FATAL   = iota
-	AUDIT_ERROR   = iota
-	AUDIT_WARNING = iota
-	AUDIT_INFO    = iota
-	AUDIT_DEBUG   = iota
-	AUDIT_TRACE   = iota
+	AUDIT_FATAL = iota
+	AUDIT_ERROR
+	AUDIT_WARNING
+	AUDIT_INFO
+	AUDIT_DEBUG
+	AUDIT_TRACE
 )
 
 type AuditProxy struct {
