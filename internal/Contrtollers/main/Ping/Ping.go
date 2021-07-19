@@ -22,7 +22,8 @@ type Ping struct {
 }
 
 type AliveAnswer struct {
-	Status string `json:"Status"`
+	Status    string `json:"Status"`
+	ReturnMsg string `json:"ReturnMsg"`
 }
 
 func (data *Ping) Execute(writer http.ResponseWriter, reader *http.Request) {
@@ -30,7 +31,12 @@ func (data *Ping) Execute(writer http.ResponseWriter, reader *http.Request) {
 
 	// TODO : for test
 	// TODO : need a parallel execution
-	AuditProxy.WriteEvent("debug", time.Now(), "main", false, "test descr")
+
+	ch := make(chan error, 1)
+
+	go func() {
+		ch <- AuditProxy.WriteEvent("debug", time.Now(), "main", false, "test descr")
+	}()
 
 	writer.Header().Set("Content-Type", "application/json")
 	err := json.NewDecoder(reader.Body).Decode(&data)
@@ -59,22 +65,44 @@ func (data *Ping) Execute(writer http.ResponseWriter, reader *http.Request) {
 		return
 	}
 	//TODO build request string
-	getStr := "localhost:" + strconv.Itoa(data.Service_port) + "/" + data.Service_name + "/Alive"
+	getStr := "http://localhost:" + strconv.Itoa(data.Service_port) + "/" + data.Service_name + "/Alive"
 
-	fmt.Println(getStr)
 	resp, err := http.Get(getStr)
-	respData := AliveAnswer{}
 
-	fmt.Println("1")
+	if resp == nil || err != nil {
+		Logger.Instance().Log().Error().Msg(err.Error())
+		bytes, err := utils.SenErrorMessage("Error during execute Ping function", err.Error())
+
+		if err != nil {
+			Logger.Instance().Log().Error().Msg(err.Error())
+		}
+
+		writer.Write(bytes)
+
+		return
+	}
+
+	respData := AliveAnswer{}
 	err = json.NewDecoder(resp.Body).Decode(&respData)
 
-	fmt.Println("2")
+	if err != nil {
+		Logger.Instance().Log().Error().Msg(err.Error())
+		return
+	}
+
 	if respData.Status == "OK" {
-		bytes, _ := utils.SendOkResponce(fmt.Sprintf("Service %s is alive", data.Service_name))
+		bytes, _ := utils.SendOkResponce(respData.ReturnMsg)
 
 		writer.Write(bytes)
 	}
-	fmt.Println("3")
+
+	err = <-ch
+	close(ch)
+
+	if err != nil {
+		fmt.Printf(err.Error())
+		Logger.Instance().Log().Error().Msg(err.Error())
+	}
 }
 
 func NewPing() Controller {
