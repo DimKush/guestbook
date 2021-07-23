@@ -1,18 +1,6 @@
 package Logger
 
-import (
-	"io/ioutil"
-	"log"
-	"os"
-	"runtime"
-	"strings"
-	"sync"
-	"time"
-
-	"github.com/DimKush/guestbook/tree/main/internal/Configurator"
-	"github.com/rs/zerolog"
-)
-
+/* TODO comment until new configurator will be done
 const (
 	ERROR = iota
 	WARNING
@@ -178,3 +166,4 @@ func (data *log_struct) init() {
 		}
 	}
 }
+*/
