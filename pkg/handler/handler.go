@@ -7,7 +7,6 @@ import (
 
 type Handler struct {
 	services service.Service
-	auth     authHandler
 }
 
 func (h *Handler) InitRoutes() *gin.Engine {
@@ -15,28 +14,28 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	auth := router.Group("/auth")
 	{
-		auth.POST("/sign-up", h.signIn())
-		auth.POST("/sign-in")
+		auth.POST("/sign-up", h.signUp)
+		auth.POST("/sign-in", h.signIn)
 	}
 
 	api := router.Group("/api")
 	{
-		api.GET("/status")
+		api.GET("/status", h.status)
 		lists := router.Group("/lists")
 		{
-			lists.POST("/")
-			lists.GET("/")
-			lists.GET("/:id")
-			lists.PUT("/:id")
-			lists.DELETE("/:id")
+			lists.POST("/", h.createList)
+			lists.GET("/", h.getAllLists)
+			lists.GET("/:list_id", h.getListById)
+			lists.PUT("/:list_id", h.updateListById)
+			lists.DELETE("/:list_id", h.dropListById)
 
 			events := router.Group(":id/items")
 			{
-				events.POST("/")
-				events.GET("/")
-				events.GET("/:item_id")
-				events.PUT("/:item_id")
-				events.DELETE("/:item_id")
+				events.POST("/", h.createEvent)
+				events.GET("/", h.getAllEvents)
+				events.GET("/:item_id", h.getEventById)
+				events.PUT("/:item_id", h.updateEventById)
+				events.DELETE("/:item_id", h.dropEventById)
 			}
 		}
 	}
