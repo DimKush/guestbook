@@ -1,0 +1,8 @@
+{
+	"EventType" : "debug",
+	"EventDate" : "2013-10-21T13:28:06.419Z",
+	"IsPanic" : false,
+	"Description" : "Descr",
+	"ServiceName": "main",
+	"OperationSysName": "Status"
+}
