@@ -1,5 +1,7 @@
 package repository
 
+import "gorm.io/gorm"
+
 type Authorization interface {
 }
 
@@ -15,6 +17,6 @@ type Repository struct {
 	EventList
 }
 
-func ServiceInit() *Repository {
+func RepositoryInit(db *gorm.DB) *Repository {
 	return &Repository{}
 }

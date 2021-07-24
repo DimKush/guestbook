@@ -1,1 +1,10 @@
 port: 8008
+
+database:
+  host: localhost
+  port: 5505
+  username: postgres
+  password: postgres   
+  dbname: dkguestbook-db
+  timezone: Russia/Moscow
+  sslmode: disable
