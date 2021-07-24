@@ -5,6 +5,6 @@ database:
   port: 5505
   username: postgres
   password: postgres   
-  dbname: dkguestbook-db
-  timezone: Russia/Moscow
+  dbname: postgres
+  timezone: Europe/Moscow
   sslmode: disable
