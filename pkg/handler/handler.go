@@ -42,3 +42,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	return router
 }
+
+func HandlerInit(service *service.Service) *Handler {
+	return &Handler{}
+}
