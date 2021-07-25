@@ -11,18 +11,26 @@ import (
 	"github.com/DimKush/guestbook/tree/main/pkg/repository"
 	"github.com/DimKush/guestbook/tree/main/pkg/service"
 	"github.com/joho/godotenv"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 )
 
 func init() {
 	// read config
-	if err := InitConfig(); err != nil {
+	if err := initConfig(); err != nil {
 		panic(fmt.Sprintf("Cannot read service config. Reason: %s", err.Error()))
 	}
 
+	// read environment variables
 	if err := godotenv.Load(); err != nil {
 		panic(fmt.Sprintf("Cannot load environment variables. Reason:%s", err.Error()))
 	}
+
+	// logger settings
+	if err := loggerInit(); err != nil {
+		panic(fmt.Sprintf("Cannot init logger. Reason:%s", err.Error()))
+	}
+
 }
 
 func main() {
@@ -60,7 +68,7 @@ func run(server *server.Server) error {
 	return nil
 }
 
-func InitConfig() error {
+func initConfig() error {
 	platform := strings.ToLower(runtime.GOOS)
 
 	var confDirPath string
@@ -78,4 +86,11 @@ func InitConfig() error {
 	viper.AddConfigPath(confDirPath)
 	viper.SetConfigName("config")
 	return viper.ReadInConfig()
+}
+
+func loggerInit() error {
+	log.Logger = server.InitLogger()
+	log.Error().Msg("Error")
+
+	return nil
 }

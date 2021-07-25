@@ -1,6 +1,17 @@
-package Logger
+package server
 
-/* TODO comment until new configurator will be done
+import (
+	"io/ioutil"
+	"log"
+	"os"
+	"runtime"
+	"strings"
+	"time"
+
+	"github.com/rs/zerolog"
+	"github.com/spf13/viper"
+)
+
 const (
 	ERROR = iota
 	WARNING
@@ -9,35 +20,11 @@ const (
 	TRACE
 )
 
-type Logger interface {
-	Log() *zerolog.Logger
-}
-
 type log_struct struct {
 	current_log_level int
 	path_to_logs      string
 	today_log_file    string
 	zLog              *zerolog.Logger
-}
-
-var once sync.Once
-var onceWrite sync.Once
-var instance *log_struct = nil
-var logger_data *log_struct = nil
-
-func Instance() Logger {
-	once.Do(func() {
-		if instance == nil {
-			instance = new(log_struct)
-			instance.init()
-		}
-	})
-
-	return instance
-}
-
-func (data *log_struct) Log() *zerolog.Logger {
-	return data.zLog
 }
 
 func (data *log_struct) createLogNewDate() {
@@ -81,7 +68,7 @@ func (data *log_struct) checkLogDateFile() bool {
 }
 
 func (data *log_struct) init() {
-	strLevel := strings.ToUpper(Configurator.Instance().GetLogLevel())
+	strLevel := strings.ToUpper(viper.GetString("log_level"))
 
 	var complete_path = func(data string) string {
 		var strb strings.Builder
@@ -96,7 +83,7 @@ func (data *log_struct) init() {
 		}
 	}
 
-	if Configurator.Instance().GetLogPath() == "" {
+	if viper.GetString("log_path") == "" {
 		log_path_dir_foo := func() string {
 			if runtime.GOOS == "windows" {
 				return "c:\\dimkush_guestbook\\log\\"
@@ -106,7 +93,7 @@ func (data *log_struct) init() {
 		}
 		data.path_to_logs = log_path_dir_foo()
 	} else {
-		data.path_to_logs = complete_path(Configurator.Instance().GetLogPath())
+		data.path_to_logs = complete_path(viper.GetString("log_path"))
 	}
 
 	current_dt := time.Now()
@@ -166,4 +153,10 @@ func (data *log_struct) init() {
 		}
 	}
 }
-*/
+
+func InitLogger() (zerolog.Logger, error) {
+	var logger_obj log_struct
+	logger_obj.init()
+
+	return *logger_obj.zLog, nil
+}
