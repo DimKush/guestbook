@@ -4,7 +4,6 @@ database:
   host: localhost
   port: 5505
   username: postgres
-  password: postgres   
   dbname: postgres
   timezone: Europe/Moscow
   sslmode: disable
