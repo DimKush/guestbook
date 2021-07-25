@@ -1,8 +1,8 @@
 package server
 
 import (
+	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"runtime"
 	"strings"
@@ -21,13 +21,12 @@ const (
 )
 
 type log_struct struct {
-	current_log_level int
-	path_to_logs      string
-	today_log_file    string
-	zLog              *zerolog.Logger
+	path_to_logs   string
+	today_log_file string
+	zLog           *zerolog.Logger
 }
 
-func (data *log_struct) createLogNewDate() {
+func (data *log_struct) createLogNewDate() error {
 	var strb strings.Builder
 
 	log_path_dir_foo := func() string {
@@ -46,28 +45,32 @@ func (data *log_struct) createLogNewDate() {
 	log_file, err := os.Create(strb.String())
 
 	if err != nil {
-		log.Fatalf("Cannot create the file %s", strb.String())
+		err := fmt.Errorf("Cannot create the file %s, Reason: %s", strb.String(), err.Error())
+		return err
 	}
 
 	log_file.Close()
+
+	return nil
 }
 
-func (data *log_struct) checkLogDateFile() bool {
+func (data *log_struct) checkLogDateFile() (bool, error) {
 	files, err := ioutil.ReadDir(data.path_to_logs)
 	if err != nil {
-		log.Fatalf("Cannot open the directory with logs %s", data.path_to_logs)
+		err := fmt.Errorf("Cannot open the directory with logs %s. Reason : %s", data.path_to_logs, err.Error())
+		return false, err
 	}
 
 	for _, file := range files {
 		if file.Name() == data.today_log_file {
-			return true
+			return true, nil
 		}
 	}
 
-	return false
+	return false, nil
 }
 
-func (data *log_struct) init() {
+func (data *log_struct) init() error {
 	strLevel := strings.ToUpper(viper.GetString("log_level"))
 
 	var complete_path = func(data string) string {
@@ -109,8 +112,14 @@ func (data *log_struct) init() {
 
 	data.today_log_file = strb.String()
 
-	if !data.checkLogDateFile() {
-		data.createLogNewDate()
+	if needNewfile, err := data.checkLogDateFile(); err != nil {
+		return err
+	} else {
+		if !needNewfile {
+			if err := data.createLogNewDate(); err != nil {
+				return err
+			}
+		}
 	}
 
 	strb.Reset()
@@ -120,7 +129,8 @@ func (data *log_struct) init() {
 
 	file, err := os.OpenFile(strb.String(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
-		log.Fatalf("Cannot open the log file %s", strb.String())
+		err := fmt.Errorf("Cannot open the log file %s, Reason : %s", strb.String(), err.Error())
+		return err
 	}
 
 	zlogger := zerolog.New(file).With().Caller().Timestamp().Logger().Output(file)
@@ -152,11 +162,16 @@ func (data *log_struct) init() {
 			zerolog.SetGlobalLevel(zerolog.ErrorLevel)
 		}
 	}
+
+	return nil
 }
 
 func InitLogger() (zerolog.Logger, error) {
 	var logger_obj log_struct
-	logger_obj.init()
+
+	if err := logger_obj.init(); err != nil {
+		return zerolog.Logger{}, err
+	}
 
 	return *logger_obj.zLog, nil
 }

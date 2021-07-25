@@ -89,8 +89,13 @@ func initConfig() error {
 }
 
 func loggerInit() error {
-	log.Logger = server.InitLogger()
-	log.Error().Msg("Error")
+	var err error
 
-	return nil
+	if log.Logger, err = server.InitLogger(); err != nil {
+		return err
+	} else {
+		log.Info().Msg("Logger initialized.")
+		return nil
+	}
+
 }
