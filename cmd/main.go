@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"runtime"
 	"strings"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/DimKush/guestbook/tree/main/pkg/handler"
 	"github.com/DimKush/guestbook/tree/main/pkg/repository"
 	"github.com/DimKush/guestbook/tree/main/pkg/service"
+	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
 
@@ -16,6 +18,10 @@ func init() {
 	// read config
 	if err := InitConfig(); err != nil {
 		panic(fmt.Sprintf("Cannot read service config. Reason: %s", err.Error()))
+	}
+
+	if err := godotenv.Load(); err != nil {
+		panic(fmt.Sprintf("Cannot load environment variables. Reason:%s", err.Error()))
 	}
 }
 
@@ -28,14 +34,11 @@ func main() {
 }
 
 func run(server *server.Server) error {
-	//TODO : from config
-	strPort := "8040"
-
 	db_config := repository.Config{
 		Host:     viper.GetString("database.host"),
 		Port:     viper.GetString("database.port"),
 		Username: viper.GetString("database.username"),
-		Password: viper.GetString("database.password"),
+		Password: os.Getenv("PG_DB_PASSWORD"),
 		Dbname:   viper.GetString("database.dbname"),
 		Timezone: viper.GetString("database.timezone"),
 		SSLMode:  viper.GetString("database.sslmode"),
@@ -50,8 +53,8 @@ func run(server *server.Server) error {
 	services := service.ServiceInit(repository)
 	handlers := handler.HandlerInit(services)
 
-	if err := server.Run(strPort, handlers.InitRoutes()); err != nil {
-		return fmt.Errorf("Cannot run server on port : %s. Reason : %s", strPort, err.Error())
+	if err := server.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
+		return fmt.Errorf("Cannot run server on port : %s. Reason : %s", viper.GetString("port"), err.Error())
 	}
 
 	return nil
