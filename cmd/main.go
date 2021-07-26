@@ -22,11 +22,9 @@ func init() {
 
 	var wg sync.WaitGroup
 
-	wg.Add(3)
-	go func() {
-		defer wg.Done()
-		ch <- initConfig()
-	}()
+	ch <- initConfig()
+
+	wg.Add(2)
 	go func() {
 		defer wg.Done()
 		ch <- godotenv.Load()
