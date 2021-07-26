@@ -11,16 +11,16 @@ import (
 const salt = "ssgsdgdfggegrgwgwefwefwefwefdf4r231"
 
 type AuthService struct {
-	repos repository.Authorization
+	auth repository.Authorization
 }
 
 func InitAuthService(repos repository.Authorization) *AuthService {
-	return &AuthService{repos: repos}
+	return &AuthService{auth: repos}
 }
 
 func (data *AuthService) CreateUser(user User.User) (int, error) {
 	user.Password = data.generatePassHash(user.Password)
-	return data.repos.CreateUser(user)
+	return data.auth.CreateUser(user)
 }
 
 func (data *AuthService) generatePassHash(password string) string {
