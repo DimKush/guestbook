@@ -3,6 +3,7 @@ CREATE TABLE users
 	id serial not null unique,
 	name varchar(255) not null,
 	username varchar(255) not null,
+	email varchar(255) not null,
 	password_hash varchar(255) not null,
 	registration_date timestamptz not null 
 );
@@ -36,6 +37,7 @@ CREATE TABLE audit_events (
   eventtype varchar(255) NOT NULL,
   eventdate timestamptz NOT NULL,
   servicename varchar(255) NULL,
+  initiator varchar(255) NOT NULL
   is_panic bool NULL,
   description text NULL
 );

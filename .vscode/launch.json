@@ -2,17 +2,21 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Audit debug",
+            
+            "name": "Launch main debug",
+            "owner": "root",
+            "sudo": true,
             "type": "go",
             "request": "launch",
             "mode": "debug",
             "remotePath": "",
-            "port": 5003,
+            "port": 8007,
             "host": "localhost",
-            "program": "${workspaceRoot}/cmd/audit/audit.go",
+            "program": "${workspaceRoot}/cmd/main.go",
             "env": {},
             "args": [],
             "showLog": true
+            
         }
     ]
 }

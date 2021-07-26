@@ -1,8 +1,12 @@
 package repository
 
-import "gorm.io/gorm"
+import (
+	"github.com/DimKush/guestbook/tree/main/internal/entities/User"
+	"gorm.io/gorm"
+)
 
 type Authorization interface {
+	CreateUser(user User.User) (int, error)
 }
 
 type Event interface {
@@ -18,5 +22,7 @@ type Repository struct {
 }
 
 func RepositoryInit(db *gorm.DB) *Repository {
-	return &Repository{}
+	return &Repository{
+		Authorization: InitAuthPostgres(db),
+	}
 }
