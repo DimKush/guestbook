@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/diode"
 	"github.com/spf13/viper"
 )
 
@@ -133,7 +134,11 @@ func (data *log_struct) init() error {
 		return err
 	}
 
-	zlogger := zerolog.New(file).With().Caller().Timestamp().Logger().Output(file)
+	writer := diode.NewWriter(file, 10000, 10*time.Microsecond, func(missed int) {
+		fmt.Printf("Logger dropped %d messages", missed)
+	})
+
+	zlogger := zerolog.New(writer).With().Caller().Timestamp().Logger().Output(file)
 	data.zLog = &zlogger
 
 	switch strLevel {

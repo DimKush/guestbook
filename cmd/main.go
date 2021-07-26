@@ -5,6 +5,7 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"sync"
 
 	server "github.com/DimKush/guestbook/tree/main"
 	"github.com/DimKush/guestbook/tree/main/pkg/handler"
@@ -17,20 +18,31 @@ import (
 
 func init() {
 	// read config
-	if err := initConfig(); err != nil {
-		panic(fmt.Sprintf("Cannot read service config. Reason: %s", err.Error()))
-	}
+	ch := make(chan error, 3)
 
-	// read environment variables
-	if err := godotenv.Load(); err != nil {
-		panic(fmt.Sprintf("Cannot load environment variables. Reason:%s", err.Error()))
-	}
+	var wg sync.WaitGroup
 
-	// logger settings
-	if err := loggerInit(); err != nil {
-		panic(fmt.Sprintf("Cannot init logger. Reason:%s", err.Error()))
-	}
+	wg.Add(3)
+	go func() {
+		defer wg.Done()
+		ch <- initConfig()
+	}()
+	go func() {
+		defer wg.Done()
+		ch <- godotenv.Load()
+	}()
+	go func() {
+		defer wg.Done()
+		ch <- initLogger()
+	}()
 
+	wg.Wait()
+	close(ch)
+	for errVal := range ch {
+		if errVal != nil {
+			panic(fmt.Sprintf("Error during init the application. Reason: %s", errVal.Error()))
+		}
+	}
 }
 
 func main() {
@@ -88,7 +100,7 @@ func initConfig() error {
 	return viper.ReadInConfig()
 }
 
-func loggerInit() error {
+func initLogger() error {
 	var err error
 
 	if log.Logger, err = server.InitLogger(); err != nil {
