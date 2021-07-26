@@ -18,7 +18,9 @@ func InitAuthPostgres(database *gorm.DB) *AuthPostgres {
 
 func (data *AuthPostgres) CreateUser(user User.User) (int, error) {
 	var count int64
-	data.db.Table(users).Where("username=?", user.Username).Count(&count)
+	if err := data.db.Table(users).Where("username=?", user.Username).Count(&count).Error; err != nil {
+
+	}
 	if count != 0 {
 		return 0, fmt.Errorf("Username with username : %s already exists.", user.Username)
 	}

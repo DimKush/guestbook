@@ -1,6 +1,6 @@
 port: 8007
 log_level: warning
-log_path: "/home/dim/logs"
+log_path: "/opt/dimkush_guestbook/log"
 
 database:
   host: localhost

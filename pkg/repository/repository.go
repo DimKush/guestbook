@@ -15,10 +15,16 @@ type Event interface {
 type EventList interface {
 }
 
+type AuditEvent interface {
+	WriteEvent() error
+	WriteEventStruct() error
+}
+
 type Repository struct {
 	Authorization
 	Event
 	EventList
+	AuditEvent
 }
 
 func RepositoryInit(db *gorm.DB) *Repository {

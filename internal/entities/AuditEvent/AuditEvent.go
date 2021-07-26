@@ -3,10 +3,11 @@ package AuditEvent
 import "time"
 
 type AuditEvent struct {
-	Description      string    `json:"Description"`
-	EventDate        time.Time `json:"EventDate"`
-	EventType        string    `json:"EventType"`
-	IsPanic          bool      `json:"IsPanic"`
-	OperationSysName string    `json:"OperationSysName"`
-	ServiceName      string    `json:"ServiceName"`
+	Id               int       `gorm:"event_id"`
+	Description      string    `gorm:"event_type"`
+	EventDate        time.Time `gorm:"event_date"`
+	EventType        string    `gorm:"service_name"`
+	OperationSysName string    `gorm:"initiator"`
+	IsPanic          bool      `gorm:"IsPanic"`
+	ServiceName      string    `gorm:"description"`
 }
