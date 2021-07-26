@@ -69,8 +69,11 @@ func run(server *server.Server) error {
 		return fmt.Errorf("Cannot create db connection %v.\nReason: %s", db_config, err.Error())
 	}
 
+	fmt.Printf("DEB1")
 	repository := repository.RepositoryInit(db)
+	fmt.Printf("DEB2")
 	services := service.ServiceInit(repository)
+	fmt.Printf("DEB3")
 	handlers := handler.HandlerInit(services)
 
 	if err := server.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
