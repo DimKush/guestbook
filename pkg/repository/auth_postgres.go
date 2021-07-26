@@ -19,6 +19,7 @@ func (data *AuthPostgres) CreateUser(user User.User) (int, error) {
 
 	if err != nil {
 		log.Error().Msgf("Error during execute the query : \n%s.", err.Error())
+		return 0, err
 	}
 
 	return user.Id, nil

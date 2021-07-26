@@ -37,7 +37,7 @@ CREATE TABLE audit_events (
   eventtype varchar(255) NOT NULL,
   eventdate timestamptz NOT NULL,
   servicename varchar(255) NULL,
-  initiator varchar(255) NOT NULL
+  initiator varchar(255) NOT NULL,
   is_panic bool NULL,
   description text NULL
 );

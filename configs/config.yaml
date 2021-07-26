@@ -1,4 +1,6 @@
-port: 8008
+port: 8007
+log_level: warning
+log_path: "/home/dim/logs"
 
 database:
   host: localhost
