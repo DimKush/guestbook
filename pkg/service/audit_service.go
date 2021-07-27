@@ -2,7 +2,6 @@ package service
 
 import (
 	"strings"
-	"time"
 
 	"github.com/DimKush/guestbook/tree/main/internal/entities/AuditEvent"
 	"github.com/DimKush/guestbook/tree/main/pkg/repository"
@@ -18,7 +17,7 @@ const (
 )
 
 type Audit interface {
-	WriteEvent() error
+	WriteEvent(event AuditEvent.AuditEvent) error
 }
 
 type AuditService struct {
@@ -26,7 +25,7 @@ type AuditService struct {
 	CurrentLevel int
 }
 
-func InitAudit(log_level string, repos *repository.Repository) *AuditService {
+func InitAudit(repos repository.Audit, log_level string) AuditService {
 	log_level = strings.ToLower(log_level)
 
 	var cur_lvl int
@@ -60,21 +59,8 @@ func InitAudit(log_level string, repos *repository.Repository) *AuditService {
 			cur_lvl = AUDIT_ERROR
 		}
 	}
-
-	return &AuditService{
-		Audit:        repos.Audit,
+	return AuditService{
+		Audit:        AuditWriterInit(repos),
 		CurrentLevel: cur_lvl,
 	}
-}
-
-func (data *AuditService) WriteEvent(service_name string, initiator string, event_type int, event_date time.Time, is_panic bool, description string) {
-	data.WriteEventStruct(AuditEvent.AuditEvent{
-		ServiceName: service_name,
-		Initiator:   initiator,
-		//EventType:   event_type,
-	})
-}
-
-func (data *AuditService) WriteEventStruct(event AuditEvent.AuditEvent) {
-
 }

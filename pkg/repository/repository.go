@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/DimKush/guestbook/tree/main/internal/entities/AuditEvent"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/User"
 	"gorm.io/gorm"
 )
@@ -16,7 +17,7 @@ type EventList interface {
 }
 
 type Audit interface {
-	WriteEvent() error
+	WriteEvent(event AuditEvent.AuditEvent) error
 }
 
 type Repository struct {
@@ -29,5 +30,6 @@ type Repository struct {
 func RepositoryInit(db *gorm.DB) *Repository {
 	return &Repository{
 		Authorization: InitAuthPostgres(db),
+		Audit:         InitAuditRep(db),
 	}
 }
