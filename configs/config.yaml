@@ -1,6 +1,7 @@
 port: 8007
 log_level: warning
 log_path: "/opt/dimkush_guestbook/log"
+audit_level: info
 
 database:
   host: localhost

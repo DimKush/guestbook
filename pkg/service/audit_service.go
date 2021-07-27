@@ -68,8 +68,8 @@ var Audit *AuditService = nil
 
 func (data *AuditService) WriteEventParams(service_name string, initiator string, event_type int, event_date time.Time, is_panic bool, description string) error {
 	if data.currentLevel < event_type {
-		err := fmt.Errorf("Didn't write event in a audit because current audit level is lower that input : current : %d input : %d", data.currentLevel, event_type)
-		log.Trace().Msgf(err.Error())
+		err := fmt.Errorf("Couldn't write event in a audit because current audit level is lower than input : current : %d input : %d", data.currentLevel, event_type)
+		log.Error().Msgf(err.Error())
 
 		return err
 	}
@@ -103,7 +103,9 @@ func (data *AuditService) WriteEventParams(service_name string, initiator string
 		}
 	default:
 		{
-			return fmt.Errorf("Cannot set audit level from the event_type = %d", event_type)
+			err := fmt.Errorf("Cannot set audit level from the event_type = %d", event_type)
+			log.Error().Msg(err.Error())
+			return err
 		}
 	}
 
