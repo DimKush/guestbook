@@ -74,6 +74,8 @@ func run(server *server.Server) error {
 	fmt.Printf("DEB3")
 	handlers := handler.HandlerInit(services)
 
+	service.Audit = service.InitAudit(repository, viper.GetString("audit_level"))
+
 	if err := server.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
 		return fmt.Errorf("Cannot run server on port : %s. Reason : %s", viper.GetString("port"), err.Error())
 	}

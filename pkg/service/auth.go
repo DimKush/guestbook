@@ -3,6 +3,7 @@ package service
 import (
 	"crypto/sha1"
 	"fmt"
+	"time"
 
 	"github.com/DimKush/guestbook/tree/main/internal/entities/User"
 	"github.com/DimKush/guestbook/tree/main/pkg/repository"
@@ -19,6 +20,13 @@ func InitAuthService(repos repository.Authorization) *AuthService {
 }
 
 func (data *AuthService) CreateUser(user User.User) (int, error) {
+	Audit.WriteEventParams("AuthService",
+		"CreateUser",
+		AUDIT_INFO,
+		time.Now(),
+		false,
+		"Try to create user")
+
 	user.Password = data.generatePassHash(user.Password)
 	return data.auth.CreateUser(user)
 }

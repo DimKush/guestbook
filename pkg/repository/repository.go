@@ -16,20 +16,20 @@ type Event interface {
 type EventList interface {
 }
 
-type Audit interface {
-	WriteEvent(event AuditEvent.AuditEvent) error
+type AuditInt interface {
+	WriteEvent(AuditEvent.AuditEvent) error
 }
 
 type Repository struct {
 	Authorization
 	Event
 	EventList
-	Audit
+	AuditInt
 }
 
 func RepositoryInit(db *gorm.DB) *Repository {
 	return &Repository{
 		Authorization: InitAuthPostgres(db),
-		Audit:         InitAuditRep(db),
+		AuditInt:      InitAuditRep(db),
 	}
 }
