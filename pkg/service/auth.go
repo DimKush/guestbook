@@ -20,14 +20,16 @@ func InitAuthService(repos repository.Authorization) *AuthService {
 }
 
 func (data *AuthService) CreateUser(user User.User) (int, error) {
+	user.Password = data.generatePassHash(user.Password)
+
 	Audit.WriteEventParams("AuthService",
 		"CreateUser",
 		AUDIT_INFO,
 		time.Now(),
 		false,
-		"Try to create user")
+		"Try to create user",
+	)
 
-	user.Password = data.generatePassHash(user.Password)
 	return data.auth.CreateUser(user)
 }
 
