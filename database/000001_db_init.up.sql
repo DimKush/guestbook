@@ -33,11 +33,11 @@ CREATE TABLE event_item
 
 
 CREATE TABLE audit_events (
-  eventid serial not null unique,
-  eventtype varchar(255) NOT NULL,
-  eventdate timestamptz NOT NULL,
-  servicename varchar(255) NULL,
+  event_id serial not null unique,
+  service_name varchar(255) NULL,
   initiator varchar(255) NOT NULL,
+  event_type varchar(255) NOT NULL,
+  event_date timestamptz NOT NULL,
   is_panic bool NULL,
   description text NULL
 );
