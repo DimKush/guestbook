@@ -8,6 +8,7 @@ import (
 
 type Authorization interface {
 	CreateUser(user User.User) (int, error)
+	GetUser(username, password string) (User.User, error)
 }
 
 type Event interface {

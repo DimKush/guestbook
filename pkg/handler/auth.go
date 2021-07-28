@@ -31,8 +31,20 @@ func (h *Handler) signUp(context *gin.Context) {
 func (h *Handler) signIn(context *gin.Context) {
 	var userIn UserIn.UserIn
 	log.Info().Msg("signIn process request.")
+
 	if err := context.BindJSON(&userIn); err != nil {
 		initErrorResponce(context, http.StatusBadRequest, err.Error())
 		return
 	}
+
+	token, err := h.services.Authorization.GenerateToken(userIn.Username, userIn.Password)
+	if err != nil {
+		log.Error().Msg(err.Error())
+		initErrorResponce(context, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	initOkResponce(context, map[string]interface{}{
+		"token": token,
+	})
 }
