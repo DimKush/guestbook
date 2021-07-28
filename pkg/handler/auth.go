@@ -8,7 +8,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func (h *Handler) signIn(context *gin.Context) {
+func (h *Handler) signUp(context *gin.Context) {
 	var user User.User
 	log.Info().Msg("signIn process request.")
 	if err := context.BindJSON(&user); err != nil {
@@ -27,5 +27,9 @@ func (h *Handler) signIn(context *gin.Context) {
 
 }
 
-func (h *Handler) signUp(context *gin.Context) {
+type signInInput struct {
+}
+
+func (h *Handler) signIn(context *gin.Context) {
+
 }
