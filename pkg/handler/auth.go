@@ -4,13 +4,14 @@ import (
 	"net/http"
 
 	"github.com/DimKush/guestbook/tree/main/internal/entities/User"
+	"github.com/DimKush/guestbook/tree/main/internal/entities/UserIn"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
 )
 
 func (h *Handler) signUp(context *gin.Context) {
 	var user User.User
-	log.Info().Msg("signIn process request.")
+	log.Info().Msg("signUp process request.")
 	if err := context.BindJSON(&user); err != nil {
 		initErrorResponce(context, http.StatusBadRequest, err.Error())
 		return
@@ -27,9 +28,11 @@ func (h *Handler) signUp(context *gin.Context) {
 
 }
 
-type signInInput struct {
-}
-
 func (h *Handler) signIn(context *gin.Context) {
-
+	var userIn UserIn.UserIn
+	log.Info().Msg("signIn process request.")
+	if err := context.BindJSON(&userIn); err != nil {
+		initErrorResponce(context, http.StatusBadRequest, err.Error())
+		return
+	}
 }
