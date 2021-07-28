@@ -110,16 +110,74 @@ func (data *AuditService) WriteEventParams(service_name string, initiator string
 	}
 
 	return data.writeEvent(AuditEvent.AuditEvent{
-		ServiceName:  service_name,
-		Initiator:    initiator,
-		EventType:    event_type,
-		EventTypeStr: currentLvlStr,
-		EventDate:    event_date,
-		IsPanic:      is_panic,
-		Description:  description,
+		ServiceName: service_name,
+		Initiator:   initiator,
+		EventType:   currentLvlStr,
+		EventDate:   event_date,
+		IsPanic:     is_panic,
+		Description: description,
+	})
+}
+
+func (data *AuditService) WriteEventParamsBody(service_name string, initiator string, event_type int, event_date time.Time, is_panic bool, description string, body interface{}) error {
+	if data.currentLevel < event_type {
+		err := fmt.Errorf("Couldn't write event in a audit because current audit level is lower than input : current : %d input : %d", data.currentLevel, event_type)
+		log.Error().Msgf(err.Error())
+
+		return err
+	}
+
+	var currentLvlStr string
+
+	switch event_type {
+	case AUDIT_FATAL:
+		{
+			currentLvlStr = "fatal"
+		}
+	case AUDIT_ERROR:
+		{
+			currentLvlStr = "error"
+		}
+	case AUDIT_WARNING:
+		{
+			currentLvlStr = "warning"
+		}
+	case AUDIT_INFO:
+		{
+			currentLvlStr = "info"
+		}
+	case AUDIT_DEBUG:
+		{
+			currentLvlStr = "debug"
+		}
+	case AUDIT_TRACE:
+		{
+			currentLvlStr = "trace"
+		}
+	default:
+		{
+			err := fmt.Errorf("Cannot set audit level from the event_type = %d", event_type)
+			log.Error().Msg(err.Error())
+			return err
+		}
+	}
+
+	descrWithBody := description + fmt.Sprintf(" with a body : %v", body)
+
+	return data.writeEvent(AuditEvent.AuditEvent{
+		ServiceName: service_name,
+		Initiator:   initiator,
+		EventType:   currentLvlStr,
+		EventDate:   event_date,
+		IsPanic:     is_panic,
+		Description: descrWithBody,
 	})
 }
 
 func (data *AuditService) writeEvent(event AuditEvent.AuditEvent) error {
-	return data.audit.WriteEvent(event)
+	if err := data.audit.WriteEvent(event); err != nil {
+		log.Error().Msgf("Cannot write %v in database. Reason : %s", event, err.Error())
+		return err
+	}
+	return nil
 }

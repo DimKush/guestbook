@@ -14,5 +14,5 @@ func InitAuditRep(database *gorm.DB) *AuditEventRep {
 }
 
 func (data *AuditEventRep) WriteEvent(event AuditEvent.AuditEvent) error {
-	return nil
+	return data.db.Table(audit_events).Create(&event).Error
 }
