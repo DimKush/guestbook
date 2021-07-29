@@ -12,16 +12,19 @@ type Handler struct {
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
 
+	status := router.GET("", h.status)
+	status.GET("/status", h.status)
+
 	auth := router.Group("/auth")
 	{
 		auth.POST("/sign-up", h.signUp)
 		auth.POST("/sign-in", h.signIn)
 	}
 
-	api := router.Group("/api")
+	api := router.Group("/api", h.userIdentity)
 	{
-		api.GET("/status", h.status)
-		lists := router.Group("/lists")
+
+		lists := api.Group("/lists")
 		{
 			lists.POST("/", h.createList)
 			lists.GET("/", h.getAllLists)

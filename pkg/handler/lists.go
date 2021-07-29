@@ -1,10 +1,16 @@
 package handler
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
 func (h *Handler) createList(context *gin.Context) {
+	id, _ := context.Get(userCTX)
+	context.JSON(http.StatusOK, map[string]interface{}{
+		userCTX: id,
+	})
 
 }
 
