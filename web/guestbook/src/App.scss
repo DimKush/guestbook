@@ -6,6 +6,11 @@
   justify-content: center;
   align-items: center;
   font-family: "Open Sans", sans-serif;
+  background:linear-gradient(rgb(110, 30, 106),transparent);
+  background-color: #692145;
+  width: 100%;
+  height: 100vh;
+
 }
 
 .App-logo {
@@ -52,7 +57,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgb(253, 246, 246);
+    background-color: rgb(255, 242, 254);
     box-shadow: 0px 0px 12px 2px rgba(15, 15, 15, 0.2);
     border-radius: 4px;
     position: relative;
