@@ -14,12 +14,14 @@ export class SignIn extends React.Component{
 				<div className="image"> 
 					<img src={loginImg}/> 
 				</div>
-					<div className="form">
-						<div className="form-group">
-							<input type="text" name="username" placeholder="Username"/>
+					<div className="form-login">
+						<div className="form-login-group field">
+							<input type="input" class="form-login-field" name="username" placeholder="Username" id='name' required/>
+							<label for="name" class="form-login-label">Username</label>
 						</div>
-						<div className="form-group">
-							<input type="password" name="password" placeholder="Password"/>
+						<div className="form-login-group field">
+							<input type="password" class="form-login-field" name="password" placeholder="Password" id='password' required/>
+							<label for="password" class="form-login-label">Password</label>
 						</div>
 					</div>
 					<div className="footer">
