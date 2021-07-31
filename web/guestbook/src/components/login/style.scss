@@ -39,7 +39,7 @@
 		.form-login-group {
 			position: relative;
 			padding: 15px 0 0;
-			margin-bottom: 15px;
+			//margin-bottom: 15px;
 			width: 80%;
 		  }
 
@@ -50,7 +50,7 @@
 			outline: 0;
 			font-size: 1.3rem;
 			color: rgb(187, 94, 182);
-			padding: 7px 0;
+			padding: 11px 0;
 			background: transparent;
 			transition: border-color 0.2s;
 
@@ -95,7 +95,7 @@
 		input:-webkit-autofill:active  {
     		box-shadow: 0 0 0 30px rgb(255, 242, 254) inset !important;
 			-webkit-text-fill-color: rgb(211, 59, 203) !important;
-			-webkit-text-size-adjust: 0.9rem;
+			-webkit-text-size-adjust: 0.7rem !important;
 
 		}
 		/*
