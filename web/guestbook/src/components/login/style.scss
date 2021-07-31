@@ -22,38 +22,105 @@
 			}
 		}
 	
-		.form{
+		.form-login{
 			margin-top: 2em;
 			display: flex;
 			flex-direction: column;
 			align-items: center;
 		}
 
-		.form-group {
-			display: flex;
-			flex-direction: column;
-			align-items: flex-start;
-			width: fit-content;
-			label {
-				font-size: 20px;
-				color: rgb(110, 30, 106);
+		.form__group {
+			position: relative;
+			padding: 15px 0 0;
+			margin-top: 10px;
+			width: 50%;
+		}
+		
+		.form-login-group {
+			position: relative;
+			padding: 15px 0 0;
+			margin-bottom: 15px;
+			width: 80%;
+		  }
+
+		.form-login-field{
+			width: 100%;
+			border: 1px;
+			border-bottom: 1px solid;
+			outline: 0;
+			font-size: 1.3rem;
+			color: rgb(187, 94, 182);
+			padding: 7px 0;
+			background: transparent;
+			transition: border-color 0.2s;
+
+			&::placeholder{
+				color: transparent;
 			}
-			input{
-				margin-top: 0;
-				min-width: 18em;
-				height: 50px;
-				padding: 0px 5px;
-				font-size: 20px;
-				font-family: 'Open Sans', sans-serif;
-				background-color: rgb(255, 242, 254);
-				box-sizing: content-box;
-				border: none; /* <-- This thing here */
-				border-bottom: 1.5px solid rgb(110, 30, 106);
-				margin-bottom: 14px;
-				transition: all 250ms ease-in-out;
+			&:placeholder-shown ~ .form-login-label {
+				font-size: 1.3rem;
+				cursor: text;
+				top: 20px;
 			}
 		}
+		.form-login-label{
+			position: absolute;
+			top: 0;
+			display: block;
+			transition: 0.2s;
+			font-size: 1rem;
+			color: rgb(177, 70, 170);
+		}
+
+		.form-login-field:focus{
+			~ .form-login-label {
+				position: absolute;
+				top: 0;
+				display: block;
+				transition: 0.2s;
+				font-size: 0.9rem;
+				color: rgb(190, 32, 180);
+				font-weight:700;
+			}
+			//padding-bottom: 6px;  
+			font-weight: 700;
+			border-width: 1px;
+			border-image: linear-gradient(to right, rgb(211, 59, 203), rgb(255, 126, 249));
+			border-image-slice: 1;
+		}
+		
+		input:-webkit-autofill,
+		input:-webkit-autofill:hover,
+		input:-webkit-autofill:focus,
+		input:-webkit-autofill:active  {
+    		box-shadow: 0 0 0 30px rgb(255, 242, 254) inset !important;
+			-webkit-text-fill-color: rgb(211, 59, 203) !important;
+			-webkit-text-size-adjust: 0.9rem;
+
+		}
+		/*
+		input {
+			background-color: transparent;
+			border: 3px solid grey;
+			border-radius: 3px;
+		  }
+		  
+		input:-webkit-autofill {
+			background-color: rgb(255, 242, 254);
+			color: rgb(187, 94, 182);
+			font-size: 0.7em;
+			//border: 3px solid blue;
+		}
+		input:autofill {
+			background-color: rgb(255, 242, 254);
+			font-size: 0.7em;
+			color: rgb(187, 94, 182);
+			//border: 3px solid blue;
+		}
+		*/
 	}
+
+
 
 	.footer{
 		margin-top: 3em;
