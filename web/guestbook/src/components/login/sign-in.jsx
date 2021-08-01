@@ -1,14 +1,11 @@
 import React from "react";
 import loginImg from "../../assets/sign-in.svg"
+import "./style.scss"
 
-export class SignIn extends React.Component{
-	constructor(props) {
-		super(props);
-	}
-
-	render(){
+export default function SignIn(){
 		return (
-			<div className="base-container" ref={this.props.containerRef}>
+			//<div className="base-container" ref={this.props.containerRef}>
+			<div className="base-container" >
 				<div className="header">SIGN IN TO DK-GUESTBOOK</div>
 				<div className="content">
 				<div className="image"> 
@@ -30,5 +27,4 @@ export class SignIn extends React.Component{
 				</div>
 			</div>
 		);
-	}
 }
