@@ -1,7 +1,9 @@
 import logo from './logo.svg';
 import React from 'react';
 import './App.scss';
-import { SignIn, SignUp } from "./components/login/index"
+//import { SignIn, SignUp } from "./components/login/index"
+import SignIn from "./components/login/sign-in.jsx"
+import SignUp from "./components/login/sign-up.jsx"
 
 const RightSightComponent = props => {
   return (
