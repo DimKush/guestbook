@@ -9,27 +9,26 @@ export default function SignUp(){
 	let passwordInput = React.createRef();
 
 	const handleClick = function(){
-		const registrationDate = Date.now()
+		const registrationDateStr = new Date(Date.now()).toISOString();
+		console.log(registrationDateStr);
 
 		const signUpObj = {
-			"name" : fullnameInput.current.value,
-			"username" : usernameInput.current.value,
-			"email" : emailInput.current.value,
-			"password": passwordInput.current.value,
-			"registration_date" : registrationDate.toString(),
+			'name' : fullnameInput.current.value,
+			'username' : usernameInput.current.value,
+			'email' : emailInput.current.value,
+			'password': passwordInput.current.value,
+			'registration_date' : registrationDateStr,
 		};
 		
 		console.log(signUpObj);
 
-
-		fetch('http://localhost:8007/auth/sign-up', {
-			method:'POST',
-			body : JSON.stringify(signUpObj),
-			headers:{
-				'content-type' : 'application/json'
-			},
-			
-		})
+		fetch("http://localhost:8007/auth/sign-up", {
+			method: 'POST',
+			body: JSON.stringify(signUpObj),
+			headers : {
+				'Content-Type' : 'application/json'
+			}
+		});
 	}
 
 	

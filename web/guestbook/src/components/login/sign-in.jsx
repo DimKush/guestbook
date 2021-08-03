@@ -14,15 +14,17 @@ export default function SignIn(){
 			"password" : passwordInput.current.value,
 		}
 
-		//console.log(signInObj)
-
-		data.append("sign-in", JSON.stringify(signInObj))
-
 		fetch("http://localhost:8007/auth/sign-in", {
-			method: "POST",
-			body: data,
-		})
+			method: 'POST',
+			body: JSON.stringify(signInObj),
+			headers : {
+				'Content-Type' : 'application/json'
+			}
+		});
 
+		//const content = responce.json();
+
+		//console.log(content);
 	} 
 
 		return (
