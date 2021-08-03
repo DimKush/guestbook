@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/DimKush/guestbook/tree/main/pkg/service"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,6 +12,11 @@ type Handler struct {
 
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
+
+	// CORS configuration
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://localhost:3000"}
+	router.Use(cors.New(config))
 
 	status := router.GET("", h.status)
 	status.GET("/status", h.status)
