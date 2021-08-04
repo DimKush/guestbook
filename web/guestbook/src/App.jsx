@@ -5,6 +5,42 @@ import './App.scss';
 import SignIn from "./components/login/sign-in.jsx"
 import SignUp from "./components/login/sign-up.jsx"
 
+function RightSightComponent({loggingActive, currentState, containerRef, onClick}) {
+  //setCurState(!currentState);
+  
+  return (
+    <div className={loggingActive ? "right-side right" : "right-side left"} ref={containerRef} onClick={onClick}>
+      <div className="inner-container">
+         <div className="text">{currentState}</div>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  let current = React.createRef();
+  const[isLoggingActive, setLoggingActive] = React.useState(true);
+  const[currentState, setCurrentState] = React.useState(!isLoggingActive ? "Sign in" : "Sign up");
+  
+  const changeState = () => {
+    setLoggingActive(!isLoggingActive);
+    setCurrentState(isLoggingActive ? "Sign in" : "Sign up");
+  }
+
+  return (
+    <div className="App">
+      <div className="login">
+        <div className="container">
+          {isLoggingActive && <SignIn containerRef={(ref) => current = ref} />}
+          {!isLoggingActive && <SignUp containerRef={(ref) => current = ref} />}
+        </div>
+        <RightSightComponent loggingActive={isLoggingActive} currentState={currentState} containerRef={ref => current = ref} onClick={changeState}/>
+      </div>
+    </div>
+  );
+}
+
+/*
 const RightSightComponent = props => {
   return (
     <div className="right-side" ref={props.containerRef} onClick={props.onClick}>
@@ -54,5 +90,5 @@ class App extends React.Component{
   }
 }
 
-
+*/
 export default App;
