@@ -18,11 +18,21 @@ func InitAuthPostgres(database *gorm.DB) *AuthPostgres {
 
 func (data *AuthPostgres) CreateUser(user User.User) (int, error) {
 	var count int64
+
+	// check if user with username exists
 	if err := data.db.Table(users).Where("username=?", user.Username).Count(&count).Error; err != nil {
 		return 0, fmt.Errorf("SQL : Cannot select from table %s: Reason : %s", users, err.Error())
 	}
 	if count != 0 {
 		return 0, fmt.Errorf("SQL : Username with username : %s already exists.", user.Username)
+	}
+
+	// check if user with email exists
+	if err := data.db.Table(users).Where("email=?", user.Email).Count(&count).Error; err != nil {
+		return 0, fmt.Errorf("SQL : Cannot select from table %s: Reason : %s", users, err.Error())
+	}
+	if count != 0 {
+		return 0, fmt.Errorf("SQL : Email with email : %s already exists.", user.Email)
 	}
 
 	err := data.db.Table(users).Create(&user).Error

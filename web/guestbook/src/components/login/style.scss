@@ -5,9 +5,11 @@
 	align-items: center;
 
 	.header {
-		font-size: 30px;
-		font-family: "Open Sans", sans-serif;
-		color: rgb(110, 30, 106);
+		font-size: 3em;
+		font-family: "Roboto", sans-serif;
+		color: rgb(202, 61, 195);
+		padding: 10px;
+		margin-bottom: 0.5em;
 	}
 
 	.content{
@@ -23,7 +25,7 @@
 		}
 	
 		.form-login{
-			margin-top: 2em;
+			//margin-top: 2em;
 			display: flex;
 			flex-direction: column;
 			align-items: center;
@@ -47,12 +49,16 @@
 			width: 100%;
 			border: 1px;
 			border-bottom: 1px solid;
-			outline: 0;
-			font-size: 1.3rem;
-			color: rgb(187, 94, 182);
-			padding: 11px 0;
+			border-color:  rgb(211, 59, 203);
 			background: transparent;
 			transition: border-color 0.2s;
+			color: rgb(187, 94, 182);
+			outline: 0;
+			font-size: 1.1rem;
+			border-width: 1px;
+			border-image-slice: 1;
+			padding: 10px 0;
+
 
 			&::placeholder{
 				color: transparent;
@@ -61,6 +67,7 @@
 				font-size: 1.3rem;
 				cursor: text;
 				top: 20px;
+				
 			}
 		}
 		.form-login-label{
@@ -93,31 +100,25 @@
 		input:-webkit-autofill:hover,
 		input:-webkit-autofill:focus,
 		input:-webkit-autofill:active  {
+			~ .form-login-label {
+				position: absolute;
+				top: 0;
+				display: block;
+				transition: 0.2s;
+				font-size: 0.9rem;
+				color: rgb(190, 32, 180);
+				font-weight:700;
+			}
+			//padding-bottom: 6px;  
+			font-weight: 700;
+			border-width: 1px;
+			border-image: linear-gradient(to right, rgb(211, 59, 203), rgb(255, 126, 249));
+			border-image-slice: 1;
+
     		box-shadow: 0 0 0 30px rgb(255, 242, 254) inset !important;
 			-webkit-text-fill-color: rgb(211, 59, 203) !important;
 			-webkit-text-size-adjust: 0.7rem !important;
-
 		}
-		/*
-		input {
-			background-color: transparent;
-			border: 3px solid grey;
-			border-radius: 3px;
-		  }
-		  
-		input:-webkit-autofill {
-			background-color: rgb(255, 242, 254);
-			color: rgb(187, 94, 182);
-			font-size: 0.7em;
-			//border: 3px solid blue;
-		}
-		input:autofill {
-			background-color: rgb(255, 242, 254);
-			font-size: 0.7em;
-			color: rgb(187, 94, 182);
-			//border: 3px solid blue;
-		}
-		*/
 	}
 
 

@@ -30,10 +30,10 @@ export default function SignIn(){
 		return (
 			//<div className="base-container" ref={this.props.containerRef}>
 			<div className="base-container" >
-				<div className="header">SIGN IN TO DK-GUESTBOOK</div>
+				<div className="header">SIGN IN</div>
 				<div className="content">
 				<div className="image"> 
-					<img src={loginImg}/> 
+					{/* <img src={loginImg}/>  */}
 				</div>
 					<div className="form-login">
 						<div className="form-login-group field">

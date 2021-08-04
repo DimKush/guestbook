@@ -1,5 +1,6 @@
 import React from "react";
 import loginImg from "../../assets/sign-up.svg"
+import Modal from "../modal/modal";
 import "./style.scss"
 
 export default function SignUp(){
@@ -7,11 +8,28 @@ export default function SignUp(){
 	let usernameInput = React.createRef();
 	let emailInput 	  = React.createRef();
 	let passwordInput = React.createRef();
+	
+	//let inputError = "";
+
+	const[modalActive, setModalActive] = React.useState(false);
+	const[errorMsg, setErrorMsg] = React.useState("");
+	const[errorHead, setErrorHead] = React.useState("");
+	const[inputError, setErrorInput] = React.useState("");
 
 	const handleClick = function(){
 		const registrationDateStr = new Date(Date.now()).toISOString();
 		console.log(registrationDateStr);
-
+		
+		if(!usernameInput.current.value) {
+			setErrorInput("Username is required");
+			return;
+		} else if(!emailInput.current.value) {
+			setErrorInput("Email is required");
+			return;
+		} else if(!passwordInput.current.value){
+			setErrorInput("Password is required");
+			return;
+		}
 		const signUpObj = {
 			'name' : fullnameInput.current.value,
 			'username' : usernameInput.current.value,
@@ -28,19 +46,25 @@ export default function SignUp(){
 			headers : {
 				'Content-Type' : 'application/json'
 			}
+		}).then(responce => responce.json()).then(data => {
+			if (data.status === "Error"){
+				setErrorMsg(data.message);
+				setErrorHead("Error")
+				setModalActive(true);
+
+			} 
 		});
 	}
-
-	
 
 	return (
 		//<div className="base-container" ref={this.props.containerRef}>
 		<div className="base-container">
-			<div className="header">SIGN UP TO DK-GUESTBOOK</div>
+			<div className="header">SIGN UP</div>
 			<div className="content">
 			<div className="image"> 
-				<img src={loginImg}/> 
+				{/* <img src={loginImg}/>  */}
 			</div>
+				<div className={!inputError ? "error" : "error active"}>{inputError}</div>
 				<div className="form-login">
 					<div className="form-login-group field">
 						<input type="input" class="form-login-field" name="fullname" placeholder="Full name" ref={fullnameInput} />
@@ -48,15 +72,15 @@ export default function SignUp(){
 					</div>
 					<div className="form-login-group field">
 						<input type="input" class="form-login-field" name="username" placeholder="username" ref={usernameInput} required/>
-						<label for="name" class="form-login-label">Username</label>
+						<label for="name" class="form-login-label">Username*</label>
 					</div>
 					<div className="form-login-group field">
 						<input type="input" class="form-login-field" name="email" placeholder="email" ref={emailInput}  required/>
-						<label for="password" class="form-login-label">Email</label>
+						<label for="password" class="form-login-label">Email*</label>
 					</div>
 					<div className="form-login-group field">
 						<input type="password" class="form-login-field" name="password" placeholder="password" ref={passwordInput} required/>
-						<label for="password" class="form-login-label">Password</label>
+						<label for="password" class="form-login-label">Password*</label>
 					</div>
 				</div>
 				<div className="footer">
@@ -65,6 +89,7 @@ export default function SignUp(){
 					</button>
 				</div>
 			</div>
+			<Modal active={modalActive} setActive={setModalActive} head={errorHead} msg={errorMsg}/>
 		</div>
 	);
 }
