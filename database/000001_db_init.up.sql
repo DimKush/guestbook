@@ -41,3 +41,10 @@ CREATE TABLE audit_events (
   is_panic bool NULL,
   description text NULL
 );
+
+CREATE TABLE email_events (
+	event_id serial not null unique,
+	sender varchar(255) not null,
+	receiver varchar(255) not null,
+	email_body text not null
+);

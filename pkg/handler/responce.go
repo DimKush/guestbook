@@ -8,8 +8,8 @@ import (
 )
 
 type ErrorResponce struct {
-	Status  string `json:"status"`
-	Message string `json:"message"`
+	Status  string `json:"Status"`
+	Message string `json:"Message"`
 }
 
 func initErrorResponce(c *gin.Context, statusCode int, errMessage string) {

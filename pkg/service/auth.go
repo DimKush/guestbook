@@ -19,8 +19,6 @@ const (
 	salt       = "ssgsdgdfggegrgwgwefwefwefwefdf4r231"
 	signingKey = "dzgjhhmnghty4T356cczxXzxcvxzbvvxcbgnfgnergeGWER"
 	tokenTTL   = 12 * time.Hour
-	//regexpUsername = ""
-	//regexpEmail =	 "^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$"
 )
 
 type tokenClaims struct {
@@ -36,7 +34,6 @@ func InitAuthService(repos repository.Authorization) *AuthService {
 }
 
 func (data *AuthService) checkFilledUser(user *User.User) error {
-	fmt.Println("HERE!")
 	var wg sync.WaitGroup
 	regexpChan := make(chan error, 2)
 
@@ -66,8 +63,6 @@ func (data *AuthService) checkFilledUser(user *User.User) error {
 			res += "\n"
 		}
 	}
-
-	fmt.Println(res)
 
 	if res != "" {
 		return fmt.Errorf(res)
