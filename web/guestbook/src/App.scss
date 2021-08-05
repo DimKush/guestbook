@@ -92,10 +92,11 @@
       }
     }
     &.left {
+      height: 65%;
       right: 40%;
       align-items: flex-start;
       &:hover {
-        right: 45%;
+        right: 46%;
       }
     }
 
@@ -115,13 +116,13 @@
   padding: 10px 20px;
   width: 70%;
   border: 0;
-  background-color:  #692145;
+  background-color:  #6e1e69;
   color: #fff;
   border-radius: 4px;
   transition: all 250ms ease-in-out;
   cursor: pointer;
   &:hover {
-    background-color: #b64531;
+    background-color: #682046;
   }
   &:focus {
     outline: none;

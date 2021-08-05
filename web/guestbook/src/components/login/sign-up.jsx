@@ -1,6 +1,7 @@
 import React from "react";
 import loginImg from "../../assets/sign-up.svg"
 import Modal from "../modal/modal";
+import ServerStatus from "../server/status.jsx"
 import "./style.scss"
 
 export default function SignUp(){
@@ -13,8 +14,17 @@ export default function SignUp(){
 
 	const[modalActive, setModalActive] = React.useState(false);
 	const[errorMsg, setErrorMsg] = React.useState("");
-	const[errorHead, setErrorHead] = React.useState("");
 	const[inputError, setErrorInput] = React.useState("");
+	const[modalMsgHead, setModalMsgHead] = React.useState("");
+	const[modalMsg, setModalMsg] = React.useState("");
+	const[isError, setIsError] = React.useState(false);
+
+	const handleClickServerAlive = function(){
+		ServerStatus(setModalMsg, setIsError);
+		console.log("Is error", isError)
+		setModalActive(true);
+		setModalMsgHead("Server status");
+	}
 
 	const handleClick = function(){
 		const registrationDateStr = new Date(Date.now()).toISOString();
@@ -37,8 +47,6 @@ export default function SignUp(){
 			'password': passwordInput.current.value,
 			'registration_date' : registrationDateStr,
 		};
-		
-		console.log(signUpObj);
 
 		fetch("http://localhost:8007/auth/sign-up", {
 			method: 'POST',
@@ -49,7 +57,7 @@ export default function SignUp(){
 		}).then(responce => responce.json()).then(data => {
 			if (data.status === "Error"){
 				setErrorMsg(data.message);
-				setErrorHead("Error")
+				setModalMsgHead("Error");
 				setModalActive(true);
 
 			} 
@@ -59,6 +67,9 @@ export default function SignUp(){
 	return (
 		//<div className="base-container" ref={this.props.containerRef}>
 		<div className="base-container">
+			<div className="top-system-right-btn">
+					<button onClick={handleClickServerAlive}>Server status</button>
+			</div>
 			<div className="header">SIGN UP</div>
 			<div className="content">
 			<div className="image"> 
@@ -89,7 +100,7 @@ export default function SignUp(){
 					</button>
 				</div>
 			</div>
-			<Modal active={modalActive} setActive={setModalActive} head={errorHead} msg={errorMsg}/>
+			<Modal active={modalActive} setActive={setModalActive} head={modalMsgHead} msg={modalMsg} isError={isError}/>
 		</div>
 	);
 }
