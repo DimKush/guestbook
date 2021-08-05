@@ -70,7 +70,7 @@
 			position: relative;
 			padding: 15px 0 0;
 			//margin-bottom: 15px;
-			width: 80%;
+			width: 90%;
 		  }
 
 		.form-login-field{
@@ -82,10 +82,10 @@
 			transition: border-color 0.2s;
 			color: rgb(187, 94, 182);
 			outline: 0;
-			font-size: 1rem;
+			//font-size: 1rem;
 			border-width: 1px;
 			border-image-slice: 1;
-			padding: 10px 0;
+			padding: 15px 0;
 
 
 			&::placeholder{
@@ -94,7 +94,7 @@
 			&:placeholder-shown ~ .form-login-label {
 				font-size: 1.3rem;
 				cursor: text;
-				top: 18px;
+				top: 10px;
 				
 			}
 		}
@@ -103,7 +103,7 @@
 			top: 0;
 			display: block;
 			transition: 0.2s;
-			font-size: 1rem;
+			font-size: 1.3rem;
 			color: rgb(177, 70, 170);
 		}
 
@@ -118,7 +118,7 @@
 				font-weight:700;
 			}
 			//padding-bottom: 6px;  
-			font-weight: 700;
+
 			border-width: 1px;
 			border-image: linear-gradient(to right, rgb(211, 59, 203), rgb(255, 126, 249));
 			border-image-slice: 1;
@@ -136,9 +136,8 @@
 				font-size: 0.9rem;
 				color: rgb(190, 32, 180);
 				font-weight:700;
+				font-size: 1rem;
 			}
-			//padding-bottom: 6px;  
-			font-weight: 700;
 			border-width: 1px;
 			border-image: linear-gradient(to right, rgb(211, 59, 203), rgb(255, 126, 249));
 			border-image-slice: 1;
