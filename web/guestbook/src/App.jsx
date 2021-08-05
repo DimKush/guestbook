@@ -17,7 +17,7 @@ function RightSightComponent({loggingActive, currentState, containerRef, onClick
   );
 }
 
-function App() {
+export default function App() {
   let current = React.createRef();
   const[isLoggingActive, setLoggingActive] = React.useState(true);
   const[currentState, setCurrentState] = React.useState(!isLoggingActive ? "Sign in" : "Sign up");
@@ -91,4 +91,3 @@ class App extends React.Component{
 }
 
 */
-export default App;

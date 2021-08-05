@@ -1,11 +1,17 @@
 import React from "react";
 import loginImg from "../../assets/sign-in.svg"
 import "./style.scss"
+import ServerStatus from "../server/status.jsx"
+import Modal from "../modal/modal";
 
 export default function SignIn(){
 	let usernameInput = React.createRef()
 	let passwordInput = React.createRef() 
 
+	const[modalActive, setModalActive] = React.useState(false);
+	const[modalMsgHead, setModalMsgHead] = React.useState("");
+	const[modalMsg, setModalMsg] = React.useState("");
+	const[isError, setIsError] = React.useState(false);
 	const handleClick = function(){
 		var data = new FormData()
 
@@ -21,15 +27,20 @@ export default function SignIn(){
 				'Content-Type' : 'application/json'
 			}
 		});
-
-		//const content = responce.json();
-
-		//console.log(content);
 	} 
 
+	const handleClickServerAlive = function(){
+		const serverStatusMessage =  ServerStatus(setModalMsg, setIsError);
+		console.log("serverStatusMessage", serverStatusMessage);
+		setModalActive(true);
+		setModalMsgHead("Server status");
+	}
 		return (
 			//<div className="base-container" ref={this.props.containerRef}>
 			<div className="base-container" >
+				<div className="top-system-right-btn">
+					<button onClick={handleClickServerAlive}>Server status</button>
+				</div>
 				<div className="header">SIGN IN</div>
 				<div className="content">
 				<div className="image"> 
@@ -49,6 +60,8 @@ export default function SignIn(){
 						<button type="button" className="btn" onClick={handleClick} >SIGN IN</button>
 					</div>
 				</div>
+				<Modal active={modalActive} setActive={setModalActive} head={modalMsgHead} msg={modalMsg} isError={isError}/>
 			</div>
+
 		);
 }

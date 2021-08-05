@@ -11,6 +11,34 @@
 		padding: 10px;
 		margin-bottom: 0.5em;
 	}
+	.top-system-right-btn{
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		//align-items: ;
+		
+		button{
+			
+			background: transparent;
+			border: 0.1px solid;
+			border-color: rgb(211, 59, 203);
+			color: rgb(211, 59, 203);
+			font-family: "Roboto", sans-serif;
+			cursor: pointer;
+			padding: 8px;
+			transition: all 200ms ease-in-out;
+			border-radius: 2px;
+		}
+		button:hover{
+			background-color: #6e1e69;
+			border-color: rgb(49, 20, 47);
+			color: rgb(230, 169, 217);
+			border: 0.3px solid;
+			font-weight: 1000;
+
+		}
+	}
 
 	.content{
 		display: flex;
@@ -54,7 +82,7 @@
 			transition: border-color 0.2s;
 			color: rgb(187, 94, 182);
 			outline: 0;
-			font-size: 1.1rem;
+			font-size: 1rem;
 			border-width: 1px;
 			border-image-slice: 1;
 			padding: 10px 0;
@@ -66,7 +94,7 @@
 			&:placeholder-shown ~ .form-login-label {
 				font-size: 1.3rem;
 				cursor: text;
-				top: 20px;
+				top: 18px;
 				
 			}
 		}
