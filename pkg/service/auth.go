@@ -4,6 +4,9 @@ import (
 	"crypto/sha1"
 	"errors"
 	"fmt"
+	"net/mail"
+	"regexp"
+	"sync"
 	"time"
 
 	"github.com/DimKush/guestbook/tree/main/internal/entities/User"
@@ -16,6 +19,8 @@ const (
 	salt       = "ssgsdgdfggegrgwgwefwefwefwefdf4r231"
 	signingKey = "dzgjhhmnghty4T356cczxXzxcvxzbvvxcbgnfgnergeGWER"
 	tokenTTL   = 12 * time.Hour
+	//regexpUsername = ""
+	//regexpEmail =	 "^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$"
 )
 
 type tokenClaims struct {
@@ -30,7 +35,52 @@ func InitAuthService(repos repository.Authorization) *AuthService {
 	return &AuthService{auth: repos}
 }
 
+func (data *AuthService) checkFilledUser(user *User.User) error {
+	fmt.Println("HERE!")
+	var wg sync.WaitGroup
+	regexpChan := make(chan error, 2)
+
+	wg.Add(2)
+	go func(email string) {
+		defer wg.Done()
+		if _, err := mail.ParseAddress(email); err != nil {
+			regexpChan <- fmt.Errorf("Email %s is invalid.", email)
+		}
+	}(user.Email)
+
+	go func(username string) {
+		defer wg.Done()
+		usernameRegexp := regexp.MustCompile(`^[a-zA-Z0-9_]{5,}[a-zA-Z]+[0-9]*$`)
+		if !usernameRegexp.MatchString(username) {
+			regexpChan <- fmt.Errorf("Username %s is invalid.", username)
+		}
+	}(user.Username)
+
+	wg.Wait()
+	close(regexpChan)
+
+	var res string
+	for errVal := range regexpChan {
+		if errVal != nil {
+			res += errVal.Error()
+			res += "\n"
+		}
+	}
+
+	fmt.Println(res)
+
+	if res != "" {
+		return fmt.Errorf(res)
+	} else {
+		return nil
+	}
+}
+
 func (data *AuthService) CreateUser(user User.User) (int, error) {
+	if err := data.checkFilledUser(&user); err != nil {
+		return 0, err
+	}
+
 	user.Password = data.generatePassHash(user.Password)
 
 	Audit.WriteEventParams("AuthService",
