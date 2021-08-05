@@ -146,6 +146,13 @@
 			-webkit-text-fill-color: rgb(211, 59, 203) !important;
 			-webkit-text-size-adjust: 0.7rem !important;
 		}
+		.error.active{
+			font-family: "Roboto", sans-serif;
+			text-align: left;
+			//margin-bottom: 10px;
+			color: red;
+			font-weight: bold;
+		}
 	}
 
 

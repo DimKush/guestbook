@@ -33,13 +33,18 @@ export default function SignUp(){
 		if(!usernameInput.current.value) {
 			setErrorInput("Username is required");
 			return;
-		} else if(!emailInput.current.value) {
+		} 
+
+		if(!emailInput.current.value) {
 			setErrorInput("Email is required");
 			return;
-		} else if(!passwordInput.current.value){
+		}
+
+		if(!passwordInput.current.value){
 			setErrorInput("Password is required");
 			return;
 		}
+		
 		const signUpObj = {
 			'name' : fullnameInput.current.value,
 			'username' : usernameInput.current.value,
@@ -55,17 +60,19 @@ export default function SignUp(){
 				'Content-Type' : 'application/json'
 			}
 		}).then(responce => responce.json()).then(data => {
-			if (data.status === "Error"){
-				setErrorMsg(data.message);
-				setModalMsgHead("Error");
-				setModalActive(true);
-
+			if (data.Status === "Error"){
+				setErrorInput(data.Message);
 			} 
+		}).catch(error => {
+			console.log("ERROR");
+			setModalMsg(error);
+			setModalMsgHead("Error");
+			setIsError(true);
+			setModalActive(true);
 		});
 	}
 
 	return (
-		//<div className="base-container" ref={this.props.containerRef}>
 		<div className="base-container">
 			<div className="top-system-right-btn">
 					<button onClick={handleClickServerAlive}>Server status</button>
@@ -73,7 +80,6 @@ export default function SignUp(){
 			<div className="header">SIGN UP</div>
 			<div className="content">
 			<div className="image"> 
-				{/* <img src={loginImg}/>  */}
 			</div>
 				<div className={!inputError ? "error" : "error active"}>{inputError}</div>
 				<div className="form-login">

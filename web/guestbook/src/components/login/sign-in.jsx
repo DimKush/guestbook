@@ -9,9 +9,11 @@ export default function SignIn(){
 	let passwordInput = React.createRef() 
 
 	const[modalActive, setModalActive] = React.useState(false);
+	const[inputError, setErrorInput] = React.useState("");
 	const[modalMsgHead, setModalMsgHead] = React.useState("");
 	const[modalMsg, setModalMsg] = React.useState("");
 	const[isError, setIsError] = React.useState(false);
+	
 	const handleClick = function(){
 		var data = new FormData()
 
@@ -26,6 +28,16 @@ export default function SignIn(){
 			headers : {
 				'Content-Type' : 'application/json'
 			}
+		}).then(responce => responce.json()).then(data => {
+			if (data.Status === "Error") {
+				setErrorInput(data.Message);
+			}
+		}).catch(error => {
+			console.log("ERROR");
+			setModalMsg("Server is dead.");
+			setModalMsgHead("Error");
+			setIsError(true);
+			setModalActive(true);
 		});
 	} 
 
@@ -36,7 +48,6 @@ export default function SignIn(){
 		setModalMsgHead("Server status");
 	}
 		return (
-			//<div className="base-container" ref={this.props.containerRef}>
 			<div className="base-container" >
 				<div className="top-system-right-btn">
 					<button onClick={handleClickServerAlive}>Server status</button>
@@ -44,8 +55,8 @@ export default function SignIn(){
 				<div className="header">SIGN IN</div>
 				<div className="content">
 				<div className="image"> 
-					{/* <img src={loginImg}/>  */}
 				</div>
+					<div className={!inputError ? "error" : "error active"}>{inputError}</div>
 					<div className="form-login">
 						<div className="form-login-group field">
 							<input type="input" class="form-login-field" name="username" placeholder="Username" ref={usernameInput} required/>
