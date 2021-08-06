@@ -3,8 +3,12 @@ import loginImg from "../../assets/sign-in.svg"
 import "./style.scss"
 import ServerStatus from "../server/status.jsx"
 import Modal from "../modal/modal";
+import { cookies } from "../../App";
 
-export default function SignIn(){
+
+
+
+export default function SignIn({setAuthStatus}){
 	let usernameInput = React.createRef()
 	let passwordInput = React.createRef() 
 
@@ -31,6 +35,10 @@ export default function SignIn(){
 		}).then(responce => responce.json()).then(data => {
 			if (data.Status === "Error") {
 				setErrorInput(data.Message);
+				setAuthStatus(false);
+			} else if(data.Status === "OK"){
+				cookies.set("token", data.token);
+				setAuthStatus(true);
 			}
 		}).catch(error => {
 			console.log("ERROR");
