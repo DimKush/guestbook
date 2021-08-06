@@ -54,6 +54,5 @@ func (data *AuthPostgres) GetUser(username, password string) (User.User, error) 
 		return User.User{}, fmt.Errorf("SQL : No rows in result set with username : %s", username)
 	}
 
-	fmt.Println(user)
 	return user, nil
 }

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"net/smtp"
 	"os"
 
@@ -12,14 +13,13 @@ type EmailServiceAuth struct {
 	event_db repository.EmailService
 }
 
-func (data *EmailServiceAuth) InitEmailEvent(email_event EmailEventDb.EmailEventDb) error {
-	from := os.Getenv("")
-	password := os.Getenv("")
+func (data *EmailServiceAuth) InitEmailEvent(email_event *EmailEventDb.EmailEventDb) error {
+	fmt.Println("HERE!")
+	fmt.Println(email_event)
 
-	to := []string{
-		"demonmadman228@gmail.com",
-		"sillyuglyseal@gmail.com",
-	}
+	email_event.Sender = os.Getenv("EMAIL_SENDER")
+	email_event.SenderPass = os.Getenv("EMAIL_PASSWORD")
+
 	// smtp server config
 	smtpHost := "smtp.gmail.com"
 	smtpPort := "587"
@@ -27,9 +27,9 @@ func (data *EmailServiceAuth) InitEmailEvent(email_event EmailEventDb.EmailEvent
 	// Message
 	message := []byte("Hello there")
 
-	auth := smtp.PlainAuth("", from, password, smtpHost)
+	auth := smtp.PlainAuth("", email_event.Sender, email_event.SenderPass, smtpHost)
 
-	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, message)
+	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, email_event.Sender, []string{email_event.Receiver}, message)
 	return err
 }
 

@@ -31,7 +31,6 @@ type Service struct {
 
 func ServiceInit(repos *repository.Repository) *Service {
 	return &Service{
-		Authorization: InitAuthService(repos.Authorization),
-		EmailService:  InitEmailService(repos.EmailService),
+		Authorization: InitAuthService(repos.Authorization, repos.EmailService),
 	}
 }
