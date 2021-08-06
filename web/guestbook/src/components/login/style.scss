@@ -80,13 +80,13 @@
 			border-color:  rgb(211, 59, 203);
 			background: transparent;
 			transition: border-color 0.2s;
-			color: rgb(187, 94, 182);
+			color: rgb(190, 32, 180);
 			outline: 0;
 			//font-size: 1rem;
 			border-width: 1px;
 			border-image-slice: 1;
 			padding: 15px 0;
-
+			padding-bottom: 3px;
 
 			&::placeholder{
 				color: transparent;
@@ -104,7 +104,7 @@
 			display: block;
 			transition: 0.2s;
 			font-size: 1.3rem;
-			color: rgb(177, 70, 170);
+			color: rgb(190, 32, 180);
 		}
 
 		.form-login-field:focus{
@@ -128,16 +128,6 @@
 		input:-webkit-autofill:hover,
 		input:-webkit-autofill:focus,
 		input:-webkit-autofill:active  {
-			~ .form-login-label {
-				position: absolute;
-				top: 0;
-				display: block;
-				transition: 0.2s;
-				font-size: 0.9rem;
-				color: rgb(190, 32, 180);
-				font-weight:700;
-				font-size: 1rem;
-			}
 			border-width: 1px;
 			border-image: linear-gradient(to right, rgb(211, 59, 203), rgb(255, 126, 249));
 			border-image-slice: 1;
