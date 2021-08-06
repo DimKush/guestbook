@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/DimKush/guestbook/tree/main/internal/entities/EmailEventDb"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/User"
 	"github.com/DimKush/guestbook/tree/main/pkg/repository"
 	"github.com/golang-jwt/jwt"
@@ -26,11 +27,12 @@ type tokenClaims struct {
 	UserId int `json:"user_id"`
 }
 type AuthService struct {
-	auth repository.Authorization
+	auth         repository.Authorization
+	email_sender EmailServiceAuth
 }
 
-func InitAuthService(repos repository.Authorization) *AuthService {
-	return &AuthService{auth: repos}
+func InitAuthService(repos repository.Authorization, repos_email repository.EmailService) *AuthService {
+	return &AuthService{auth: repos, email_sender: *InitEmailService(repos_email)}
 }
 
 func (data *AuthService) checkFilledUser(user *User.User) error {
@@ -91,13 +93,13 @@ func (data *AuthService) CreateUser(user User.User) (int, error) {
 	}
 
 	// Send Email
-	// email_event := EmailEventDb.EmailEventDb{
-	// 	Receiver: user.Email,
-	// }
+	email_event := EmailEventDb.EmailEventDb{
+		Receiver: user.Email,
+	}
 
-	// //email_event := EmailService.InitEmailEvent(email_event)
+	data.email_sender.InitEmailEvent(&email_event)
 
-	email_sender := EmailServiceAuth
+	//email_sender := InitEmailService()
 
 	return id, nil
 }
@@ -115,8 +117,6 @@ func (data *AuthService) GenerateToken(username, password string) (string, error
 		log.Error().Msg(err.Error())
 		return "", err
 	}
-
-	fmt.Println(user)
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
 		jwt.StandardClaims{
