@@ -5,11 +5,16 @@ import (
 	"gorm.io/gorm"
 )
 
-type EmailEvent struct {
+type EmailEventRep struct {
 	db *gorm.DB
 }
 
-func (data *EmailEvent) CreateEmailEvent(email_event EmailEventDb.EmailEventDb) error {
-
+func (data *EmailEventRep) InitEmailEvent(email_event EmailEventDb.EmailEventDb) error {
 	return nil
+}
+
+func InitEmailEventRep(database *gorm.DB) *EmailEventRep {
+	return &EmailEventRep{
+		db: database,
+	}
 }

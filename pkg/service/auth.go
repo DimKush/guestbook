@@ -85,8 +85,21 @@ func (data *AuthService) CreateUser(user User.User) (int, error) {
 		false,
 		"Try to create user",
 	)
+	id, err := data.auth.CreateUser(user)
+	if err != nil {
+		return 0, err
+	}
 
-	return data.auth.CreateUser(user)
+	// Send Email
+	// email_event := EmailEventDb.EmailEventDb{
+	// 	Receiver: user.Email,
+	// }
+
+	// //email_event := EmailService.InitEmailEvent(email_event)
+
+	email_sender := EmailServiceAuth
+
+	return id, nil
 }
 
 func (data *AuthService) generatePassHash(password string) string {
