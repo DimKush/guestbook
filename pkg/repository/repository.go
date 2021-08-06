@@ -18,8 +18,8 @@ type Event interface {
 type EventList interface {
 }
 
-type EmailEvent interface {
-	CreateEmailEvent(email_event EmailEventDb.EmailEventDb) error
+type EmailService interface {
+	InitEmailEvent(email_event EmailEventDb.EmailEventDb) error
 }
 
 type AuditInt interface {
@@ -31,13 +31,13 @@ type Repository struct {
 	Event
 	EventList
 	AuditInt
-	EmailEvent
+	EmailService
 }
 
 func RepositoryInit(db *gorm.DB) *Repository {
 	return &Repository{
 		Authorization: InitAuthPostgres(db),
 		AuditInt:      InitAuditRep(db),
-		EmailEvent:    InitEmailEvent(db),
+		EmailService:  InitEmailEventRep(db),
 	}
 }
