@@ -25,7 +25,6 @@ func (h *Handler) signUp(context *gin.Context) {
 	initOkResponce(context, map[string]interface{}{
 		"id": id,
 	})
-
 }
 
 func (h *Handler) signIn(context *gin.Context) {
