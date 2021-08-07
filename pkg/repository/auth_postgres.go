@@ -47,7 +47,7 @@ func (data *AuthPostgres) CreateUser(user User.User) (int, error) {
 
 func (data *AuthPostgres) GetUser(username, password string) (User.User, error) {
 	var user User.User
-	if err := data.db.Table(users).Where("username=? password=?", username, password).Scan(&user).Error; err != nil {
+	if err := data.db.Table(users).Where("username=?", username).Scan(&user).Error; err != nil {
 		return User.User{}, fmt.Errorf("SQL : Cannot select from table %s: Reason : %s", users, err.Error())
 	}
 	if user.Username == "" {

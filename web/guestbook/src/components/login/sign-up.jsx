@@ -65,7 +65,7 @@ export default function SignUp(){
 			} 
 		}).catch(error => {
 			console.log("ERROR");
-			setModalMsg(error);
+			setModalMsg(error.toString()); 
 			setModalMsgHead("Error");
 			setIsError(true);
 			setModalActive(true);

@@ -79,7 +79,7 @@ func (data *AuthService) CreateUser(user User.User) (int, error) {
 		return 0, err
 	}
 
-	generated_pass, err := bcrypt.GenerateFromPassword([]byte(user.Password), 20)
+	generated_pass, err := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
 	if err != nil {
 		return 0, err
 	}
@@ -158,11 +158,14 @@ func (data *AuthService) ParseToken(accessToken string) (int, error) {
 
 func (data *AuthService) CheckUserExitsts(userIn UserIn.UserIn) error {
 	user_db, err := data.auth.GetUserByUsername(userIn.Username)
+
 	if err != nil {
 		return err
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(user_db.Password), []byte(userIn.Password)); err != nil {
+	err = bcrypt.CompareHashAndPassword([]byte(user_db.Password), []byte(userIn.Password))
+	if err != nil {
+		log.Error().Msg(err.Error())
 		return fmt.Errorf("Incorrect username's password.")
 	}
 
