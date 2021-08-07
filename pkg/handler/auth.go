@@ -37,6 +37,13 @@ func (h *Handler) signIn(context *gin.Context) {
 		return
 	}
 
+	// go to the database to check if user exitsts
+	if err := h.services.Authorization.CheckUserExitsts(userIn); err != nil {
+		log.Error().Msg(err.Error())
+		initErrorResponce(context, http.StatusBadRequest, err.Error())
+		return
+	}
+
 	token, err := h.services.Authorization.GenerateToken(userIn.Username, userIn.Password)
 	if err != nil {
 		log.Error().Msg(err.Error())

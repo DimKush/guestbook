@@ -50,11 +50,11 @@ export default function App() {
 
           <main className="form-signin">
               <Route exact path= "/">
-                {isAuth ? <Redirect to = "/home" /> : <LoginComponent/>}
+                {isAuth ? <Redirect to = "/home"/> : <LoginComponent/>}
               </Route>
               <Route exact path="/login" component={() => <LoginComponent/> }/>
-              <Route exact path="/home"> 
-                {isAuth ? <Redirect to = "/home" /> : <Redirect to = "/login" />}
+              <Route exact path="/home" component={() => <Home/>}> 
+                {isAuth ? <Redirect to = "/home"/> : <Redirect to = "/login"/>}
               </Route>
           </main>
       </BrowserRouter>

@@ -9,11 +9,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/DimKush/guestbook/tree/main/internal/entities/EmailEventDb"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/User"
+	"github.com/DimKush/guestbook/tree/main/internal/entities/UserIn"
 	"github.com/DimKush/guestbook/tree/main/pkg/repository"
 	"github.com/golang-jwt/jwt"
 	"github.com/rs/zerolog/log"
+	"golang.org/x/crypto/bcrypt"
 )
 
 const (
@@ -78,7 +79,12 @@ func (data *AuthService) CreateUser(user User.User) (int, error) {
 		return 0, err
 	}
 
-	user.Password = data.generatePassHash(user.Password)
+	generated_pass, err := bcrypt.GenerateFromPassword([]byte(user.Password), 20)
+	if err != nil {
+		return 0, err
+	}
+
+	user.Password = string(generated_pass)
 
 	Audit.WriteEventParams("AuthService",
 		"CreateUser",
@@ -93,13 +99,13 @@ func (data *AuthService) CreateUser(user User.User) (int, error) {
 	}
 
 	// Send Email
-	email_event := EmailEventDb.EmailEventDb{
-		Receiver: user.Email,
-	}
+	// email_event := EmailEventDb.EmailEventDb{
+	// 	Receiver: user.Email,
+	// }
 
-	data.email_sender.InitEmailEvent(&email_event)
+	// data.email_sender.InitEmailEvent(&email_event)
 
-	//email_sender := InitEmailService()
+	// email_sender := InitEmailService()
 
 	return id, nil
 }
@@ -148,4 +154,17 @@ func (data *AuthService) ParseToken(accessToken string) (int, error) {
 	}
 
 	return claims.UserId, nil
+}
+
+func (data *AuthService) CheckUserExitsts(userIn UserIn.UserIn) error {
+	user_db, err := data.auth.GetUserByUsername(userIn.Username)
+	if err != nil {
+		return err
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user_db.Password), []byte(userIn.Password)); err != nil {
+		return fmt.Errorf("Incorrect username's password.")
+	}
+
+	return nil
 }
