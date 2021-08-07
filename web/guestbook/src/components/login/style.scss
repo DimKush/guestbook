@@ -86,7 +86,7 @@
 			border-width: 1px;
 			border-image-slice: 1;
 			padding: 15px 0;
-			padding-bottom: 5px;
+			padding-bottom: 7px;
 
 			&::placeholder{
 				color: transparent;
@@ -134,7 +134,7 @@
 
     		box-shadow: 0 0 0 30px rgb(255, 242, 254) inset !important;
 			-webkit-text-fill-color: rgb(211, 59, 203) !important;
-			-webkit-text-size-adjust: 0.7rem !important;
+			-webkit-text-size-adjust: 0.8rem !important;
 		}
 		.error.active{
 			font-family: "Roboto", sans-serif;
