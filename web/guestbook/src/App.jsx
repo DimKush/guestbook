@@ -1,3 +1,4 @@
+import {useEffect} from 'react';
 import React from 'react';
 import './App.scss';
 import {BrowserRouter, Route, Redirect} from "react-router-dom";
@@ -30,8 +31,13 @@ export default function App() {
     setLoggingActive(!isLoggingActive);
     setCurrentState(isLoggingActive ? "Sign in" : "Sign up");
   }
-
+  
   const LoginComponent = () => {
+    useEffect(() => {
+      setAuthStatus(false);
+      cookies.remove("token");
+    })
+
     return(
     <div className="login">
         <div className="container">
