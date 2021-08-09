@@ -54,13 +54,15 @@ export default function App() {
   
   const LoginComponent = () => {
     return(
-    <div className="login">
-        <div className="container">
-          {isLoggingActive && <SignIn containerRef={(ref) => current = ref} isAuth={isAuth} setAuthStatus={setAuthStatus} />}
-          {!isLoggingActive && <SignUp containerRef={(ref) => current = ref} />}
-        </div>
-        <RightSightComponent loggingActive={isLoggingActive} currentState={currentState} containerRef={ref => current = ref} onClick={changeState}/>
-    </div>
+    <main className="form-signin">
+      <div className="login">
+          <div className="container">
+            {isLoggingActive && <SignIn containerRef={(ref) => current = ref} isAuth={isAuth} setAuthStatus={setAuthStatus} />}
+            {!isLoggingActive && <SignUp containerRef={(ref) => current = ref} />}
+          </div>
+          <RightSightComponent loggingActive={isLoggingActive} currentState={currentState} containerRef={ref => current = ref} onClick={changeState}/>
+      </div>
+    </main>
     );
   }
 
@@ -68,10 +70,9 @@ export default function App() {
     <div className="App">
        <BrowserRouter>
           {/* <Nav name={name} setName={setName}/> */}
-          <main className="form-signin">
+          
             <Route path="/" exact component={() => <Home isAuth={isAuth}/>}/>
             <Route path="/login" component={() => <LoginComponent/>}/>
-          </main>
       </BrowserRouter>
     </div>
   );
