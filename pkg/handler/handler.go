@@ -16,6 +16,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	// CORS configuration
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{"http://localhost:3000"}
+	config.AllowCredentials = true
+
 	router.Use(cors.New(config))
 
 	status := router.GET("", h.status)
@@ -25,6 +27,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	{
 		auth.POST("/sign-up", h.signUp)
 		auth.POST("/sign-in", h.signIn)
+		auth.GET("/user", h.userIdentityToken)
 	}
 
 	api := router.Group("/api", h.userIdentity)

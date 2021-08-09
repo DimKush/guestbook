@@ -2,12 +2,23 @@ package handler
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/DimKush/guestbook/tree/main/internal/entities/User"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/UserIn"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
 )
+
+type jwtCookie struct {
+	name     string
+	value    string
+	maxAge   int
+	path     string
+	domain   string
+	secure   bool
+	httpOnly bool
+}
 
 func (h *Handler) signUp(context *gin.Context) {
 	var user User.User
@@ -37,7 +48,7 @@ func (h *Handler) signIn(context *gin.Context) {
 	}
 
 	// go to the database to check if user exitsts
-	if err := h.services.Authorization.CheckUserExitsts(userIn); err != nil {
+	if err := h.services.Authorization.CheckUserExitstsWithPass(userIn); err != nil {
 		log.Error().Msg(err.Error())
 		initErrorResponce(context, http.StatusBadRequest, err.Error())
 		return
@@ -50,7 +61,19 @@ func (h *Handler) signIn(context *gin.Context) {
 		return
 	}
 
+	cookie := &jwtCookie{
+		name:     "jwt",
+		value:    token,
+		maxAge:   int(time.Now().Add(12 * time.Hour).Unix()),
+		path:     "/",
+		domain:   "localhost",
+		secure:   false,
+		httpOnly: true,
+	}
+
+	context.SetCookie(cookie.name, cookie.value, cookie.maxAge, cookie.path, cookie.domain, cookie.secure, cookie.httpOnly)
+
 	initOkResponce(context, map[string]interface{}{
-		"token": token,
+		"Status": "OK",
 	})
 }
