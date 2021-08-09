@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/DimKush/guestbook/tree/main/internal/entities/UserIn"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
 )
@@ -36,4 +37,27 @@ func (h *Handler) userIdentity(context *gin.Context) {
 	}
 
 	context.Set(userCTX, userId)
+}
+
+func (h *Handler) userIdentityToken(context *gin.Context) {
+	cookie_token, err := context.Cookie("jwt")
+	if err != nil {
+		log.Error().Msg(err.Error())
+	}
+
+	userId, err := h.services.ParseToken(cookie_token)
+	if err != nil {
+		log.Error().Msgf("Error during userIdentity. Reason : %s", err.Error())
+		initErrorResponce(context, http.StatusUnauthorized, err.Error())
+		return
+	}
+
+	if err := h.services.CheckUserExitsts(UserIn.UserIn{Id: userId}); err != nil {
+		fmt.Println(err.Error())
+		initErrorResponce(context, http.StatusUnauthorized, err.Error())
+	}
+
+	initOkResponce(context, map[string]interface{}{
+		"Status": "OK",
+	})
 }

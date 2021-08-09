@@ -9,6 +9,7 @@ import (
 
 type Authorization interface {
 	CreateUser(user User.User) (int, error)
+	CheckUserExitstsWithPass(user UserIn.UserIn) error
 	CheckUserExitsts(user UserIn.UserIn) error
 	GenerateToken(username, password string) (string, error)
 	ParseToken(accessToken string) (int, error)

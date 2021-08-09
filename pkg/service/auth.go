@@ -156,8 +156,8 @@ func (data *AuthService) ParseToken(accessToken string) (int, error) {
 	return claims.UserId, nil
 }
 
-func (data *AuthService) CheckUserExitsts(userIn UserIn.UserIn) error {
-	user_db, err := data.auth.GetUserByUsername(userIn.Username)
+func (data *AuthService) CheckUserExitstsWithPass(userIn UserIn.UserIn) error {
+	user_db, err := data.auth.GetUserByParams(userIn.Username)
 
 	if err != nil {
 		return err
@@ -169,5 +169,12 @@ func (data *AuthService) CheckUserExitsts(userIn UserIn.UserIn) error {
 		return fmt.Errorf("Incorrect username's password.")
 	}
 
+	return nil
+}
+
+func (data *AuthService) CheckUserExitsts(userIn UserIn.UserIn) error {
+	if _, err := data.auth.GetUserByParams(userIn.Username); err != nil {
+		return err
+	}
 	return nil
 }

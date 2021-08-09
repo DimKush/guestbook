@@ -27,21 +27,36 @@ export default function App() {
   const[currentState, setCurrentState] = React.useState(!isLoggingActive ? "Sign in" : "Sign up");
   const[isAuth, setAuthStatus] = React.useState(false);
 
+  useEffect(() =>{
+    (
+      async () => {
+        const responce = await fetch("http://localhost:8007/auth/user", {
+          method : "GET",
+          headers : {"Content-type" : "application/json"},
+          credentials : "include",
+        });
+
+        const content = await responce.json();
+        if(content.Status === "OK"){
+          setAuthStatus(true);
+        } else {
+          setAuthStatus(false);
+        }
+      }
+    )();
+
+  })
+
   const changeState = () => {
     setLoggingActive(!isLoggingActive);
     setCurrentState(isLoggingActive ? "Sign in" : "Sign up");
   }
   
   const LoginComponent = () => {
-    useEffect(() => {
-      setAuthStatus(false);
-      cookies.remove("token");
-    })
-
     return(
     <div className="login">
         <div className="container">
-          {isLoggingActive && <SignIn containerRef={(ref) => current = ref} setAuthStatus={setAuthStatus} />}
+          {isLoggingActive && <SignIn containerRef={(ref) => current = ref} isAuth={isAuth} setAuthStatus={setAuthStatus} />}
           {!isLoggingActive && <SignUp containerRef={(ref) => current = ref} />}
         </div>
         <RightSightComponent loggingActive={isLoggingActive} currentState={currentState} containerRef={ref => current = ref} onClick={changeState}/>
@@ -53,15 +68,9 @@ export default function App() {
     <div className="App">
        <BrowserRouter>
           {/* <Nav name={name} setName={setName}/> */}
-
           <main className="form-signin">
-              <Route exact path= "/">
-                {isAuth ? <Redirect to = "/home"/> : <LoginComponent/>}
-              </Route>
-              <Route exact path="/login" component={() => <LoginComponent/> }/>
-              <Route exact path="/home" component={() => <Home/>}> 
-                {isAuth ? <Redirect to = "/home"/> : <Redirect to = "/login"/>}
-              </Route>
+            <Route path="/" exact component={() => <Home isAuth={isAuth}/>}/>
+            <Route path="/login" component={() => <LoginComponent/>}/>
           </main>
       </BrowserRouter>
     </div>

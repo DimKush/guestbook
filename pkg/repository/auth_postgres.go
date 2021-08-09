@@ -57,14 +57,20 @@ func (data *AuthPostgres) GetUser(username, password string) (User.User, error) 
 	return user, nil
 }
 
-func (data *AuthPostgres) GetUserByUsername(username string) (User.User, error) {
+func (data *AuthPostgres) GetUserByParams(username string) (User.User, error) {
 	var user User.User
-	if err := data.db.Table(users).Where("username=?", username).Scan(&user).Error; err != nil {
+	if err := data.db.Table(users).Scan(&user).Error; err != nil {
 		return User.User{}, fmt.Errorf("SQL : Cannot select from table %s: Reason : %s", users, err.Error())
 	}
 	if user.Username == "" {
 		return User.User{}, fmt.Errorf("SQL : No rows in result set with username : %s", username)
 	}
+	// if err := data.db.Table(users).Where("username=?", username).Scan(&user).Error; err != nil {
+	// 	return User.User{}, fmt.Errorf("SQL : Cannot select from table %s: Reason : %s", users, err.Error())
+	// }
+	// if user.Username == "" {
+	// 	return User.User{}, fmt.Errorf("SQL : No rows in result set with username : %s", username)
+	// }
 
 	return user, nil
 }

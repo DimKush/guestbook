@@ -4,11 +4,12 @@ import "./style.scss"
 import ServerStatus from "../server/status.jsx"
 import Modal from "../modal/modal";
 import { cookies } from "../../App";
+import { Redirect } from "react-router-dom";
 
 
 
 
-export default function SignIn({setAuthStatus}){
+export default function SignIn({isAuth, setAuthStatus}){
 	let usernameInput = React.createRef()
 	let passwordInput = React.createRef() 
 
@@ -18,6 +19,12 @@ export default function SignIn({setAuthStatus}){
 	const[modalMsg, setModalMsg] = React.useState("");
 	const[isError, setIsError] = React.useState(false);
 	
+	console.log("isAuth in SIGN IN ", isAuth);
+	if(isAuth) {
+		console.log("redirect", isAuth);
+		return <Redirect to="/"/>
+	}
+
 	const handleClick = function(){
 		var data = new FormData()
 
@@ -29,6 +36,7 @@ export default function SignIn({setAuthStatus}){
 		fetch("http://localhost:8007/auth/sign-in", {
 			method: 'POST',
 			body: JSON.stringify(signInObj),
+			credentials: 'include',
 			headers : {
 				'Content-Type' : 'application/json'
 			}
@@ -37,7 +45,6 @@ export default function SignIn({setAuthStatus}){
 				setErrorInput(data.Message);
 				setAuthStatus(false);
 			} else if(data.Status === "OK"){
-				cookies.set("token", data.token);
 				setAuthStatus(true);
 			}
 		}).catch(error => {
