@@ -9,13 +9,21 @@ export default function Home({isAuth}) {
 		return <Redirect to="/login"/>
 	}
 
+	const handleClickLogout = () => {
+
+	} 
+
 	return (
 		<div className="home-base-container">
 			<nav>
-				<div class="nav-bg"></div>
-				<ul>
-					<li><a href="">Link</a></li>
-				</ul>
+				<div className="nav-bg"></div>
+				<div className="right-side-container">
+					<ul>
+						<div className="top-system-right-btn">
+							<button onClick={handleClickLogout}>Logout</button>
+						</div>
+					</ul>
+				</div>
 			</nav>
 
 		</div>
