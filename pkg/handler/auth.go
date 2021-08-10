@@ -1,8 +1,8 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/DimKush/guestbook/tree/main/internal/entities/User"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/UserIn"
@@ -10,15 +10,9 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-type jwtCookie struct {
-	name     string
-	value    string
-	maxAge   int
-	path     string
-	domain   string
-	secure   bool
-	httpOnly bool
-}
+const (
+	cookieName = "jwt"
+)
 
 func (h *Handler) signUp(context *gin.Context) {
 	var user User.User
@@ -39,6 +33,7 @@ func (h *Handler) signUp(context *gin.Context) {
 }
 
 func (h *Handler) signIn(context *gin.Context) {
+	fmt.Printf("signIn process request.")
 	var userIn UserIn.UserIn
 	log.Info().Msg("signIn process request.")
 
@@ -61,19 +56,11 @@ func (h *Handler) signIn(context *gin.Context) {
 		return
 	}
 
-	cookie := &jwtCookie{
-		name:     "jwt",
-		value:    token,
-		maxAge:   int(time.Now().Add(12 * time.Hour).Unix()),
-		path:     "/",
-		domain:   "localhost",
-		secure:   false,
-		httpOnly: true,
-	}
+	//context.SetCookie("jwt", token, 3600*12, "", "localhost", false, false)
 
-	context.SetCookie(cookie.name, cookie.value, cookie.maxAge, cookie.path, cookie.domain, cookie.secure, cookie.httpOnly)
+	fmt.Println(context.Cookie("jwt"))
 
 	initOkResponce(context, map[string]interface{}{
-		"Status": "OK",
+		"token": token,
 	})
 }

@@ -61,3 +61,8 @@ func (h *Handler) userIdentityToken(context *gin.Context) {
 		"Status": "OK",
 	})
 }
+
+func (h *Handler) logout(context *gin.Context) {
+	fmt.Println("logout")
+	initOkResponce(context, map[string]interface{}{})
+}
