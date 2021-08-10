@@ -27,16 +27,17 @@ export default function App() {
   const[currentState, setCurrentState] = React.useState(!isLoggingActive ? "Sign in" : "Sign up");
   const[isAuth, setAuthStatus] = React.useState(false);
 
-  useEffect(() =>{
+  useEffect(() => {
     (
       async () => {
         const responce = await fetch("http://localhost:8007/auth/user", {
-          method : "GET",
           headers : {"Content-type" : "application/json"},
           credentials : "include",
         });
-
+        
         const content = await responce.json();
+
+        console.log(cookies);
         if(content.Status === "OK"){
           setAuthStatus(true);
         } else {
@@ -71,7 +72,7 @@ export default function App() {
        <BrowserRouter>
           {/* <Nav name={name} setName={setName}/> */}
           
-            <Route path="/" exact component={() => <Home isAuth={isAuth}/>}/>
+            <Route path="/" exact component={() => <Home isAuth={isAuth} setAuthStatus={setAuthStatus}/>}/>
             <Route path="/login" component={() => <LoginComponent/>}/>
       </BrowserRouter>
     </div>

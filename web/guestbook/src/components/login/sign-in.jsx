@@ -46,6 +46,7 @@ export default function SignIn({isAuth, setAuthStatus}){
 				setAuthStatus(false);
 			} else if(data.Status === "OK"){
 				setAuthStatus(true);
+				cookies.set("jwt", data.token)
 			}
 		}).catch(error => {
 			console.log("ERROR");
