@@ -26,7 +26,8 @@ export default function App() {
   const[isLoggingActive, setLoggingActive] = React.useState(true);
   const[currentState, setCurrentState] = React.useState(!isLoggingActive ? "Sign in" : "Sign up");
   const[isAuth, setAuthStatus] = React.useState(false);
-
+  const[Username, setUsername] = React.useState("");
+  
   useEffect(() => {
     (
       async () => {

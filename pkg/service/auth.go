@@ -157,7 +157,7 @@ func (data *AuthService) ParseToken(accessToken string) (int, error) {
 }
 
 func (data *AuthService) CheckUserExitstsWithPass(userIn UserIn.UserIn) error {
-	user_db, err := data.auth.GetUserByParams(userIn.Username)
+	user_db, err := data.auth.GetUserByUsername(userIn.Username)
 
 	if err != nil {
 		return err
@@ -173,8 +173,18 @@ func (data *AuthService) CheckUserExitstsWithPass(userIn UserIn.UserIn) error {
 }
 
 func (data *AuthService) CheckUserExitsts(userIn UserIn.UserIn) error {
-	if _, err := data.auth.GetUserByParams(userIn.Username); err != nil {
+	if _, err := data.auth.GetUserByUsername(userIn.Username); err != nil {
 		return err
 	}
 	return nil
+}
+
+func (data *AuthService) GetUser(userIn UserIn.UserIn) (User.User, error) {
+	user, err := data.auth.GetUserByUserIn(userIn)
+
+	if err != nil {
+		return User.User{}, err
+	}
+
+	return user, nil
 }

@@ -52,13 +52,16 @@ func (h *Handler) userIdentityToken(context *gin.Context) {
 		return
 	}
 
-	if err := h.services.CheckUserExitsts(UserIn.UserIn{Id: userId}); err != nil {
+	user, err := h.services.GetUser(UserIn.UserIn{Id: userId})
+
+	if err != nil {
 		fmt.Println(err.Error())
 		initErrorResponce(context, http.StatusUnauthorized, err.Error())
 	}
 
 	initOkResponce(context, map[string]interface{}{
-		"Status": "OK",
+		"Status":   "OK",
+		"Username": user.Username,
 	})
 }
 

@@ -13,6 +13,7 @@ type Authorization interface {
 	CheckUserExitsts(user UserIn.UserIn) error
 	GenerateToken(username, password string) (string, error)
 	ParseToken(accessToken string) (int, error)
+	GetUser(userIn UserIn.UserIn) (User.User, error)
 }
 
 type Event interface {

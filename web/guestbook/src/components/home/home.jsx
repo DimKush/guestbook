@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
-import "./home-style.scss"
+import "./home-style.scss";
 import Modal from '../modal/modal';
+import HomeMain from '../home-main/HomeMain';
 import { cookies } from "../../App";
-import  EventsTable from "../home-events-table/events-table.jsx"
+import  EventsTable from "../home-events-table/events-table.jsx";
+
 
 export default function Home({isAuth , setAuthStatus}) {
 	const[modalActive, setModalActive] = React.useState(false);
@@ -11,7 +13,7 @@ export default function Home({isAuth , setAuthStatus}) {
 	const[modalMsg, setModalMsg] = React.useState("");
 	const[isError, setIsError] = React.useState(false);
 	const[headerDescript, setHeaderDescript] = React.useState("Home");
-	const[username, getUsername] =React.useState("Plug");
+	const[username, setUsername] =React.useState("Plug");
 
 	useEffect(() => {
 		(
@@ -26,6 +28,7 @@ export default function Home({isAuth , setAuthStatus}) {
 			console.log(cookies);
 			if(content.Status === "OK"){
 			  setAuthStatus(true);
+			  setUsername(content.Username);
 			} else {
 			  setAuthStatus(false);
 			}
@@ -57,6 +60,7 @@ export default function Home({isAuth , setAuthStatus}) {
 		// setModalActive(true);
 		// setIsError(true); 
 	}
+	const DateStr = new Date(Date.now()).getTime().toExponential();
 
 	return (
 		<div className="home-base-container">
@@ -77,27 +81,7 @@ export default function Home({isAuth , setAuthStatus}) {
 						</ul>
 					</div>
 			</nav>
-			<div className="home-content-container">
-				<div className="username">
-					<h1>Hello {username}. What we will do today?</h1>
-				</div>
-				<div className="bigButton">
-					<div className="ButtonLogo"></div>
-					<div className="ButtonText">Show all lists</div>
-					<div className="bigButtonFooter"></div>
-				</div>
-				<div className="bigButton">
-					<div className="ButtonLogo"></div>
-					<div className="ButtonText">Show all events</div>
-					<div className="bigButtonFooter"></div>
-				</div>
-				<div className="bigButton">
-					<div className="ButtonLogo"></div>
-					<div className="ButtonText">Show audit events</div>
-					<div className="bigButtonFooter"></div>
-				</div>
-				
-			</div>
+			<HomeMain username={username} />
 
 			{/* <div className="home-content">
 				<EventsTable/>
