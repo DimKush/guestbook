@@ -6,12 +6,23 @@
   display: flex;
   justify-content: center;
   font-family: "Open Sans", sans-serif;
-  background:linear-gradient(rgb(110, 30, 106),transparent);
-  background-color: #692145;
+  //background:linear-gradient(rgb(110, 30, 106),transparent);
+  //background-color: #692145;
   width: 100%;
   min-height: 100vh;
   height: 100%;
 
+}
+
+.form-signin{
+  width: 100%;
+  min-height: 100vh;
+  height: 100%;
+  background:linear-gradient(rgb(110, 30, 106),transparent);
+  background-color: #692145;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .App-logo {

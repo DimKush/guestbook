@@ -12,23 +12,17 @@ CREATE TABLE events_lists
 (
 	id  serial not null unique,
 	title varchar(255) not null,
-	description varchar(255) not null
+	description varchar(255) not null,
+	owner_user_id references users(id) on delete cascade not null
 );
 
-CREATE TABLE users_lists
-(
-	id serial not null unique,
-	user_id int references users(id) on delete cascade  not null,
-	event_list_id int references events_lists(id) on delete cascade not null
-);
 
 CREATE TABLE event_item
 (
 	id serial not null unique,
 	list_id int references events_lists(id) on delete cascade not null,
 	title varchar(255) not null,
-	description varchar(255),
-	img_path varchar(255) not null
+	description varchar(255)
 );
 
 

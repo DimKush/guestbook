@@ -1,30 +1,15 @@
+.home-base-container{	
+	nav {
+		position: fixed;
+		z-index: 9999;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 45px;
+		background-color: #ffe9fe;
+		box-shadow: 0px 0px 12px 2px rgba(15, 15, 15, 0.2);
+		}
 
-.home-base-container{
-	width: 100vh;
-	align-items: center;
-  	flex-direction: row;
-  	align-items: center;
-	height: 100vh;
-
-		nav {
-			position: fixed;
-			z-index: 9999;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 45px;
-			background-color: rgb(255, 242, 254);
-			box-shadow: 0px 0px 12px 2px rgba(15, 15, 15, 0.2);
-			}
-
-		nav ul {
-			list-style: none;
-			margin: 2px;
-			padding: .2em 2em;
-			float: right;
-			}
-
-		
 		.nav-bg {
 			content: '';
 			position: absolute;
@@ -47,35 +32,142 @@
 			top: 0;
 			opacity: 1;
 			}
-
-		.top-system-right-btn{
-			width: 100%;
-			display: flex;
-			flex-direction: column;
-			align-items: flex-end;
-			//align-items: ;
-			
-			button{
-				
-				background: transparent;
-				border: 0.1px solid;
-				border-color: rgb(211, 59, 203);
-				color: rgb(211, 59, 203);
-				font-family: "Roboto", sans-serif;
-				cursor: pointer;
-				padding: 8px;
-				transition: all 200ms ease-in-out;
-				border-radius: 2px;
-				min-width: 97px;
+		
+		.right-side-container{
+			ul {
+				list-style: none;
+				margin: 2px;
+				padding: .2em 2em;
+				float: right;
 			}
-			button:hover{
-				background-color: #6e1e69;
-				border-color: rgb(49, 20, 47);
-				color: rgb(230, 169, 217);
-				border: 0.3px solid;
-				font-weight: 1000;
 
+			.top-system-right-btn{
+				width: 100%;
+				display: flex;
+				flex-direction: column;
+				align-items: flex-end;
+				//align-items: ;
+				
+				button{
+					
+					background: transparent;
+					border: 0.1px solid;
+					border-color: rgb(211, 59, 203);
+					color: rgb(211, 59, 203);
+					font-family: "Roboto", sans-serif;
+					cursor: pointer;
+					padding: 8px;
+					transition: all 200ms ease-in-out;
+					border-radius: 2px;
+					min-width: 97px;
+				}
+				button:hover{
+					background-color: #6e1e69;
+					border-color: rgb(49, 20, 47);
+					color: rgb(230, 169, 217);
+					border: 0.3px solid;
+					font-weight: 1000;
+
+				}
 			}
 		}
+		
+
+		.left-side-container{
+			ul {
+				list-style: none;
+				margin: 2px;
+				padding: .2em 2em;
+				float: left;
+			}
+			.header-descript{
+				font-size: 20px;
+				margin-top: 4px;
+				color: #6e1e69;
+				font-family: "Roboto", sans-serif;
+
+			}
+			.top-system-left-btn{
+				width: 100%;
+				display: flex;
+				flex-direction: column;
+				align-items: flex-end;
+				//align-items: ;
+				
+				button{
+					background: transparent;
+					border: 0.1px solid;
+					border-color: rgb(211, 59, 203);
+					color: rgb(211, 59, 203);
+					font-family: "Roboto", sans-serif;
+					cursor: pointer;
+					padding: 8px;
+					transition: all 200ms ease-in-out;
+					border-radius: 2px;
+					min-width: 97px;
+				}
+				button:hover{
+					background-color: #6e1e69;
+					border-color: rgb(49, 20, 47);
+					color: rgb(230, 169, 217);
+					border: 0.3px solid;
+					font-weight: 1000;
+
+				}
+			}
+		}
+	
+	.home-content-container{
+		display: block;
+		flex-direction: row;
+		position: relative;
+		margin-top: 10vh;
+		width: 90vw;
+
+		.username{
+			color: #6e1e69;
+			font-size: larger;
+			text-align: left;
+		}
+		.bigButton{
+			float: left;
+			width: 33.33%;
+			min-height: 75vh;
+			flex-direction: column;
+			display: flex;
+			position: relative;
+			align-items: center;
+			justify-content: center;
+			
+			.bigButtonFooter{
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				height: 0vh;
+				justify-content: center;
+				position: absolute;
+				background-color: #692145;
+			}
+
+			.ButtonText{
+				font-family: "Roboto", sans-serif;
+				flex-direction: column;
+				position: relative;
+				font-size: 30px;
+				font-weight: bold;
+			}
+		}
+		.bigButton:hover{
+			transition: .45s ease-in-out;
+			background-color: #af5bc4;
+			color: #ffffff;
+			cursor: pointer;
+			.bigButtonFooter{
+				transition: .45s ease-in-out;
+				height: 10vh;
+			}
+		}
+		
+	}
 }
 
