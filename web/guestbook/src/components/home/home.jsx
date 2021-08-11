@@ -4,7 +4,8 @@ import "./home-style.scss";
 import Modal from '../modal/modal';
 import HomeMain from '../home-main/HomeMain';
 import { cookies } from "../../App";
-import  EventsTable from "../home-events-table/events-table.jsx";
+import  ListsTable from "../home-lists-table/lists-table.jsx";
+import {BrowserRouter, Route} from "react-router-dom";
 
 
 export default function Home({isAuth , setAuthStatus}) {
@@ -34,7 +35,8 @@ export default function Home({isAuth , setAuthStatus}) {
 			}
 		  }
 		)();
-	
+		
+		
 	})
 
 	console.log("Home = ", isAuth);
@@ -81,14 +83,13 @@ export default function Home({isAuth , setAuthStatus}) {
 						</ul>
 					</div>
 			</nav>
-			<HomeMain username={username} />
-
-			{/* <div className="home-content">
-				<EventsTable/>
+			<div className="home-content-container">
+			<BrowserRouter>
+            	<Route path="/" exact component={() => <HomeMain username={username} setHeaderDescript={setHeaderDescript}/>} />
+				<Route path="/lists" exact component={() => <ListsTable setHeaderDescript={setHeaderDescript}/>}/>
+      		</BrowserRouter>
+			
 			</div>
-			<div className="home-content">
-				<EventsTable/>
-			</div> */}
 			<Modal active={modalActive} setActive={setModalActive} head={modalMsgHead} msg={modalMsg} isError={isError}/>
 		</div>
 	);

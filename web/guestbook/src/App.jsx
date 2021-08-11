@@ -6,6 +6,7 @@ import SignIn from "./components/login/sign-in.jsx";
 import SignUp from "./components/login/sign-up.jsx";
 import Home from "./components/home/home.jsx";
 import Cookies from 'universal-cookie';
+import ListsTable from './components/home-lists-table/lists-table';
 
 export const cookies = new Cookies();
 
@@ -70,11 +71,12 @@ export default function App() {
 
   return (
     <div className="App">
-       <BrowserRouter>
-          {/* <Nav name={name} setName={setName}/> */}
-          
+       <BrowserRouter>          
             <Route path="/" exact component={() => <Home isAuth={isAuth} setAuthStatus={setAuthStatus}/>}/>
             <Route path="/login" component={() => <LoginComponent/>}/>
+            <Route path="/lists">
+              <Redirect to="/"/>
+            </Route>
       </BrowserRouter>
     </div>
   );
