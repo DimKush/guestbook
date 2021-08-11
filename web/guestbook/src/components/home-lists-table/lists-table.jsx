@@ -4,8 +4,8 @@ import { useTable } from 'react-table'
 import MOCK_DATA from './MOCK_DATA.json'
 import { COLUMNS } from './columns'
 
-export default function EventsTable(){
-
+export default function ListsTable({setHeaderDescript}){
+	setHeaderDescript("Lists");
 	const columns = useMemo(() => COLUMNS , []);
 	const data = useMemo(() => MOCK_DATA, []);
 	
