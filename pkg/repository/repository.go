@@ -4,13 +4,15 @@ import (
 	"github.com/DimKush/guestbook/tree/main/internal/entities/AuditEvent"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/EmailEventDb"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/User"
+	"github.com/DimKush/guestbook/tree/main/internal/entities/UserIn"
 	"gorm.io/gorm"
 )
 
 type Authorization interface {
 	CreateUser(user User.User) (int, error)
 	GetUser(username, password string) (User.User, error)
-	GetUserByParams(username string) (User.User, error)
+	GetUserByUsername(username string) (User.User, error)
+	GetUserByUserIn(userIn UserIn.UserIn) (User.User, error)
 }
 
 type Event interface {

@@ -138,7 +138,6 @@
 			position: relative;
 			align-items: center;
 			justify-content: center;
-			
 			.bigButtonFooter{
 				bottom: 0;
 				left: 0;
@@ -155,6 +154,11 @@
 				position: relative;
 				font-size: 30px;
 				font-weight: bold;
+			}
+
+			.ButtonLogo{
+				max-width: 15vh;
+				max-height: 15vh;
 			}
 		}
 		.bigButton:hover{

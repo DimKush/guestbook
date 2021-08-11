@@ -1,5 +1,4 @@
 import React from "react";
-import loginImg from "../../assets/sign-in.svg"
 import "./style.scss"
 import ServerStatus from "../server/status.jsx"
 import Modal from "../modal/modal";
