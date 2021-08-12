@@ -15,8 +15,11 @@
 			background-color: #be44b6;
 			color: white;
 		}
-
+		
+	
 		th{
+			position: sticky;
+			top: 6vh;
 			min-width: 10px;
 			padding-top: 12px;
 			padding-bottom: 12px;
@@ -24,5 +27,6 @@
 			background-color: #6e1e69;
 			color: rgb(255, 255, 255);
 		}
+
 	}
 }
