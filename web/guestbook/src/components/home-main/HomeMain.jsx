@@ -35,6 +35,11 @@ export default function HomeMain({username , setHeaderDescript}) {
 				<div className="ButtonText">Show audit events</div>
 				<div className="bigButtonFooter"></div>
 			</div>
+			<div className="bigButton">
+				<img className="ButtonLogo" src={wlogImg} alt="Logo"/>
+				<div className="ButtonText">Show Users</div>
+				<div className="bigButtonFooter"></div>
+			</div>
 		
 		</div>
 );
