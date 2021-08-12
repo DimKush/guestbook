@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import './style.scss'
-import { useTable } from 'react-table'
+import { useTable, useGlobalFilter, useFilters } from 'react-table'
 import MOCK_DATA from './MOCK_DATA.json'
 import { COLUMNS } from './columns'
 
@@ -10,10 +10,10 @@ export default function ListsTable({setHeaderDescript}){
 	const data = useMemo(() => MOCK_DATA, []);
 	
 	//prepare table
-	const TableInstance = useTable({
-		columns,
-		data
-	});
+	// const TableInstance = useTable({
+	// 	columns,
+	// 	data
+	// }); 
 
 	const {
 		getTableProps,
@@ -21,7 +21,14 @@ export default function ListsTable({setHeaderDescript}){
 		headerGroups,
 		rows,
 		prepareRow,
-	} =  TableInstance;
+		state,
+	} =  useTable(
+		{
+			columns,
+			data,
+		},
+		useFilters,
+	);
 
 	return(
 	<div className="form-events">
@@ -32,7 +39,9 @@ export default function ListsTable({setHeaderDescript}){
 						<tr {...headerGroup.getHeaderGroupProps()}>
 							{
 								headerGroup.headers.map(column => (
-									<th {...column.getHeaderProps()}>{column.render('Header')}</th>
+									<th {...column.getHeaderProps()}>{column.render('Header')}
+										<div>{column.canFilter ? column.render('Filter') : null } </div>
+									</th>
 								))
 							}
 							

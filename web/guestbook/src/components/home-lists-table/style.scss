@@ -23,10 +23,19 @@
 			min-width: 10px;
 			padding-top: 12px;
 			padding-bottom: 12px;
-			text-align: center;
+			text-align: left;
 			background-color: #6e1e69;
 			color: rgb(255, 255, 255);
 		}
-
+		span{
+			position: relative;
+			opacity: 1;
+			input{
+				font-family: "Roboto", sans-serif;
+				width: 80%;
+				min-height: 3vh;
+				border: 0px solid;
+			}
+		}
 	}
 }
