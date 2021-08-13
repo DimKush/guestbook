@@ -1,14 +1,10 @@
 .home-content-container{
-	display: block;
-	flex-direction: row;
-	position: relative;
-	margin-top: 12vh;
-	width: 90vw;
 
 	.username{
 		color: #6e1e69;
 		font-size: larger;
 		text-align: left;
+		padding-top: 10vh;
 	}
 	.linkButton{
 		color: #000000;

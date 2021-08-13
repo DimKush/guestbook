@@ -1,19 +1,15 @@
-import React, { useMemo } from 'react'
+import React, { useMemo} from 'react'
 import './style.scss'
-import { useTable } from 'react-table'
+import { useTable, useGlobalFilter, useFilters } from 'react-table'
 import MOCK_DATA from './MOCK_DATA.json'
 import { COLUMNS } from './columns'
+import { AiOutlineSearch } from 'react-icons/ai'
 
 export default function ListsTable({setHeaderDescript}){
 	setHeaderDescript("Lists");
 	const columns = useMemo(() => COLUMNS , []);
 	const data = useMemo(() => MOCK_DATA, []);
-	
-	//prepare table
-	const TableInstance = useTable({
-		columns,
-		data
-	});
+	const[sidebar, setSidebar] = React.useState(false);
 
 	const {
 		getTableProps,
@@ -21,10 +17,53 @@ export default function ListsTable({setHeaderDescript}){
 		headerGroups,
 		rows,
 		prepareRow,
-	} =  TableInstance;
+		state,
+	} =  useTable(
+		{
+			columns,
+			data,
+		},
+		useFilters,
+	);
+	
+	const showSidebar = () => setSidebar(!sidebar);
+
+	const Sidebar = () => {
+		return (
+			<div className={sidebar ? "SidebarFilter active" : "SidebarFilter" }>
+				<button className="searchClick" onClick={showSidebar}><AiOutlineSearch/></button>
+				<div className="filters-container">
+				{
+					headerGroups.map(headerGroup => (
+						<div {...headerGroup.getHeaderGroupProps()}>
+							{
+								headerGroup.headers.map(column => (
+									<div {...column.getHeaderProps()} className="search-field">
+										{column.render('Header')}
+										{ <div>{column.canFilter ? column.render('Filter') : null } </div> }
+									</div>
+								))
+							}
+							
+						</div>
+					))
+				}
+				</div>
+
+
+			</div>
+
+		);
+	} 
 
 	return(
-	<div className="form-events">
+	<div className="form-container">
+		<Sidebar/>
+	<div className={sidebar ? "form-events active" : "form-events"}>
+		
+		{/* <div className="search-container">
+			
+		</div> */}
 		<table {...getTableProps()} > 
 			<thead>
 				{
@@ -32,7 +71,9 @@ export default function ListsTable({setHeaderDescript}){
 						<tr {...headerGroup.getHeaderGroupProps()}>
 							{
 								headerGroup.headers.map(column => (
-									<th {...column.getHeaderProps()}>{column.render('Header')}</th>
+									<th {...column.getHeaderProps()}>{column.render('Header')}
+										{/* <div>{column.canFilter ? column.render('Filter') : null } </div> */}
+									</th>
 								))
 							}
 							
@@ -59,6 +100,7 @@ export default function ListsTable({setHeaderDescript}){
 				
 			</tbody>
 		</table>
+	</div>
 	</div>
 	);
 }

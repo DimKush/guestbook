@@ -1,6 +1,66 @@
+.form-container{
+	width:100%
+	height 100%;
+}
+
+.SidebarFilter{
+	height: 100%;
+	width: 10%;
+	background-color: #ffe9fe;
+	display: flex;
+	justify-content: center;
+	position: fixed;
+	float: right;
+	top: 0;
+	right: -14%;
+	z-index: 9997;
+	transition: 400ms;	
+}
+
+.filters-container{
+	margin-top: 10vh;
+}
+
+.searchClick{
+	position: relative;
+	top: 10vh;
+	left: -50%;
+	height: 50px;
+	width: 50px;
+	border-radius: 50%;
+	border: 1px;
+	font-size: medium;
+	background-color: #ffe9fe;
+	cursor: pointer;
+
+	svg{
+		color: #6e1e69;
+		width: 40px;
+		height: 40px;
+	}
+}
+
+.SidebarFilter.active{
+	right: 0;
+	transition: 450ms;
+	width: 18%;
+
+	.searchClick{
+		left: -4%;
+	}
+	
+}
+
+
 .form-events{
+	margin-top: 10vh;
+	margin-left: 6.5%;
+	margin-right: 5%;
+	width: 86%;
+	float: left;
+	transition: 200ms;
 	table{
-		border-collapse: collapse;
+		//border-collapse: collapse;
 		width: 100%;
 
 		td, th{
@@ -19,14 +79,18 @@
 	
 		th{
 			position: sticky;
-			top: 6vh;
+			top: 5vh;
 			min-width: 10px;
 			padding-top: 12px;
 			padding-bottom: 12px;
-			text-align: center;
+			text-align: left;
 			background-color: #6e1e69;
 			color: rgb(255, 255, 255);
 		}
-
+		
 	}
+}
+
+.form-events.active{
+	width: 80%;
 }
