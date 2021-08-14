@@ -4,6 +4,25 @@ import { useTable, useGlobalFilter, useFilters } from 'react-table'
 import MOCK_DATA from './MOCK_DATA.json'
 import { COLUMNS } from './columns'
 import { AiOutlineSearch } from 'react-icons/ai'
+import { BsBoxArrowInRight } from "react-icons/bs";
+
+import "./filters-styles.scss"
+
+export function ColumnFilter ( {column} ) {
+	const {filterValue, setFilter} = column
+	console.log(column);
+	return (
+		<div className="form-group">
+		<span>{column.id}</span>
+			
+			<input class="form-field"	
+				//value={filterValue || ''} 
+				//onChange ={(event) => setFilter(event.target.value)} />
+				/>
+		</div>
+	);
+}
+
 
 export default function ListsTable({setHeaderDescript}){
 	setHeaderDescript("Lists");
@@ -28,18 +47,26 @@ export default function ListsTable({setHeaderDescript}){
 	
 	const showSidebar = () => setSidebar(!sidebar);
 
+
 	const Sidebar = () => {
 		return (
 			<div className={ sidebar ? "SidebarFilter active" : "SidebarFilter" }>
-				<button className="searchClick" onClick={showSidebar}><AiOutlineSearch/></button>
+				{!sidebar && <button className="searchClick" onClick={showSidebar}><AiOutlineSearch/></button>}
 				<div className="filters-container">
+				{sidebar && 
+					<div className="searchButton" onClick={showSidebar}>
+					<button className="searchClick active "><BsBoxArrowInRight/> </button>
+						<div className="searchText">Search in table </div>
+					</div>
+				}
 				{
+					
 					headerGroups.map(headerGroup => (
 						<div {...headerGroup.getHeaderGroupProps()}>
 							{
 								headerGroup.headers.map(column => (
 									<div {...column.getHeaderProps()} className="search-field">
-										{column.canFilter ? column.render('Filter') : null }
+										{column.canFilter ? <ColumnFilter column={column}/> : null }
 									</div>
 								))
 							}
@@ -47,9 +74,12 @@ export default function ListsTable({setHeaderDescript}){
 						</div>
 					))
 				}
+				<div className="buttons-place">
+					<button className="sidebar-but">Refresh</button>
+					<button className="sidebar-but">Find</button>
 				</div>
 
-
+				</div>
 			</div>
 
 		);

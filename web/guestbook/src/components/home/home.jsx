@@ -45,8 +45,6 @@ export default function Home({isAuth , setAuthStatus}) {
 		return <Redirect to="/login"/>
 	}
 
-	
-
 	const handleClickLogout = async() => {
 		const responce = await fetch("http://localhost:8007/auth/logout", {
 			headers : {"Content-type" : "application/json"},
