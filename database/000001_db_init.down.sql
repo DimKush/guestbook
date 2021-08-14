@@ -1,5 +1,3 @@
-drop table users_lists;
-
 drop table event_item;
 
 drop table events_lists;
