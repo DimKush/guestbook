@@ -8,27 +8,14 @@ import { BsBoxArrowInRight } from "react-icons/bs";
 
 import "./filters-styles.scss"
 
-export function ColumnFilter ( {column} ) {
-	const {filterValue, setFilter} = column
-	console.log(column);
-	return (
-		<div className="form-group">
-		<span>{column.id}</span>
-			
-			<input class="form-field"	
-				//value={filterValue || ''} 
-				//onChange ={(event) => setFilter(event.target.value)} />
-				/>
-		</div>
-	);
-}
-
 
 export default function ListsTable({setHeaderDescript}){
 	setHeaderDescript("Lists");
 	const columns = useMemo(() => COLUMNS , []);
 	const data = useMemo(() => MOCK_DATA, []);
 	const[sidebar, setSidebar] = React.useState(false);
+	const[clearInput, setClearInput] = React.useState(false);
+	let columnsFiltered = {};
 
 	const {
 		getTableProps,
@@ -45,8 +32,35 @@ export default function ListsTable({setHeaderDescript}){
 		useFilters,
 	);
 	
-	const showSidebar = () => setSidebar(!sidebar);
+	
 
+	function ColumnFilter ( {column} ) {
+		console.log("columnsFiltered[column.id]", columnsFiltered[column.id])
+		return (
+			<div className="form-group">
+			<span>{column.id}</span>
+				
+				<input class="form-field"	
+					onChange ={(event) =>  {
+						columnsFiltered[column.id] = event.target.value;
+					}} />
+			</div>
+		);
+	}
+	
+	const showSidebar = () => setSidebar(!sidebar);
+	const handleClickRefresh = () => {
+		console.log("handleClickRefresh");
+	}
+
+	const handleClickFind = () => {
+		console.log(columnsFiltered);
+		headerGroups.map(headerGroup => { headerGroup.headers.map(column =>{
+			column.setFilter(columnsFiltered[column.id]);
+		} ) })
+
+		console.log("columnsFiltered after ", columnsFiltered);
+	}
 
 	const Sidebar = () => {
 		return (
@@ -75,8 +89,8 @@ export default function ListsTable({setHeaderDescript}){
 					))
 				}
 				<div className="buttons-place">
-					<button className="sidebar-but">Refresh</button>
-					<button className="sidebar-but">Find</button>
+					<button className="sidebar-but" onClick={handleClickRefresh}>Refresh</button>
+					<button className="sidebar-but" onClick={handleClickFind}>Find</button>
 				</div>
 
 				</div>
