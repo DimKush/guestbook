@@ -30,7 +30,7 @@ export default function ListsTable({setHeaderDescript}){
 
 	const Sidebar = () => {
 		return (
-			<div className={sidebar ? "SidebarFilter active" : "SidebarFilter" }>
+			<div className={ sidebar ? "SidebarFilter active" : "SidebarFilter" }>
 				<button className="searchClick" onClick={showSidebar}><AiOutlineSearch/></button>
 				<div className="filters-container">
 				{
@@ -39,8 +39,7 @@ export default function ListsTable({setHeaderDescript}){
 							{
 								headerGroup.headers.map(column => (
 									<div {...column.getHeaderProps()} className="search-field">
-										{column.render('Header')}
-										{ <div>{column.canFilter ? column.render('Filter') : null } </div> }
+										{column.canFilter ? column.render('Filter') : null }
 									</div>
 								))
 							}

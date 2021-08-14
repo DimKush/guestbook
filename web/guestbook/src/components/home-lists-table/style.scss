@@ -18,41 +18,62 @@
 }
 
 .filters-container{
-	margin-top: 10vh;
+	
+	position: fixed;
+    float: left;
+    top: 10vh;
 }
 
 .searchClick{
 	position: relative;
-	top: 10vh;
-	left: -50%;
-	height: 50px;
-	width: 50px;
-	border-radius: 50%;
+	top: 15vh;
+	left: -130%;
+	height: 40px;
+	width: 40px;
+	border-radius: 25%;
 	border: 1px;
 	font-size: medium;
 	background-color: #ffe9fe;
 	cursor: pointer;
-
+	transition: 200ms;
 	svg{
 		color: #6e1e69;
-		width: 40px;
-		height: 40px;
+		width: 30px;
+		height: 30px;
 	}
 }
 
+.searchClick:hover{
+	background-color: #6e1e69;
+	border-radius: 50%;
+	transition: 200ms;
+	svg{
+		color: #ffffff;
+		width: 30px;
+		height: 30px;
+	}
+}
+
+
+
+
 .SidebarFilter.active{
+	flex-direction: column;
+	//align-items: center;
 	right: 0;
 	transition: 450ms;
-	width: 18%;
-
+	width: 22%;
 	.searchClick{
-		left: -4%;
+		top : -30%;
+		left: -15%;
+		border-radius: 20%;
 	}
 	
 }
 
 
 .form-events{
+	font-size: 12px;
 	margin-top: 10vh;
 	margin-left: 6.5%;
 	margin-right: 5%;
@@ -65,7 +86,7 @@
 
 		td, th{
 			border: 0px solid #f1aaed;
-			padding: 8px;
+			padding: 1px;
 			text-align: left;
 		}
 		tr:nth-child(even){
@@ -81,7 +102,7 @@
 			position: sticky;
 			top: 5vh;
 			min-width: 10px;
-			padding-top: 12px;
+			padding-top: 10px;
 			padding-bottom: 12px;
 			text-align: left;
 			background-color: #6e1e69;
@@ -92,5 +113,10 @@
 }
 
 .form-events.active{
-	width: 80%;
+	width: 75%;
+	margin-left: 1%;
+}
+
+.search-field {
+	margin: 10px;
 }
