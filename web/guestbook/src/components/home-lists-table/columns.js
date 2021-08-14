@@ -1,4 +1,4 @@
-import { ColumnFilter } from "./ColumnsFilters"
+import { ColumnFilter } from "./lists-table.jsx"
 
 export const COLUMNS = [
 	{
