@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/DimKush/guestbook/tree/main/internal/entities/List"
 	"gorm.io/gorm"
 )
@@ -10,6 +12,7 @@ type ListServiceRepo struct {
 }
 
 func (data *ListServiceRepo) GetAllLists() ([]List.List, error) {
+	fmt.Println("HERE_1")
 	var allLists []List.List
 
 	rows, err := data.db.Table(events_lists).Select("events_lists.*, users.username as owner").Joins("left join users on users.id=owner_user_id").Rows()
@@ -20,11 +23,14 @@ func (data *ListServiceRepo) GetAllLists() ([]List.List, error) {
 	}
 
 	for rows.Next() {
+		fmt.Println("HERE_11")
 		var element List.List
-		data.db.ScanRows(rows, element)
+		data.db.ScanRows(rows, &element)
+		fmt.Println(element)
 		allLists = append(allLists, element)
 	}
 
+	fmt.Println("HERE_2")
 	return allLists, nil
 }
 
