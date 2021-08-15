@@ -15,7 +15,8 @@ export default function ListsTable({setHeaderDescript}){
 	const data = useMemo(() => MOCK_DATA, []);
 	const[sidebar, setSidebar] = React.useState(false);
 	const[clearInput, setClearInput] = React.useState(false);
-	let columnsFiltered = {};
+	
+	//let columnsFiltered = {};
 
 	const {
 		getTableProps,
@@ -32,34 +33,48 @@ export default function ListsTable({setHeaderDescript}){
 		useFilters,
 	);
 	
-	
+	const arrLength = columns.length;
+	const inputRef = React.useRef([]);
+	inputRef.current = [];
+
+	const addToRefs = (el) => {
+		if(el && !inputRef.current.includes(el)){
+			inputRef.current.push(el);
+		}
+	}
+
+	const[columnsFiltered, setColumnsFiltered] = React.useState(new Map());
+	const updateMap = (k,v) => {
+	 	setColumnsFiltered(columnsFiltered.set(k,v));
+	}
 
 	function ColumnFilter ( {column} ) {
-		console.log("columnsFiltered[column.id]", columnsFiltered[column.id])
 		return (
 			<div className="form-group">
 			<span>{column.id}</span>
 				
-				<input class="form-field"	
-					onChange ={(event) =>  {
-						columnsFiltered[column.id] = event.target.value;
-					}} />
+				<input class="form-field"
+					defaultValue={column.filterValue}
+					type="text"
+					id={column.id}
+					ref={addToRefs}
+					onChange ={(event) =>  {}} />
 			</div>
 		);
 	}
 	
 	const showSidebar = () => setSidebar(!sidebar);
 	const handleClickRefresh = () => {
-		console.log("handleClickRefresh");
+		inputRef.current.map(elem => elem.value = '');
 	}
 
 	const handleClickFind = () => {
-		console.log(columnsFiltered);
-		headerGroups.map(headerGroup => { headerGroup.headers.map(column =>{
-			column.setFilter(columnsFiltered[column.id]);
-		} ) })
+		let mpValues = new Map();
+		inputRef.current.map( elem => mpValues.set(elem.id, elem.value) );
 
-		console.log("columnsFiltered after ", columnsFiltered);
+		headerGroups.map(headerGroup => { headerGroup.headers.map(column =>{
+			column.setFilter(mpValues.get(column.id));
+		})});
 	}
 
 	const Sidebar = () => {

@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/DimKush/guestbook/tree/main/internal/entities/EmailEventDb"
+	"github.com/DimKush/guestbook/tree/main/internal/entities/List"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/User"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/UserIn"
 	"github.com/DimKush/guestbook/tree/main/pkg/repository"
@@ -26,15 +27,21 @@ type EmailService interface {
 	InitEmailEvent(email_event EmailEventDb.EmailEventDb) error
 }
 
+type ListService interface {
+	GetAllLists() ([]List.List, error)
+}
+
 type Service struct {
 	Authorization
 	Event
 	EventList
 	EmailService
+	ListService
 }
 
 func ServiceInit(repos *repository.Repository) *Service {
 	return &Service{
 		Authorization: InitAuthService(repos.Authorization, repos.EmailService),
+		ListService:   InitListsServiceWorker(repos.ListService),
 	}
 }
