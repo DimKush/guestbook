@@ -33,8 +33,15 @@ export default function ListsTable({setHeaderDescript}){
 		useFilters,
 	);
 	
-	const self = React.useRef([]).current;
-	const saveRef = key => r => {self[key] = r }
+	const arrLength = columns.length;
+	const inputRef = React.useRef([]);
+	inputRef.current = [];
+
+	const addToRefs = (el) => {
+		if(el && !inputRef.current.includes(el)){
+			inputRef.current.push(el);
+		}
+	}
 
 	const[columnsFiltered, setColumnsFiltered] = React.useState(new Map());
 	const updateMap = (k,v) => {
@@ -42,34 +49,32 @@ export default function ListsTable({setHeaderDescript}){
 	}
 
 	function ColumnFilter ( {column} ) {
-		console.log("columnsFiltered[column.id]", columnsFiltered)
 		return (
 			<div className="form-group">
 			<span>{column.id}</span>
 				
 				<input class="form-field"
+					defaultValue={column.filterValue}
 					type="text"
-					ref={el => saveRef(el) }
-					onChange ={(event) =>  {
-						updateMap(column.id, event.target.value);
-					}} />
+					id={column.id}
+					ref={addToRefs}
+					onChange ={(event) =>  {}} />
 			</div>
 		);
 	}
 	
 	const showSidebar = () => setSidebar(!sidebar);
 	const handleClickRefresh = () => {
-		console.log("handleClickRefresh");
+		inputRef.current.map(elem => elem.value = '');
 	}
 
 	const handleClickFind = () => {
-		console.log("self", self);
-		console.log(columnsFiltered);
-		headerGroups.map(headerGroup => { headerGroup.headers.map(column =>{
-			column.setFilter(columnsFiltered.get(column.id));
-		} ) })
+		let mpValues = new Map();
+		inputRef.current.map( elem => mpValues.set(elem.id, elem.value) );
 
-		console.log("columnsFiltered after ", columnsFiltered);
+		headerGroups.map(headerGroup => { headerGroup.headers.map(column =>{
+			column.setFilter(mpValues.get(column.id));
+		})});
 	}
 
 	const Sidebar = () => {

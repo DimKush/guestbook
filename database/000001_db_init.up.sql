@@ -12,7 +12,7 @@ CREATE TABLE events_lists
 (
 	id  serial not null unique,
 	title varchar(255) not null,
-	description varchar(255) not null,
+	description text not null,
 	owner_user_id int references users(id) on delete cascade not null
 );
 
@@ -42,3 +42,5 @@ CREATE TABLE email_events (
 	receiver varchar(255) not null,
 	email_body text not null
 );
+
+

@@ -3,6 +3,7 @@ package repository
 import (
 	"github.com/DimKush/guestbook/tree/main/internal/entities/AuditEvent"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/EmailEventDb"
+	"github.com/DimKush/guestbook/tree/main/internal/entities/List"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/User"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/UserIn"
 	"gorm.io/gorm"
@@ -29,12 +30,17 @@ type AuditInt interface {
 	WriteEvent(AuditEvent.AuditEvent) error
 }
 
+type ListService interface {
+	GetAllLists() ([]List.List, error)
+}
+
 type Repository struct {
 	Authorization
 	Event
 	EventList
 	AuditInt
 	EmailService
+	ListService
 }
 
 func RepositoryInit(db *gorm.DB) *Repository {
@@ -42,5 +48,6 @@ func RepositoryInit(db *gorm.DB) *Repository {
 		Authorization: InitAuthPostgres(db),
 		AuditInt:      InitAuditRep(db),
 		EmailService:  InitEmailEventRep(db),
+		ListService:   InitListsRep(db),
 	}
 }
