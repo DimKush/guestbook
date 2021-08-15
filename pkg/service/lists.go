@@ -14,6 +14,7 @@ type ListsServiceWorker struct {
 }
 
 func (data *ListsServiceWorker) GetAllLists() ([]List.List, error) {
+	fmt.Println("HERE")
 	log.Info().Msg("GetAllLists process request")
 
 	lists, err := data.db_lists.GetAllLists()
