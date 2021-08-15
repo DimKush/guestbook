@@ -1,4 +1,4 @@
-import React, { useMemo} from 'react'
+import React, { useMemo , useEffect} from 'react'
 import './style.scss'
 import { useTable, useGlobalFilter, useFilters } from 'react-table'
 import MOCK_DATA from './MOCK_DATA.json'
@@ -7,17 +7,36 @@ import { AiOutlineSearch } from 'react-icons/ai'
 import { BsBoxArrowInRight } from "react-icons/bs";
 
 import "./filters-styles.scss"
-
+import { cookies } from '../../App'
 
 export default function ListsTable({setHeaderDescript}){
 	setHeaderDescript("Lists");
-	const columns = useMemo(() => COLUMNS , []);
-	const data = useMemo(() => MOCK_DATA, []);
 	const[sidebar, setSidebar] = React.useState(false);
 	const[clearInput, setClearInput] = React.useState(false);
-	
-	//let columnsFiltered = {};
+	const[dataTable, setDataTable] = React.useState([]);
+	const columns = useMemo(() => COLUMNS , []);
 
+	useEffect(() => {
+		(async () => {
+		  const responce = await fetch("http://localhost:8007/api/lists/", {
+				method: 'GET',
+				credentials: 'include',
+				headers : {
+						"Content-type" : "application/json", 
+						"Authorization" :`Bearer ${cookies.get("jwt")}`
+				}
+			})
+			const content = await responce.json();
+			if(content.Status === "OK"){
+				setDataTable(content.Result);
+			} else if( content.Status === "Error") {
+				console.log("Message");
+			}
+		}
+		)();
+	  }, []);
+
+	console.log("dataTable", dataTable);
 	const {
 		getTableProps,
 		getTableBodyProps,
@@ -27,12 +46,13 @@ export default function ListsTable({setHeaderDescript}){
 		state,
 	} =  useTable(
 		{
-			columns,
-			data,
+			columns, 
+			data: dataTable,
 		},
 		useFilters,
 	);
 	
+
 	const arrLength = columns.length;
 	const inputRef = React.useRef([]);
 	inputRef.current = [];
@@ -58,7 +78,7 @@ export default function ListsTable({setHeaderDescript}){
 					type="text"
 					id={column.id}
 					ref={addToRefs}
-					onChange ={(event) =>  {}} />
+					/>
 			</div>
 		);
 	}
@@ -138,7 +158,6 @@ export default function ListsTable({setHeaderDescript}){
 						</tr>
 					))
 				}
-
 			</thead>
 			<tbody {... getTableBodyProps()}>
 				{
@@ -155,7 +174,6 @@ export default function ListsTable({setHeaderDescript}){
 						)
 					})
 				}
-				
 			</tbody>
 		</table>
 	</div>
