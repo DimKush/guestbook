@@ -15,7 +15,8 @@ export default function ListsTable({setHeaderDescript}){
 	const data = useMemo(() => MOCK_DATA, []);
 	const[sidebar, setSidebar] = React.useState(false);
 	const[clearInput, setClearInput] = React.useState(false);
-	let columnsFiltered = {};
+	
+	//let columnsFiltered = {};
 
 	const {
 		getTableProps,
@@ -32,17 +33,25 @@ export default function ListsTable({setHeaderDescript}){
 		useFilters,
 	);
 	
-	
+	const self = React.useRef([]).current;
+	const saveRef = key => r => {self[key] = r }
+
+	const[columnsFiltered, setColumnsFiltered] = React.useState(new Map());
+	const updateMap = (k,v) => {
+	 	setColumnsFiltered(columnsFiltered.set(k,v));
+	}
 
 	function ColumnFilter ( {column} ) {
-		console.log("columnsFiltered[column.id]", columnsFiltered[column.id])
+		console.log("columnsFiltered[column.id]", columnsFiltered)
 		return (
 			<div className="form-group">
 			<span>{column.id}</span>
 				
-				<input class="form-field"	
+				<input class="form-field"
+					type="text"
+					ref={el => saveRef(el) }
 					onChange ={(event) =>  {
-						columnsFiltered[column.id] = event.target.value;
+						updateMap(column.id, event.target.value);
 					}} />
 			</div>
 		);
@@ -54,9 +63,10 @@ export default function ListsTable({setHeaderDescript}){
 	}
 
 	const handleClickFind = () => {
+		console.log("self", self);
 		console.log(columnsFiltered);
 		headerGroups.map(headerGroup => { headerGroup.headers.map(column =>{
-			column.setFilter(columnsFiltered[column.id]);
+			column.setFilter(columnsFiltered.get(column.id));
 		} ) })
 
 		console.log("columnsFiltered after ", columnsFiltered);
