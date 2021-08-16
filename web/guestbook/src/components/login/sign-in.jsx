@@ -44,6 +44,7 @@ export default function SignIn({isAuth, setAuthStatus}){
 				setErrorInput(data.Message);
 				setAuthStatus(false);
 			} else if(data.Status === "OK"){
+				
 				setAuthStatus(true);
 				cookies.set("jwt", data.token)
 			}
