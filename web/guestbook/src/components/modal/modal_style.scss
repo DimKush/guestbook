@@ -100,3 +100,26 @@ transition: all 300ms ease-in-out;
 		margin: 0;
 	}
 }
+
+
+// donut loader
+
+.donutContainer.active{
+	position: relative;
+	width: 3rem;
+	height: 3rem;
+	align-items: center;
+
+	.Donut{
+		display: block;
+		width: 3rem;
+		height: 3rem;
+		border: 0.5rem solid salmon;
+		border-top: 0.5rem solid #6e1e6a;
+		border-radius: 50%;
+		position: absolute;
+		box-sizing: border-box;
+		top: 0;
+		left: 0;
+	}
+}
