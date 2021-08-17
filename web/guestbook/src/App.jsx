@@ -61,7 +61,7 @@ export default function App() {
       <div className="login">
           <div className="container">
             {isLoggingActive && <SignIn containerRef={(ref) => current = ref} isAuth={isAuth} setAuthStatus={setAuthStatus} />}
-            {!isLoggingActive && <SignUp containerRef={(ref) => current = ref} />}
+            {!isLoggingActive && <SignUp containerRef={(ref) => current = ref} setLoggingActive={setLoggingActive} />}
           </div>
           <RightSightComponent loggingActive={isLoggingActive} currentState={currentState} containerRef={ref => current = ref} onClick={changeState}/>
       </div>

@@ -4,7 +4,7 @@ import ServerStatus from "../server/status.jsx"
 import "./style.scss"
 import ModalThx from "../modal/modal-thx";
 
-export default function SignUp(){
+export default function SignUp({setLoggingActive}){
 	let fullnameInput = React.createRef();
 	let usernameInput = React.createRef();
 	let emailInput 	  = React.createRef();
@@ -13,7 +13,7 @@ export default function SignUp(){
 	//let inputError = "";
 
 	const[modalActive, setModalActive] = React.useState(false);
-	const[modalThx, setModalThx] = React.useState(true);
+	const[modalThx, setModalThx] = React.useState(false);
 	const[errorMsg, setErrorMsg] = React.useState("");
 	const[inputError, setErrorInput] = React.useState("");
 	const[modalMsgHead, setModalMsgHead] = React.useState("");
@@ -64,6 +64,10 @@ export default function SignUp(){
 			if (data.Status === "Error"){
 				setErrorInput(data.Message);
 			} 
+			if (data.Status === "OK") {
+				setLoggingActive(true);
+				setModalThx(true);
+			}
 		}).catch(error => {
 			console.log("ERROR");
 			setModalMsg(error.toString()); 
@@ -111,4 +115,4 @@ export default function SignUp(){
 			<ModalThx active={modalThx} setActive={setModalThx}/>
 		</div>
 	);
-}
+}	
