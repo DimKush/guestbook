@@ -1,11 +1,19 @@
 import React, { Children } from 'react';
 import "./modal_style.scss"
+import { motion } from "framer-motion"
 
+const ModalLoading = ({active}) => {
 
-const ModalLoading = ({active, setActive}) => {
+	console.log("ACTIVE ? ", active);
+	const spinTransition = {
+		loop: Infinity,
+		duration: 1,
+	}
+
 	return (
-		<div className={active ? "modal active": "modal "} onClick={() => setActive(false)}>
-			<div className={active ? "modal_thx_content active" : "modal_thx_content"} onClick={e => e.stopPropagation()}>
+		<div className={active ? "modal active": "modal "}>
+			<div className={active ? "donutContainer active" : "donutContainer"} onClick={e => e.stopPropagation()}>
+				<motion.span className="Donut" animate={{rotate: 360 }} transition={spinTransition}/>
 			</div>
 			
 		</div>
