@@ -1,10 +1,10 @@
 import React, { Children } from 'react';
 import "./modal_style.scss"
-
+import {Redirect} from "react-router-dom";
 
 const ModalThx = ({active, setActive}) => {
 	const handleOkClick = () => {
-		setActive(false);
+		setActive(false);		
 	}
 
 	

@@ -9,16 +9,8 @@ import { BsBoxArrowInRight } from "react-icons/bs";
 import "./filters-styles.scss"
 import { cookies } from '../../App'
 
-export default function ListsTable({setHeaderDescript}){
-	setHeaderDescript("Lists");
-	const[sidebar, setSidebar] = React.useState(false);
-	const[clearInput, setClearInput] = React.useState(false);
-	const[dataTable, setDataTable] = React.useState([]);
-	const columns = useMemo(() => COLUMNS , []);
-
-	useEffect(() => {
-		(async () => {
-		  const responce = await fetch("http://localhost:8007/api/lists/", {
+const refershTable = async({setLoadingDonut}) => {
+	const responce = await fetch("http://localhost:8007/api/lists/", {
 				method: 'GET',
 				credentials: 'include',
 				headers : {
@@ -26,11 +18,37 @@ export default function ListsTable({setHeaderDescript}){
 						"Authorization" :`Bearer ${cookies.get("jwt")}`
 				}
 			})
-			const content = await responce.json();
-			if(content.Status === "OK"){
-				setDataTable(content.Result);
+			
+			setLoadingDonut(true);
+
+				const content = await responce.json();
+			
+			setLoadingDonut(false);
+			
+			if(content.Status === "OK" && content.Result !== null ){
+				return content.Result;
+				//setDataTable(content.Result);
 			} else if( content.Status === "Error") {
 				console.log("Message");
+				return null;
+			}
+}
+
+
+export default function ListsTable({setHeaderDescript}){
+	setHeaderDescript("Lists");
+	const[sidebar, setSidebar] = React.useState(false);
+	const[clearInput, setClearInput] = React.useState(false);
+	const[dataTable, setDataTable] = React.useState([]);
+	const[loadingDonut , setLoadingDonut] = React.useState(false);
+
+	const columns = useMemo(() => COLUMNS , []);
+
+	useEffect(() => {
+		(async () => {
+			let tableData = await refershTable({setLoadingDonut});
+			if (tableData != null) {
+				setDataTable(tableData);
 			}
 		}
 		)();
@@ -68,7 +86,28 @@ export default function ListsTable({setHeaderDescript}){
 	 	setColumnsFiltered(columnsFiltered.set(k,v));
 	}
 
+	const handleClickFind = () => {
+		(async () => {
+			let tableData = await refershTable({setLoadingDonut});
+			if (tableData != null) {
+				setDataTable(tableData);
+			}
+		})();
+
+		let mpValues = new Map();
+		inputRef.current.map( elem => mpValues.set(elem.id, elem.value) );
+
+		headerGroups.map(headerGroup => { headerGroup.headers.map(column =>{
+			column.setFilter(mpValues.get(column.id));
+		})});
+	}
+
 	function ColumnFilter ( {column} ) {
+		const handleKeyDown = (input) => {
+			if (input.key === "Enter"){
+				handleClickFind();
+			}
+		} 
 		return (
 			<div className="form-group">
 			<span>{column.id}</span>
@@ -78,6 +117,7 @@ export default function ListsTable({setHeaderDescript}){
 					type="text"
 					id={column.id}
 					ref={addToRefs}
+					onKeyDown={handleKeyDown}
 					/>
 			</div>
 		);
@@ -86,15 +126,6 @@ export default function ListsTable({setHeaderDescript}){
 	const showSidebar = () => setSidebar(!sidebar);
 	const handleClickRefresh = () => {
 		inputRef.current.map(elem => elem.value = '');
-	}
-
-	const handleClickFind = () => {
-		let mpValues = new Map();
-		inputRef.current.map( elem => mpValues.set(elem.id, elem.value) );
-
-		headerGroups.map(headerGroup => { headerGroup.headers.map(column =>{
-			column.setFilter(mpValues.get(column.id));
-		})});
 	}
 
 	const Sidebar = () => {
@@ -109,7 +140,6 @@ export default function ListsTable({setHeaderDescript}){
 					</div>
 				}
 				{
-					
 					headerGroups.map(headerGroup => (
 						<div {...headerGroup.getHeaderGroupProps()}>
 							{
