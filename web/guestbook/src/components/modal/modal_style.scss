@@ -11,6 +11,7 @@
 	pointer-events: none;
 	opacity: 0;
 	transform: 0.5s;
+	z-index: 9998;
 }
 
 
@@ -114,12 +115,12 @@ transition: all 300ms ease-in-out;
 		display: block;
 		width: 3rem;
 		height: 3rem;
-		border: 0.5rem solid salmon;
-		border-top: 0.5rem solid #6e1e6a;
+		border: 0.5rem solid #ffeefb;
+		border-top: 0.5rem solid #be44b6;
 		border-radius: 50%;
 		position: absolute;
 		box-sizing: border-box;
 		top: 0;
-		left: 0;
+		left: .1vh;
 	}
 }

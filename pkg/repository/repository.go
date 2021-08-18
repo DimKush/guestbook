@@ -32,6 +32,7 @@ type AuditInt interface {
 
 type ListService interface {
 	GetAllLists() ([]List.List, error)
+	GetListsByParams(List.List) ([]List.List, error)
 }
 
 type Repository struct {

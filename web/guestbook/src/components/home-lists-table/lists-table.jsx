@@ -10,7 +10,9 @@ import "./filters-styles.scss"
 import { cookies } from '../../App'
 import ModalLoading from '../modal/modal-loading'
 
+
 const refershTable = async() => {
+
 	const responce = await fetch("http://localhost:8007/api/lists/", {
 				method: 'GET',
 				credentials: 'include',
@@ -42,16 +44,12 @@ export default function ListsTable({setHeaderDescript}){
 	const columns = useMemo(() => COLUMNS , []);
 
 	useEffect(() => {
-		//setLoadingDonut(true);
-	
 		(async () => {
 			setLoadingDonut(true);
-			
 			let tableData = await refershTable({setLoadingDonut});
 			if (tableData != null) {
 				setDataTable(tableData);
 			}
-			
 			setLoadingDonut(false);
 		}
 		)();
