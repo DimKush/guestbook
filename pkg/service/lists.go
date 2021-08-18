@@ -1,8 +1,6 @@
 package service
 
 import (
-	"fmt"
-
 	"github.com/rs/zerolog/log"
 
 	"github.com/DimKush/guestbook/tree/main/internal/entities/List"
@@ -14,7 +12,6 @@ type ListsServiceWorker struct {
 }
 
 func (data *ListsServiceWorker) GetAllLists() ([]List.List, error) {
-	fmt.Println("HERE")
 	log.Info().Msg("GetAllLists process request")
 
 	lists, err := data.db_lists.GetAllLists()
@@ -23,8 +20,16 @@ func (data *ListsServiceWorker) GetAllLists() ([]List.List, error) {
 		return []List.List{}, err
 	}
 
-	for _, val := range lists {
-		fmt.Println(val)
+	return lists, nil
+}
+
+func (data *ListsServiceWorker) GetListsByParams(list List.List) ([]List.List, error) {
+	log.Info().Msg("GetListsByParams process request")
+
+	lists, err := data.db_lists.GetListsByParams(list)
+	if err != nil {
+		log.Error().Msg(err.Error())
+		return []List.List{}, err
 	}
 
 	return lists, nil
