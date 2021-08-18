@@ -33,9 +33,9 @@ func (h *Handler) signUp(context *gin.Context) {
 }
 
 func (h *Handler) signIn(context *gin.Context) {
-	fmt.Printf("signIn process request.")
-	var userIn UserIn.UserIn
 	log.Info().Msg("signIn process request.")
+
+	var userIn UserIn.UserIn
 
 	if err := context.BindJSON(&userIn); err != nil {
 		initErrorResponce(context, http.StatusBadRequest, err.Error())

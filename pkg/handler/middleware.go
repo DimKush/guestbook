@@ -55,7 +55,6 @@ func (h *Handler) userIdentityToken(context *gin.Context) {
 	user, err := h.services.GetUser(UserIn.UserIn{Id: userId})
 
 	if err != nil {
-		fmt.Println(err.Error())
 		initErrorResponce(context, http.StatusUnauthorized, err.Error())
 	}
 
@@ -66,6 +65,5 @@ func (h *Handler) userIdentityToken(context *gin.Context) {
 }
 
 func (h *Handler) logout(context *gin.Context) {
-	fmt.Println("logout")
 	initOkResponce(context, map[string]interface{}{})
 }

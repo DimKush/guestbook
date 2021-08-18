@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"net/smtp"
 	"os"
 
@@ -14,9 +13,6 @@ type EmailServiceAuth struct {
 }
 
 func (data *EmailServiceAuth) InitEmailEvent(email_event *EmailEventDb.EmailEventDb) error {
-	fmt.Println("HERE!")
-	fmt.Println(email_event)
-
 	email_event.Sender = os.Getenv("EMAIL_SENDER")
 	email_event.SenderPass = os.Getenv("EMAIL_PASSWORD")
 
