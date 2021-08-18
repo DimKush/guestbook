@@ -32,8 +32,7 @@ func (h *Handler) GetListsByParams(context *gin.Context) {
 	var listsParams List.List
 
 	if err := context.BindJSON(&listsParams); err != nil {
-		initErrorResponce(context, http.StatusBadRequest, err.Error())
-		return
+		listsParams = List.List{}
 	}
 
 	lists, err := h.services.GetListsByParams(listsParams)

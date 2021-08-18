@@ -1,4 +1,4 @@
-import React, { useMemo , useEffect} from 'react'
+import React, { useMemo, useRef , useEffect} from 'react'
 import './style.scss'
 import { useTable, useGlobalFilter, useFilters } from 'react-table'
 import MOCK_DATA from './MOCK_DATA.json'
@@ -11,15 +11,17 @@ import { cookies } from '../../App'
 import ModalLoading from '../modal/modal-loading'
 
 
-const refershTable = async() => {
-
-	const responce = await fetch("http://localhost:8007/api/lists/", {
-				method: 'GET',
+const refershTable = async(listFilters) => {
+	// from GO : json: invalid use of ,string struct tag, trying to unmarshal "" into int
+	console.log("JSON.stringify(listFilters)",JSON.stringify(listFilters))
+	const responce = await fetch("http://localhost:8007/api/lists/params", {
+				method: 'POST',
 				credentials: 'include',
 				headers : {
 						"Content-type" : "application/json", 
 						"Authorization" :`Bearer ${cookies.get("jwt")}`
-				}
+				},
+				body :JSON.stringify(listFilters)
 			})
 		
 			const content = await responce.json();
@@ -40,19 +42,25 @@ export default function ListsTable({setHeaderDescript}){
 	const[clearInput, setClearInput] = React.useState(false);
 	const[dataTable, setDataTable] = React.useState([]);
 	const[loadingDonut , setLoadingDonut] = React.useState(false);
-
+	const[mpValues , setMapValues] = React.useState(new Map());
+	const[timelineLoaded, setTimelineloaded] = React.useState(false);
 	const columns = useMemo(() => COLUMNS , []);
 
 	useEffect(() => {
-		(async () => {
-			setLoadingDonut(true);
-			let tableData = await refershTable({setLoadingDonut});
-			if (tableData != null) {
-				setDataTable(tableData);
+		if (!timelineLoaded) {
+			(async () => {
+				setLoadingDonut(true);
+				const empty = {} 
+				let tableData = await refershTable(empty);
+				if (tableData != null) {
+					setDataTable(tableData);
+				}
+				setLoadingDonut(false);
 			}
-			setLoadingDonut(false);
+			)();
+
+			setTimelineloaded(true);
 		}
-		)();
 	  }, []);
 	  
 	  //setLoadingDonut(false);
@@ -90,19 +98,25 @@ export default function ListsTable({setHeaderDescript}){
 	}
 
 	const handleClickFind = () => {
+		let values = new Map();
+		inputRef.current.map( elem => values.set(elem.id, elem.value) );
+		setMapValues(values);
+
 		(async () => {
-			let tableData = await refershTable({setLoadingDonut});
+			setLoadingDonut(true);
+			const tableData = await refershTable(Object.fromEntries(values));
 			if (tableData != null) {
 				setDataTable(tableData);
 			}
+			setLoadingDonut(false);
 		})();
 
-		let mpValues = new Map();
-		inputRef.current.map( elem => mpValues.set(elem.id, elem.value) );
+		
+		
 
-		headerGroups.map(headerGroup => { headerGroup.headers.map(column =>{
-			column.setFilter(mpValues.get(column.id));
-		})});
+		// headerGroups.map(headerGroup => { headerGroup.headers.map(column =>{
+		// 	column.setFilter(mpValues.get(column.id));
+		// })});
 	}
 
 	function ColumnFilter ( {column} ) {
@@ -110,13 +124,14 @@ export default function ListsTable({setHeaderDescript}){
 			if (input.key === "Enter"){
 				handleClickFind();
 			}
-		} 
+		}
+
 		return (
 			<div className="form-group">
 			<span>{column.id}</span>
 				
 				<input class="form-field"
-					defaultValue={column.filterValue}
+					defaultValue={mpValues.get(column.id)}
 					type="text"
 					id={column.id}
 					ref={addToRefs}

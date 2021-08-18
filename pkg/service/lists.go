@@ -1,6 +1,8 @@
 package service
 
 import (
+	"strconv"
+
 	"github.com/rs/zerolog/log"
 
 	"github.com/DimKush/guestbook/tree/main/internal/entities/List"
@@ -25,6 +27,10 @@ func (data *ListsServiceWorker) GetAllLists() ([]List.List, error) {
 
 func (data *ListsServiceWorker) GetListsByParams(list List.List) ([]List.List, error) {
 	log.Info().Msg("GetListsByParams process request")
+
+	// string to int
+	id, _ := strconv.Atoi(list.IdStr)
+	list.Id = id
 
 	lists, err := data.db_lists.GetListsByParams(list)
 	if err != nil {
