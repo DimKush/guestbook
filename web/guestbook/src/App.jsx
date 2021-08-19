@@ -33,8 +33,10 @@ export default function App() {
     (
       async () => {
         const responce = await fetch("http://localhost:8007/auth/user", {
-          headers : {"Content-type" : "application/json"},
+          headers : {"Content-type" : "application/json",
+                     "Authorization" :`Bearer ${cookies.get("jwt")}`},
           credentials : "include",
+          
         });
         
         const content = await responce.json();

@@ -133,6 +133,7 @@
 	margin-top: 8vh;
 	margin-left: 6.5%;
 	margin-right: 5%;
+	margin-bottom: 60px;
 	width: 86%;
 	float: left;
 	transition: 200ms;
@@ -175,6 +176,7 @@
 .form-events.active{
 	width: 75%;
 	margin-left: 1%;
+	margin-bottom: 5%;
 }
 
 .search-field {
@@ -187,19 +189,7 @@
 	width: 100%;
 	top: 2vh;
 
-	.sidebar-but{
-		float: left;
-		width: 43%;
-		margin-left: 5%;
-		padding: 1.5vh;
-		border-radius: 6px;
-		border: 1px #CDD9ED solid;
-		font-family: inherit;
-		font-weight: bold;
-		color: #99A3BA;
-		background-color: #EEF4FF;
-		transition: 400ms;
-	}
+	
 	
 	
 }
@@ -210,4 +200,86 @@
 	color: #fff;
 	transition: 400ms;
 	border-color: 1px #CDD9ED solid;
+}
+
+.sidebar-but{
+	float: left;
+	width: 43%;
+	margin-left: 5%;
+	padding: 1.5vh;
+	border-radius: 6px;
+	border: 1px #CDD9ED solid;
+	font-family: inherit;
+	font-weight: bold;
+	color: #99A3BA;
+	background-color: #EEF4FF;
+	transition: 400ms;
+}
+
+.tableNavigator{
+	//position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 90%;
+	height: 45px;
+}
+
+.tableNavigator{
+	width: 100%;
+	margin-top: 5vh;
+
+	select{
+		float: left;
+		width: 15%;
+	}
+	.pageShow{
+		align-items: center;
+	}
+	.tableButtons{
+		float: right;
+		width: 25%;
+		button{
+			margin-left: 1.5vh;
+		}
+
+		input{
+			
+		}
+	
+		.but-tab-nav{
+			width: 20%;
+			border-radius: 6px;
+			border: 1px #CDD9ED solid;
+			font-family: inherit;
+			font-weight: bold;
+			color: #99A3BA;
+			background-color: #EEF4FF;
+			transition: 200ms;
+		}
+
+		.but-tab-nav:disabled{
+			background-color: #ffffff;
+		}
+		
+		.but-tab-nav:enabled:hover{
+			cursor: pointer;
+			background-color: #6e1e69;
+			color: #fff;
+			transition: 200ms;
+			border-color: 1px #CDD9ED solid;
+		}
+	}
+	.form-field.pages{
+		display:inline;
+		width: 10vh;
+		padding: 0;
+		padding-left: 1.4vh;
+		line-height: 0px;
+	}
+	.form-field.pagesSize{
+		display:inline;
+		width: 10vh;
+		padding: 0;
+		padding-left: 0.5vh;
+	}
 }

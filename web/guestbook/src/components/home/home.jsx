@@ -20,7 +20,8 @@ export default function Home({isAuth , setAuthStatus}) {
 		(
 		  async () => {
 			const responce = await fetch("http://localhost:8007/auth/user", {
-			  headers : {"Content-type" : "application/json"},
+			  headers : {"Content-type" : "application/json",
+			  			"Authorization" :`Bearer ${cookies.get("jwt")}`},
 			  credentials : "include",
 			});
 			
@@ -29,7 +30,7 @@ export default function Home({isAuth , setAuthStatus}) {
 			console.log(cookies);
 			if(content.Status === "OK"){
 			  setAuthStatus(true);
-			  setUsername(content.Username);
+			  setUsername(content.username);
 			} else {
 			  setAuthStatus(false);
 			}

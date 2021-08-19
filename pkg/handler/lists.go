@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/DimKush/guestbook/tree/main/internal/entities/List"
@@ -28,7 +29,7 @@ func (h *Handler) getAllLists(context *gin.Context) {
 }
 
 func (h *Handler) GetListsByParams(context *gin.Context) {
-	log.Info().Msg("GetListsByParams process request.")
+	log.Info().Msg("Handler GetListsByParams process request.")
 	var listsParams List.List
 
 	if err := context.BindJSON(&listsParams); err != nil {
@@ -39,6 +40,13 @@ func (h *Handler) GetListsByParams(context *gin.Context) {
 
 	if err != nil {
 		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+	}
+
+	if len(lists) == 0 {
+		err := fmt.Errorf("Didn't find anything.")
+		initErrorResponce(context, http.StatusOK, err.Error())
+
+		return
 	}
 
 	initOkResponce(context, map[string]interface{}{

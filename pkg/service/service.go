@@ -13,7 +13,7 @@ type Authorization interface {
 	CheckUserExitstsWithPass(user UserIn.UserIn) error
 	CheckUserExitsts(user UserIn.UserIn) error
 	GenerateToken(username, password string) (string, error)
-	ParseToken(accessToken string) (int, error)
+	ParseToken(accessToken string) (int, string, error)
 	GetUser(userIn UserIn.UserIn) (User.User, error)
 }
 
