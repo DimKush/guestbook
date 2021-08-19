@@ -283,3 +283,46 @@
 		padding-left: 0.5vh;
 	}
 }
+
+.ControlContainer{
+	height: 100%;
+	width: 100%;
+	position: relative;
+	margin-top: 5vh;
+	margin-bottom: 1vh;
+	
+	float: left;
+	flex-direction: column;
+	justify-content: center;
+	background-color: #EEF4FF;
+
+	.butControl{
+		min-width: 35%;
+		max-width: 70%;
+		margin-left: 0;
+		.but-tab-hight{
+			padding: 1vh;
+			border-radius: 6px;
+			border: 1px #CDD9ED solid;
+			font-family: inherit;
+			font-weight: bold;
+			color: #99A3BA;
+			background-color: #EEF4FF;
+			transition: 200ms;
+			margin-right: 5vh;
+			float: left;
+		}
+
+		.but-tab-hight:disabled{
+			background-color: #ffffff;
+		}
+		
+		.but-tab-hight:enabled:hover{
+			cursor: pointer;
+			background-color: #6e1e69;
+			color: #fff;
+			transition: 200ms;
+			border-color: 1px #CDD9ED solid;
+		}
+	}
+}

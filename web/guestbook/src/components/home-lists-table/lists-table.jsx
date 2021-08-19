@@ -199,10 +199,13 @@ export default function ListsTable({setHeaderDescript}){
 	<div className="form-container">
 		<Sidebar/>
 	<div className={sidebar ? "form-events active" : "form-events"}>
-		
-		{/* <div className="search-container">
-			
-		</div> */}
+		<div className="ControlContainer">
+			<div className="butControl">
+				<button className="but-tab-hight">New List</button>
+				<button className="but-tab-hight">Edit List</button>
+				<button className="but-tab-hight">Delete List</button>
+			</div>
+		</div>
 		<table {...getTableProps()} > 
 			<thead>
 				{
