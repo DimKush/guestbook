@@ -25,7 +25,8 @@ const (
 
 type tokenClaims struct {
 	jwt.StandardClaims
-	UserId int `json:"user_id"`
+	UserId   int    `json:"user_id"`
+	Username string `json:"username,omitempty"`
 }
 type AuthService struct {
 	auth         repository.Authorization
@@ -130,12 +131,13 @@ func (data *AuthService) GenerateToken(username, password string) (string, error
 			IssuedAt:  time.Now().Unix(),
 		},
 		user.Id,
+		user.Username,
 	})
 
 	return token.SignedString([]byte(signingKey))
 }
 
-func (data *AuthService) ParseToken(accessToken string) (int, error) {
+func (data *AuthService) ParseToken(accessToken string) (int, string, error) {
 	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("Invalid string methods.")
@@ -145,15 +147,15 @@ func (data *AuthService) ParseToken(accessToken string) (int, error) {
 	})
 
 	if err != nil {
-		return 0, err
+		return 0, "", err
 	}
 
 	claims, ok := token.Claims.(*tokenClaims)
 	if !ok {
-		return 0, errors.New("Error during parse the token. Token claims are not of types.")
+		return 0, "", errors.New("Error during parse the token. Token claims are not of types.")
 	}
 
-	return claims.UserId, nil
+	return claims.UserId, claims.Username, nil
 }
 
 func (data *AuthService) CheckUserExitstsWithPass(userIn UserIn.UserIn) error {

@@ -1,7 +1,10 @@
 package service
 
 import (
-	"strconv"
+	"encoding/json"
+	"fmt"
+	"sort"
+	"time"
 
 	"github.com/rs/zerolog/log"
 
@@ -26,16 +29,47 @@ func (data *ListsServiceWorker) GetAllLists() ([]List.List, error) {
 }
 
 func (data *ListsServiceWorker) GetListsByParams(list List.List) ([]List.List, error) {
-	log.Info().Msg("GetListsByParams process request")
+	log.Info().Msg("Service GetListsByParams process request")
 
-	// string to int
-	id, _ := strconv.Atoi(list.IdStr)
-	list.Id = id
+	//write event into audit_event
+	audit_ch := make(chan error)
+
+	go func() {
+		out, err := json.Marshal(list)
+		if err != nil {
+			log.Error().Msg(err.Error())
+		}
+		audit_ch <- Audit.WriteEventParams("ListsServiceWorker",
+			"GetListsByParams",
+			AUDIT_INFO,
+			time.Now(),
+			false,
+			fmt.Sprintf("Get lists params %s", string(out)),
+		)
+	}()
 
 	lists, err := data.db_lists.GetListsByParams(list)
 	if err != nil {
 		log.Error().Msg(err.Error())
 		return []List.List{}, err
+	}
+
+	// sorting output
+	if len(lists) != 0 {
+		sort.Slice(lists, func(i, j int) bool {
+			return lists[i].Id < lists[j].Id
+		})
+	}
+
+	//output log
+	log.Info().Msg("Database output:")
+
+	for _, val := range lists {
+		log.Info().Msgf("\n%v", val)
+	}
+
+	if err := <-audit_ch; err != nil {
+		log.Error().Msg(err.Error())
 	}
 
 	return lists, nil

@@ -1,6 +1,6 @@
 import React, { useMemo, useRef , useEffect} from 'react'
 import './style.scss'
-import { useTable, useGlobalFilter, useFilters } from 'react-table'
+import { useTable, useFilters, usePagination } from 'react-table'
 import MOCK_DATA from './MOCK_DATA.json'
 import { COLUMNS } from './columns'
 import { AiOutlineSearch } from 'react-icons/ai'
@@ -14,6 +14,8 @@ import ModalLoading from '../modal/modal-loading'
 const refershTable = async(listFilters) => {
 	// from GO : json: invalid use of ,string struct tag, trying to unmarshal "" into int
 	console.log("JSON.stringify(listFilters)",JSON.stringify(listFilters))
+
+	listFilters.id = Number(listFilters.id)
 	const responce = await fetch("http://localhost:8007/api/lists/params", {
 				method: 'POST',
 				credentials: 'include',
@@ -70,20 +72,31 @@ export default function ListsTable({setHeaderDescript}){
 		getTableProps,
 		getTableBodyProps,
 		headerGroups,
-		rows,
+		page,
+		nextPage,
+		previousPage,
+		canNextPage,
+		canPreviousPage,
+		pageOptions,
 		prepareRow,
+		gotoPage,
+		pageCount,
+		setPageSize,
 		state,
 	} =  useTable(
 		{
 			columns, 
 			data: dataTable,
+			initialState : {pageIndex : 0}
 		},
 		useFilters,
+		usePagination,
 	);
 	
 
 	const arrLength = columns.length;
 	const inputRef = React.useRef([]);
+	const { pageIndex, pageSize } = state;
 	inputRef.current = [];
 
 	const addToRefs = (el) => {
@@ -209,7 +222,7 @@ export default function ListsTable({setHeaderDescript}){
 			</thead>
 			<tbody {... getTableBodyProps()}>
 				{
-					rows.map(row => {
+					page.map(row => {
 						prepareRow(row)
 						return (
 							<tr {...row.getRowProps()}>
@@ -224,6 +237,39 @@ export default function ListsTable({setHeaderDescript}){
 				}
 			</tbody>
 		</table>
+		<div className="tableNavigator">
+		<select className="form-field pagesSize" value={pageSize} onChange={e => setPageSize(Number(e.target.value))}>
+				{
+					[5,10,25,50].map(pageSize => (
+						<option key ={pageSize} value={pageSize}>
+							Show {pageSize}
+						</option>
+					))
+				}
+			</select>
+			<div className="pageShow">
+				<span>
+					Page {' '}
+					<strong>
+						{ pageIndex + 1} of {pageOptions.length}
+					</strong>
+				</span>
+				<span>
+					{' '}Go to page: {' '}
+					<input class="form-field pages" type="number" defaultValue={pageIndex + 1} 
+					onChange={e => { 
+						const pageNumber = e.target.value ? Number(e.target.value) -1 : 0;
+						gotoPage(pageNumber);
+					}}/>
+				</span>
+				<div className="tableButtons">
+					<button className="but-tab-nav" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>{'<<'}</button>
+					<button className="but-tab-nav" onClick={() => previousPage()} disabled={!canPreviousPage} >Prev</button>
+					<button className="but-tab-nav" onClick={() => nextPage()} disabled={!canNextPage}>Next</button>
+					<button className="but-tab-nav" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>{'>>'}</button>
+				</div>
+			</div>
+		</div>
 	</div>
 	<ModalLoading active={loadingDonut}/>
 	</div>

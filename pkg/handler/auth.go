@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/DimKush/guestbook/tree/main/internal/entities/User"
@@ -55,10 +54,6 @@ func (h *Handler) signIn(context *gin.Context) {
 		initErrorResponce(context, http.StatusBadRequest, err.Error())
 		return
 	}
-
-	//context.SetCookie("jwt", token, 3600*12, "", "localhost", false, false)
-
-	fmt.Println(context.Cookie("jwt"))
 
 	initOkResponce(context, map[string]interface{}{
 		"token": token,
