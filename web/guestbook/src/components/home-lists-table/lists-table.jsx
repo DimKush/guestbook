@@ -1,11 +1,10 @@
 import React, { useMemo, useRef , useEffect} from 'react'
 import './style.scss'
 import { useTable, useFilters, usePagination } from 'react-table'
-import MOCK_DATA from './MOCK_DATA.json'
 import { COLUMNS } from './columns'
-import { AiOutlineSearch } from 'react-icons/ai'
+import { AiOutlineSearch, AiOutlineForm, AiOutlinePlusSquare, AiOutlineMinusSquare} from 'react-icons/ai'
 import { BsBoxArrowInRight } from "react-icons/bs";
-
+import { Link } from "react-router-dom";
 import "./filters-styles.scss"
 import { cookies } from '../../App'
 import ModalLoading from '../modal/modal-loading'
@@ -64,8 +63,6 @@ export default function ListsTable({setHeaderDescript}){
 			setTimelineloaded(true);
 		}
 	  }, []);
-	  
-	  //setLoadingDonut(false);
 
 	console.log("dataTable", dataTable);
 	const {
@@ -201,9 +198,11 @@ export default function ListsTable({setHeaderDescript}){
 	<div className={sidebar ? "form-events active" : "form-events"}>
 		<div className="ControlContainer">
 			<div className="butControl">
-				<button className="but-tab-hight">New List</button>
-				<button className="but-tab-hight">Edit List</button>
-				<button className="but-tab-hight">Delete List</button>
+				<Link to="/lists/create">
+					<button className="but-tab-hight"><AiOutlinePlusSquare/><div className="but-tab-hight-text">New List</div></button>
+				</Link>
+				<button className="but-tab-hight"><AiOutlineForm/><div className="but-tab-hight-text">Edit List</div></button>
+				<button className="but-tab-hight"><AiOutlineMinusSquare/><div className="but-tab-hight-text">Delete List</div></button>
 			</div>
 		</div>
 		<table {...getTableProps()} > 
