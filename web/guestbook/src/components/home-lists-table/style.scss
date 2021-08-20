@@ -284,6 +284,11 @@
 	}
 }
 
+.home-content-container{
+	height: 35vh;
+	position: relative;
+}
+
 .ControlContainer{
 	height: 100%;
 	width: 100%;
@@ -294,14 +299,13 @@
 	float: left;
 	flex-direction: column;
 	justify-content: center;
-	background-color: #EEF4FF;
 
 	.butControl{
 		min-width: 35%;
 		max-width: 70%;
 		margin-left: 0;
 		.but-tab-hight{
-			padding: 1vh;
+
 			border-radius: 6px;
 			border: 1px #CDD9ED solid;
 			font-family: inherit;
@@ -311,6 +315,21 @@
 			transition: 200ms;
 			margin-right: 5vh;
 			float: left;
+			padding: 1vh;
+
+			svg{
+				position: relative;
+				float: left;
+				margin-right: 0.7vh;
+				height: 20px;
+				width: 20px;
+				margin-top: 0.25vh;
+			}
+			.but-tab-hight-text{
+				position: relative;
+				float: left;
+				margin-top: 0.3vh;
+			}
 		}
 
 		.but-tab-hight:disabled{
