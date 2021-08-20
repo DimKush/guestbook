@@ -77,7 +77,7 @@ export default function SignUp({setLoggingActive}){
 		});
 	}
 
-	return (
+	return(
 		<div className="base-container">
 			<div className="top-system-right-btn">
 					<button onClick={handleClickServerAlive}>Server status</button>

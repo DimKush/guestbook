@@ -13,7 +13,7 @@ export default function HomeMain({username , setHeaderDescript}) {
 		console.log("POOP");
 		return <Redirect from="/" to="/lists"/>
 	}
-	return (
+	return(
 		<div className="home-content-container">
 			<div className="username">
 				<h1>Hello, {username}. What we will do today at <Clock format={"HH:mm"} ticking={true} timezone={Intl.DateTimeFormat().resolvedOptions().timeZone}/>? </h1>

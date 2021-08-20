@@ -136,7 +136,7 @@ export default function ListsTable({setHeaderDescript}){
 			}
 		}
 
-		return (
+		return(
 			<div className="form-group">
 			<span>{column.id}</span>
 				
@@ -157,7 +157,7 @@ export default function ListsTable({setHeaderDescript}){
 	}
 
 	const Sidebar = () => {
-		return (
+		return(
 			<div className={ sidebar ? "SidebarFilter active" : "SidebarFilter" }>
 				{!sidebar && <button className="searchClick" onClick={showSidebar}><AiOutlineSearch/></button>}
 				<div className="filters-container">
@@ -212,9 +212,7 @@ export default function ListsTable({setHeaderDescript}){
 						<tr {...headerGroup.getHeaderGroupProps()}>
 							{
 								headerGroup.headers.map(column => (
-									<th {...column.getHeaderProps()}>{column.render('Header')}
-										{/* <div>{column.canFilter ? column.render('Filter') : null } </div> */}
-									</th>
+									<th {...column.getHeaderProps()}>{column.render('Header')}</th>
 								))
 							}
 							
@@ -226,7 +224,7 @@ export default function ListsTable({setHeaderDescript}){
 				{
 					page.map(row => {
 						prepareRow(row)
-						return (
+						return(
 							<tr {...row.getRowProps()}>
 								{
 									row.cells.map((cell) => {

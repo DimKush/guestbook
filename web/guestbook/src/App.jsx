@@ -1,34 +1,16 @@
 import {useEffect} from 'react';
 import React from 'react';
 import './App.scss';
-import {BrowserRouter, Route, Redirect} from "react-router-dom";
-import SignIn from "./components/login/sign-in.jsx";
-import SignUp from "./components/login/sign-up.jsx";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Home from "./components/home/home.jsx";
 import Cookies from 'universal-cookie';
 import ListsTable from './components/home-lists-table/lists-table';
-
+import LoginComponent from './components/login/login'
 export const cookies = new Cookies();
-
-function RightSightComponent({loggingActive, currentState, containerRef, onClick}) {
-  
-  return (
-    <div className={loggingActive ? "right-side right" : "right-side left"} ref={containerRef} onClick={onClick}>
-      <div className="inner-container">
-         <div className="text">{currentState}</div>
-      </div>
-    </div>
-  );
-}
 
 
 export default function App() {
-  let current = React.createRef();
-  const[isLoggingActive, setLoggingActive] = React.useState(true);
-  const[currentState, setCurrentState] = React.useState(!isLoggingActive ? "Sign in" : "Sign up");
   const[isAuth, setAuthStatus] = React.useState(false);
-  const[Username, setUsername] = React.useState("");
-  
   useEffect(() => {
     (
       async () => {
@@ -52,34 +34,9 @@ export default function App() {
 
   })
 
-  const changeState = () => {
-    setLoggingActive(!isLoggingActive);
-    setCurrentState(isLoggingActive ? "Sign in" : "Sign up");
-  }
-  
-  const LoginComponent = () => {
-    return(
-    <main className="form-signin">
-      <div className="login">
-          <div className="container">
-            {isLoggingActive && <SignIn containerRef={(ref) => current = ref} isAuth={isAuth} setAuthStatus={setAuthStatus} />}
-            {!isLoggingActive && <SignUp containerRef={(ref) => current = ref} setLoggingActive={setLoggingActive} />}
-          </div>
-          <RightSightComponent loggingActive={isLoggingActive} currentState={currentState} containerRef={ref => current = ref} onClick={changeState}/>
-      </div>
-    </main>
-    );
-  }
-
-  return (
+  return(
     <div className="App">
-       <BrowserRouter>          
-            <Route path="/" exact component={() => <Home isAuth={isAuth} setAuthStatus={setAuthStatus}/>}/>
-            <Route path="/login" component={() => <LoginComponent/>}/>
-            <Route path="/lists">
-              <Redirect to="/"/>
-            </Route>
-      </BrowserRouter>
+      <Home isAuth={isAuth} setAuthStatus={setAuthStatus}/>
     </div>
   );
 }
