@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Redirect, Switch, withRouter} from 'react-router-dom';
+import { Redirect, Switch, useHistory, withRouter} from 'react-router-dom';
 import "./home-style.scss";
 import Modal from '../modal/modal';
 import HomeMain from '../home-main/HomeMain';
@@ -10,7 +10,8 @@ import CreateList from '../home-lists-create/create-list';
 import LoginComponent from '../login/login.jsx'
 
 const Navigation = ({setAuthStatus, headerDescript}) => {
-	
+	const history = useHistory();
+
 	const handleClickLogout = async() => {
 		const responce = await fetch("http://localhost:8007/auth/logout", {
 			headers : {"Content-type" : "application/json"},
@@ -19,6 +20,8 @@ const Navigation = ({setAuthStatus, headerDescript}) => {
 		console.log("Logout");
 		cookies.remove("jwt");
 		setAuthStatus(false);
+
+		history.push("/login");
 	}
 
 	return(
@@ -27,9 +30,7 @@ const Navigation = ({setAuthStatus, headerDescript}) => {
 			<div className="right-side-container">
 				<ul>
 					<div className="top-system-right-btn">
-						<Link to="/login">
-							<button onClick={handleClickLogout}>Logout</button>
-						</Link>
+						<button onClick={handleClickLogout}>Logout</button>
 					</div>
 				</ul>
 			</div>
@@ -52,6 +53,8 @@ export default function Home({isAuth , setAuthStatus}) {
 	const[isError, setIsError] = React.useState(false);
 	const[headerDescript, setHeaderDescript] = React.useState("Home");
 	const[username, setUsername] =React.useState("Plug");
+
+	
 
 	useEffect(() => {
 		(
@@ -80,6 +83,9 @@ export default function Home({isAuth , setAuthStatus}) {
 	console.log("Home = ", isAuth);
 	if (!isAuth) {
 		console.log(isAuth);
+		return(
+			<LoginComponent isAuth={isAuth} setAuthStatus={setAuthStatus}/>
+		);
 	}
 
 
@@ -90,12 +96,14 @@ export default function Home({isAuth , setAuthStatus}) {
 		<BrowserRouter>
 			{isAuth ? <Navigation setAuthStatus={setAuthStatus} headerDescript={headerDescript}/> : null}
 			<div className="home-content-container">
+				<div className="base-container-main">
 				<Switch>
             		<Route path="/" exact component={() => <HomeMain username={username} setHeaderDescript={setHeaderDescript}/> }/>
 					<Route path="/login" exact component ={()  => <LoginComponent isAuth={isAuth} setAuthStatus={setAuthStatus}/>}/>
 					<Route path="/lists" exact component= {() => <ListsTable setHeaderDescript={setHeaderDescript}/>}/>
 					<Route path="/lists/create" component={() => <CreateList/>} />
 				</Switch>
+				</div>
 			</div>
 			<Modal active={modalActive} setActive={setModalActive} head={modalMsgHead} msg={modalMsg} isError={isError}/>
 		</BrowserRouter>

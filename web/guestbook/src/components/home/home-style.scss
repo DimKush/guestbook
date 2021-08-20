@@ -1,4 +1,4 @@
-.home-base-container{	
+.home-base-container{
 	nav {
 		position: fixed;
 		z-index: 9999;
@@ -72,6 +72,10 @@
 			}
 		}
 		
+		.base-container-main{
+			margin-top: 55px;
+			position: relative;
+		}
 
 		.left-side-container{
 			ul {

@@ -1,0 +1,65 @@
+
+.list-card-main{
+	margin-top: 10vh;
+	min-width: 50%;
+	position: relative;
+	background-color: #eef4ff;
+	border: 1px #cdd9ed solid;
+	border-radius: 1%;
+	.form-group{
+		max-width: 100%;
+	}
+	.row-form{
+		margin-left: 0;
+		width: 100%;
+		flex-direction: row;
+		
+		h1{
+			padding-left: 2%;
+			padding-top: 2%;
+			text-align: left;
+			font-size: large;
+			color: #99a3ba;
+		}
+
+		.search-field{
+			float: left;
+		}
+		.search-field.id{
+			width: 15%;
+		}
+		.search-field.title{
+			width: 50%;
+		}
+		.search-field.owner{
+			width: 27.3%;
+		}
+		.search-field.description{
+			min-width: 98%;
+		}
+
+		.control-but:hover{
+			cursor: pointer;
+			background-color: #6e1e69;
+			color: #fff;
+			transition: 400ms;
+			border-color: 1px #CDD9ED solid;
+		}
+
+		.control-but{
+			align-items: flex-end;
+			position: relative;
+			 float: left;
+			margin-bottom: 2vh;
+			//padding: 1.5vh;
+			border-radius: 6px;
+			border: 1px #CDD9ED solid;
+			font-family: inherit;
+			font-weight: bold;
+			color: #99A3BA;
+			background-color: #EEF4FF;
+			transition: 400ms;
+		}
+	}
+
+}
