@@ -63,7 +63,7 @@ export default function SignIn({isAuth, setAuthStatus}){
 		setModalActive(true);
 		setModalMsgHead("Server status");
 	}
-		return (
+		return(
 			<div className="base-container" >
 				<div className="top-system-right-btn">
 					<button onClick={handleClickServerAlive}>Server status</button>

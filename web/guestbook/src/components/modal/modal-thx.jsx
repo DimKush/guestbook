@@ -8,7 +8,7 @@ const ModalThx = ({active, setActive}) => {
 	}
 
 	
-	return (
+	return(
 		<div className={active ? "modal active": "modal "} onClick={() => setActive(false)}>
 			<div className={active ? "modal_thx_content active" : "modal_thx_content"} onClick={e => e.stopPropagation()}>
 				<div className="header-part">

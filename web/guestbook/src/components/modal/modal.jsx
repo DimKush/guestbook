@@ -9,7 +9,7 @@ const Modal = ({active, setActive, head, msg, isError}) => {
 	const handleSendAdminClick = () => {
 	}
 	
-	return (
+	return(
 		<div className={active ? "modal active": "modal "} onClick={() => setActive(false)}>
 			<div className={active ? "modal__content active" : "modal__content"} onClick={e => e.stopPropagation()}>
 				{isError &&
