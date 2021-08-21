@@ -32,17 +32,23 @@ type ListService interface {
 	GetListsByParams(List.List) ([]List.List, error)
 }
 
+type UsersSevice interface {
+	GetAllUsernames() ([]string, error)
+}
+
 type Service struct {
 	Authorization
 	Event
 	EventList
 	EmailService
 	ListService
+	UsersSevice
 }
 
 func ServiceInit(repos *repository.Repository) *Service {
 	return &Service{
 		Authorization: InitAuthService(repos.Authorization, repos.EmailService),
 		ListService:   InitListsServiceWorker(repos.ListService),
+		UsersSevice:   InitUsersServiceWorker(repos.UsersService),
 	}
 }

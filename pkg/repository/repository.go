@@ -35,6 +35,10 @@ type ListService interface {
 	GetListsByParams(List.List) ([]List.List, error)
 }
 
+type UsersService interface {
+	GetAllUsernames() ([]UserIn.UserIn, error)
+}
+
 type Repository struct {
 	Authorization
 	Event
@@ -42,6 +46,7 @@ type Repository struct {
 	AuditInt
 	EmailService
 	ListService
+	UsersService
 }
 
 func RepositoryInit(db *gorm.DB) *Repository {
@@ -50,5 +55,6 @@ func RepositoryInit(db *gorm.DB) *Repository {
 		AuditInt:      InitAuditRep(db),
 		EmailService:  InitEmailEventRep(db),
 		ListService:   InitListsRep(db),
+		UsersService:  InitUsersRepos(db),
 	}
 }
