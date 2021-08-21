@@ -54,6 +54,20 @@ func (h *Handler) GetListsByParams(context *gin.Context) {
 	})
 }
 
+func (h *Handler) GetAllUsernames(context *gin.Context) {
+	log.Info().Msg("Handler GetAllUsernames process request.")
+
+	users, err := h.services.GetAllUsernames()
+
+	if err != nil {
+		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+	}
+
+	initOkResponce(context, map[string]interface{}{
+		"Result": users,
+	})
+}
+
 func (h *Handler) getListById(context *gin.Context) {
 
 }

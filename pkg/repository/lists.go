@@ -2,7 +2,6 @@ package repository
 
 import (
 	"github.com/DimKush/guestbook/tree/main/internal/entities/List"
-	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
 )
 
@@ -31,7 +30,6 @@ func (data *ListServiceRepo) GetAllLists() ([]List.List, error) {
 }
 
 func (data *ListServiceRepo) GetListsByParams(list List.List) ([]List.List, error) {
-	log.Info().Msgf("%v\n", list)
 	var allLists []List.List
 
 	query := data.db.Table(events_lists).Select("events_lists.*, users.username as owner").Joins("left join users on users.id=owner_user_id")

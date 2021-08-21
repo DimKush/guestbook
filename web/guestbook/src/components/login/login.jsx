@@ -22,7 +22,7 @@ export default function LoginComponent({isAuth, setAuthStatus}) {
 	const changeState = () => {
 		setLoggingActive(!isLoggingActive);
 		setCurrentState(isLoggingActive ? "Sign in" : "Sign up");
-	  }
+	}
 
 	return(
 		<div className="form-signin">
