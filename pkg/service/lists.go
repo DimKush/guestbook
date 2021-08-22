@@ -75,6 +75,18 @@ func (data *ListsServiceWorker) GetListsByParams(list List.List) ([]List.List, e
 	return lists, nil
 }
 
+func (data *ListsServiceWorker) GetAutoListId() (int, error) {
+	id, err := data.db_lists.GetAutoListId()
+
+	if err != nil {
+		return 0, err
+	}
+
+	id++ // nextval
+
+	return id, nil
+}
+
 func InitListsServiceWorker(repos repository.ListService) *ListsServiceWorker {
 	return &ListsServiceWorker{db_lists: repos}
 }

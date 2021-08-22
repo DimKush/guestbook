@@ -33,6 +33,7 @@ type AuditInt interface {
 type ListService interface {
 	GetAllLists() ([]List.List, error)
 	GetListsByParams(List.List) ([]List.List, error)
+	GetAutoListId() (int, error)
 }
 
 type UsersService interface {

@@ -30,6 +30,7 @@ type EmailService interface {
 type ListService interface {
 	GetAllLists() ([]List.List, error)
 	GetListsByParams(List.List) ([]List.List, error)
+	GetAutoListId() (int, error)
 }
 
 type UsersSevice interface {

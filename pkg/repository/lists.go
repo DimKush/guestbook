@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/DimKush/guestbook/tree/main/internal/entities/List"
 	"gorm.io/gorm"
 )
@@ -67,6 +69,17 @@ func (data *ListServiceRepo) GetListsByParams(list List.List) ([]List.List, erro
 	}
 
 	return allLists, nil
+}
+
+func (data *ListServiceRepo) GetAutoListId() (int, error) {
+	var idVal int
+
+	data.db.Table(system_tables.sequences).Select("last_value as id").Where("sequencename = ?", "events_lists_id_seq").Scan(&idVal)
+	if idVal == 0 {
+		return 0, fmt.Errorf("Can't get nextval('events_lists_id_seq')")
+	}
+
+	return idVal, nil
 }
 
 func InitListsRep(database *gorm.DB) *ListServiceRepo {

@@ -21,6 +21,7 @@ func (h *Handler) getAllLists(context *gin.Context) {
 	lists, err := h.services.GetAllLists()
 	if err != nil {
 		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	initOkResponce(context, map[string]interface{}{
@@ -28,7 +29,7 @@ func (h *Handler) getAllLists(context *gin.Context) {
 	})
 }
 
-func (h *Handler) GetListsByParams(context *gin.Context) {
+func (h *Handler) getListsByParams(context *gin.Context) {
 	log.Info().Msg("Handler GetListsByParams process request.")
 	var listsParams List.List
 
@@ -40,31 +41,16 @@ func (h *Handler) GetListsByParams(context *gin.Context) {
 
 	if err != nil {
 		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	if len(lists) == 0 {
 		err := fmt.Errorf("Didn't find anything.")
 		initErrorResponce(context, http.StatusOK, err.Error())
-
-		return
 	}
 
 	initOkResponce(context, map[string]interface{}{
 		"Result": lists,
-	})
-}
-
-func (h *Handler) GetAllUsernames(context *gin.Context) {
-	log.Info().Msg("Handler GetAllUsernames process request.")
-
-	users, err := h.services.GetAllUsernames()
-
-	if err != nil {
-		initErrorResponce(context, http.StatusInternalServerError, err.Error())
-	}
-
-	initOkResponce(context, map[string]interface{}{
-		"Result": users,
 	})
 }
 
@@ -78,4 +64,17 @@ func (h *Handler) updateListById(context *gin.Context) {
 
 func (h *Handler) dropListById(context *gin.Context) {
 
+}
+
+func (h *Handler) getAutoListId(context *gin.Context) {
+	id, err := h.services.GetAutoListId()
+
+	if err != nil {
+		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	initOkResponce(context, map[string]interface{}{
+		"Result": id,
+	})
 }
