@@ -35,13 +35,27 @@ export default function CreateList() {
 				</div>
 			</div>
 			<div className="row-form">
+				<div className="search-field id checkbox">
+					<input type="checkbox" id="autoId"></input>
+					<label for ="autoId">Auto-increment Id</label>
+				</div>
+				<div className="search-field id checkbox">
+					<input type="checkbox" id="autoTitle"></input>
+					<label for ="autoTitle">Autogenerate title</label>
+				</div>
+				<div className="search-field id checkbox">
+					<input type="checkbox" id="autoOwner"></input>
+					<label for ="autoOwner">I'm the owner</label>
+				</div>
+			</div>
+			<div className="row-form">
 				<div className="search-field description">
 					<ColumnCreateList column={"Description"}/>
 				</div>
 			</div>
 			<div className="row-form">
-				<button className="control-but">Clean fields</button>
 				<button className="control-but">Create List</button>
+				<button className="control-but">Clean fields</button>
 			</div>
 		</div>
 	);

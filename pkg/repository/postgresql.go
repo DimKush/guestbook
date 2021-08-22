@@ -15,6 +15,8 @@ const (
 	audit_events = "audit_events"
 )
 
+var system_tables = initSystemTablesConf(db_type_postgres)
+
 type Config struct {
 	Host     string
 	Port     string

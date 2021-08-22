@@ -3,16 +3,20 @@
 	margin-top: 10vh;
 	min-width: 50%;
 	position: relative;
-	background-color: #eef4ff;
-	border: 1px #cdd9ed solid;
-	border-radius: 1%;
+	// background-color: #eef4ff;
+	// border: 1px #cdd9ed solid;
+	// border-radius: 1%;
 	.form-group{
 		max-width: 100%;
+		margin-bottom: 0px;
 	}
 	.row-form{
 		margin-left: 0;
 		width: 100%;
 		flex-direction: row;
+		max-height: 50px;
+		height: 100%;
+		position: relative;
 		
 		h1{
 			padding-left: 2%;
@@ -27,7 +31,28 @@
 		}
 		.search-field.id{
 			width: 15%;
+			
+			&.checkbox{
+				margin: 0px;
+				margin-bottom: 10px;
+				font-size: 12px;
+				color: #99a3ba;
+				float: left;
+				input{
+					width: 15px;
+				height: 15px;
+					margin: 0;
+					margin-top: 2px;
+				}
+				label{
+					margin-top: -3px;
+					margin-left: 5px;
+				}
+			}
+		
 		}
+
+
 		.search-field.title{
 			width: 50%;
 		}
@@ -47,11 +72,13 @@
 		}
 
 		.control-but{
+			max-height: 40px;
+			max-width: 100px;
 			align-items: flex-end;
 			position: relative;
-			 float: left;
+			float: right;
 			margin-bottom: 2vh;
-			//padding: 1.5vh;
+			margin-left: 1.5vh;
 			border-radius: 6px;
 			border: 1px #CDD9ED solid;
 			font-family: inherit;
