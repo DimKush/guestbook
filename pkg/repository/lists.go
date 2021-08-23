@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/DimKush/guestbook/tree/main/internal/entities/List"
+	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
 )
 
@@ -80,6 +81,31 @@ func (data *ListServiceRepo) GetAutoListId() (int, error) {
 	}
 
 	return idVal, nil
+}
+
+func (data *ListServiceRepo) GetListById(list_id int) (List.List, error) {
+	var list List.List
+
+	data.db.Table(events_lists).Select("events_lists.*, users.username as owner").
+		Joins("left join users on users.id=owner_user_id").
+		Where("events_lists.id=?", list_id).
+		Scan(&list)
+
+	if (list == List.List{}) {
+		return List.List{}, fmt.Errorf("Cannot find list with id = %d", list_id)
+	}
+
+	return list, nil
+}
+
+func (data *ListServiceRepo) CreateList(list List.List) error {
+	err := data.db.Table(events_lists).Create(&list).Error
+	if err != nil {
+		log.Error().Msgf(err.Error())
+		return err
+	}
+
+	return nil
 }
 
 func InitListsRep(database *gorm.DB) *ListServiceRepo {

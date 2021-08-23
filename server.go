@@ -25,6 +25,5 @@ func (s *Server) Run(port string, handler http.Handler) error {
 }
 
 func (s *Server) Shutdown(ctx context.Context) error {
-	fmt.Println("Server shutdown.")
 	return s.server.Shutdown(ctx)
 }

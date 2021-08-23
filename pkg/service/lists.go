@@ -87,6 +87,30 @@ func (data *ListsServiceWorker) GetAutoListId() (int, error) {
 	return id, nil
 }
 
+func (data *ListsServiceWorker) CreateList(newList List.List) error {
+	// check if list with list_id exists
+	list_id := newList.Id
+
+	if list, _ := data.GetListById(list_id); (list != List.List{}) {
+		err := fmt.Errorf("Cannot create new list. List with id = %d already exists.", list_id)
+		log.Error().Msgf(err.Error())
+		return err
+	}
+
+	err := data.db_lists.CreateList(newList)
+	if err != nil {
+		log.Error().Msg(err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func (data *ListsServiceWorker) GetListById(list_id int) (List.List, error) {
+	return data.db_lists.GetListById(list_id)
+
+}
+
 func InitListsServiceWorker(repos repository.ListService) *ListsServiceWorker {
 	return &ListsServiceWorker{db_lists: repos}
 }

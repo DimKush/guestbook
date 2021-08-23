@@ -1,9 +1,8 @@
 
 .list-card-main{
 	margin-top: 10vh;
-	min-width: 50%;
+	width: 100%;
 	position: relative;
-	// background-color: #eef4ff;
 	// border: 1px #cdd9ed solid;
 	// border-radius: 1%;
 	.form-group{
@@ -30,37 +29,58 @@
 			float: left;
 		}
 		.search-field.id{
-			width: 15%;
+			width: 32.5vh;
 			
 			&.checkbox{
+				
 				margin: 0px;
+				margin-top: 2vh;
 				margin-bottom: 10px;
 				font-size: 12px;
 				color: #99a3ba;
 				float: left;
 				input{
-					width: 15px;
-				height: 15px;
+					color: #6e1e69;
+					width: 20px;
+					height: 20px;
 					margin: 0;
 					margin-top: 2px;
 				}
 				label{
-					margin-top: -3px;
 					margin-left: 5px;
 				}
 			}
-		
+			
 		}
-
+		.search-field.id{
+			input{
+				transition: 400ms;
+			}
+			input:disabled{
+				transition: 400ms;
+				background-color: #EEF4FF;
+			}
+		}
 
 		.search-field.title{
-			width: 50%;
+			width: 50vh;
 		}
 		.search-field.owner{
-			width: 27.3%;
+			width: 45vh;
+
+			input{
+				transition: 400ms;
+			}
+			input:disabled{
+				transition: 400ms;
+				background-color: #EEF4FF;
+			}
+		}
+		.search-field.owner:disabled{
+
 		}
 		.search-field.description{
-			min-width: 98%;
+			min-width: 98vh;
 		}
 
 		.control-but:hover{
@@ -74,6 +94,7 @@
 		.control-but{
 			max-height: 40px;
 			max-width: 100px;
+			padding: 7px;
 			align-items: flex-end;
 			position: relative;
 			float: right;
