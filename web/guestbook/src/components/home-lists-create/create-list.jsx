@@ -50,7 +50,6 @@ export default function CreateList() {
 			}
 		  }
 		)();
-	
 	});
 
 	const handleCreateClick = () => {
@@ -74,13 +73,18 @@ export default function CreateList() {
 			<div className="row-form">
 				<div className="search-field id checkbox">
 					<input type="checkbox" id="autoId" defaultValue="off" ref={auto_id_checkbox} onChange={() =>
-						setIdCheckboxBlocked(!idCheckboxBlocked)}></input>
+						{
+							setIdCheckboxBlocked(!idCheckboxBlocked)
+							idInput.current.value = "";
+						}}></input>
 					<label for ="autoId">Auto-increment Id</label>
 				</div>
 				<div className="search-field id checkbox">
 					
 					<input type="checkbox" id="autoOwner"  defaultValue="off" ref={auto_owner_checkbox} onChange={()=>
-					setOwnerCheckboxBlocked(!ownerCheckboxBlocked)}></input>
+					{
+						setOwnerCheckboxBlocked(!ownerCheckboxBlocked);
+					}}></input>
 
 					<label for ="autoOwner">I'm the owner</label>
 				</div>
