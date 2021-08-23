@@ -68,10 +68,10 @@
 		.search-field.owner{
 			width: 45vh;
 
-			input{
+			select{
 				transition: 400ms;
 			}
-			input:disabled{
+			select:disabled{
 				transition: 400ms;
 				background-color: #EEF4FF;
 			}

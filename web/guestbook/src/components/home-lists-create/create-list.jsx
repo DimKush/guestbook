@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import "./create-list-style.scss"
+import { cookies } from "../../App";
 
 function ColumnCreateList ( {column, ref_current, blocked=false} ) {
 	return(
@@ -20,7 +21,7 @@ function ColumnCreateList ( {column, ref_current, blocked=false} ) {
 export default function CreateList() {
 	const[idCheckboxBlocked, setIdCheckboxBlocked]= useState(false);
 	const[ownerCheckboxBlocked, setOwnerCheckboxBlocked] = useState(false);
-
+	const[Owners, setOwners] = useState([])
 	let idInput = React.createRef();
 	let ownerInput = React.createRef();
 	let titleInput = React.createRef();
@@ -28,10 +29,31 @@ export default function CreateList() {
 	let auto_id_checkbox = React.createRef();
 	let auto_owner_checkbox = React.createRef();
 
-
+	useEffect(() => {
+		(
+		  async () => {
+			const responce = await fetch("http://localhost:8007/api/users/GetAllUsernames", {
+			  headers : {"Content-type" : "application/json",
+						 "Authorization" :`Bearer ${cookies.get("jwt")}`},
+			  credentials : "include",
+			  
+			});
+			
+			const content = await responce.json();
+	
+			console.log(cookies);
+			if(content.Status === "OK"){
+				setOwners(content.Result)
+			  //setAuthStatus(true);
+			} else {
+			  //setAuthStatus(false);
+			}
+		  }
+		)();
+	
+	});
 
 	const handleCreateClick = () => {
-		var data = new FormData()
 		const obj = {
 			"id" : idInput.current.value,
 			"owner" : ownerInput.current.value,
@@ -72,7 +94,18 @@ export default function CreateList() {
 					<ColumnCreateList column={"Title"} ref_current={titleInput}/>
 				</div>
 				<div className="search-field owner" >
-					<ColumnCreateList column={"Owner"} ref_current={ownerInput} blocked={ownerCheckboxBlocked}/>
+				<div className="form-group">
+					<span>Owner</span>
+						<select className="form-field pagesSize" disabled={ownerCheckboxBlocked}>
+						{
+							Owners.map(Owner => (
+								<option value={Owner}>
+									{Owner}
+								</option>
+							))
+						}
+			</select>
+					</div>
 				</div>
 			</div>
 			<div className="row-form">
