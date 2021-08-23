@@ -190,3 +190,16 @@ func (data *AuthService) GetUser(userIn UserIn.UserIn) (User.User, error) {
 
 	return user, nil
 }
+
+func (data *AuthService) GetUserByUsername(username string) (User.User, error) {
+	user, err := data.auth.GetUserByUsername(username)
+
+	if err != nil {
+		return User.User{}, err
+	}
+	if (user == User.User{}) {
+		return User.User{}, fmt.Errorf("User with username = %s doesn't exists.", username)
+	}
+
+	return user, nil
+}

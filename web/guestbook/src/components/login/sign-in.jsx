@@ -25,8 +25,6 @@ export default function SignIn({isAuth, setAuthStatus}){
 	}
 
 	const handleClick = function(){
-		var data = new FormData()
-
 		const signInObj = {
 			"username" : usernameInput.current.value,
 			"password" : passwordInput.current.value,

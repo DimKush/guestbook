@@ -15,12 +15,10 @@ type Authorization interface {
 	GenerateToken(username, password string) (string, error)
 	ParseToken(accessToken string) (int, string, error)
 	GetUser(userIn UserIn.UserIn) (User.User, error)
+	GetUserByUsername(username string) (User.User, error)
 }
 
 type Event interface {
-}
-
-type EventList interface {
 }
 
 type EmailService interface {
@@ -30,7 +28,9 @@ type EmailService interface {
 type ListService interface {
 	GetAllLists() ([]List.List, error)
 	GetListsByParams(List.List) ([]List.List, error)
+	GetListById(list_id int) (List.List, error)
 	GetAutoListId() (int, error)
+	CreateList(List.List) error
 }
 
 type UsersSevice interface {
@@ -40,7 +40,6 @@ type UsersSevice interface {
 type Service struct {
 	Authorization
 	Event
-	EventList
 	EmailService
 	ListService
 	UsersSevice

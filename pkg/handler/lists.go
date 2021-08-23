@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/DimKush/guestbook/tree/main/internal/entities/List"
 	"github.com/gin-gonic/gin"
@@ -10,11 +11,32 @@ import (
 )
 
 func (h *Handler) createList(context *gin.Context) {
-	id, _ := context.Get(userCTX)
-	context.JSON(http.StatusOK, map[string]interface{}{
-		userCTX: id,
-	})
+	log.Info().Msg("Handler createList process request.")
 
+	var newList List.List
+
+	if err := context.BindJSON(&newList); err != nil {
+		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	//get the user's id - owner of the new list
+
+	user, err := h.services.GetUserByUsername(newList.Owner)
+
+	if err != nil {
+		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	newList.OwnerUserId = user.Id
+
+	if err := h.services.CreateList(newList); err != nil {
+		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	initOkResponce(context, map[string]interface{}{})
 }
 
 func (h *Handler) getAllLists(context *gin.Context) {
@@ -55,7 +77,23 @@ func (h *Handler) getListsByParams(context *gin.Context) {
 }
 
 func (h *Handler) getListById(context *gin.Context) {
+	log.Info().Msg("Handler getListById process request.")
 
+	list_id, err := strconv.Atoi(context.Param("list_id"))
+	if err != nil {
+		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	list, err := h.services.GetListById(list_id)
+	if err != nil {
+		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	initOkResponce(context, map[string]interface{}{
+		"Result": list,
+	})
 }
 
 func (h *Handler) updateListById(context *gin.Context) {
