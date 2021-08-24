@@ -40,8 +40,7 @@ export default function CreateList() {
 			});
 			
 			const content = await responce.json();
-	
-			console.log(cookies);
+
 			if(content.Status === "OK"){
 				setOwners(content.Result)
 			  //setAuthStatus(true);
@@ -53,13 +52,31 @@ export default function CreateList() {
 	});
 
 	const handleCreateClick = () => {
+		let username = "";
+		if (auto_owner_checkbox.current.value === "on"){
+			(async () => {
+				const responce = await fetch("http://localhost:8007/auth/user", {
+			  	headers : { "Content-type" : "application/json",
+							"Authorization" :`Bearer ${cookies.get("jwt")}`},
+			  	credentials : "include",
+				});
+
+				const content = await responce.json();
+
+				if(content.Status === "OK"){
+						username = content.username
+				} else {
+					// TODO: Modal error
+				}
+			})();
+		}
+		
+
 		const obj = {
 			"id" : idInput.current.value,
-			"owner" : ownerInput.current.value,
+			"owner" : username,
 			"title" : titleInput.current.value,
 			"description" : descriptionInput.current.value,
-			"auto_id_checkbox" : auto_id_checkbox.current.value,
-			"auto_owner_checkbox" : auto_owner_checkbox.current.value,
 		}
 		
 		console.log(JSON.stringify(obj));
