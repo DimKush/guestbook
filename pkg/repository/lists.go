@@ -86,7 +86,7 @@ func (data *ListServiceRepo) GetAutoListId() (int, error) {
 func (data *ListServiceRepo) GetListById(list_id int) (List.List, error) {
 	var list List.List
 
-	data.db.Table(events_lists).Select("events_lists.*, users.username as owner").
+	data.db.Debug().Table(events_lists).Select("events_lists.*, users.username as owner").
 		Joins("left join users on users.id=owner_user_id").
 		Where("events_lists.id=?", list_id).
 		Scan(&list)
@@ -99,7 +99,14 @@ func (data *ListServiceRepo) GetListById(list_id int) (List.List, error) {
 }
 
 func (data *ListServiceRepo) CreateList(list List.List) error {
-	err := data.db.Table(events_lists).Create(&list).Error
+	var err error
+
+	if list.Id != 0 {
+		err = data.db.Table(events_lists).Omit("owner").Create(&list).Error
+	} else {
+		err = data.db.Table(events_lists).Omit("id", "owner").Create(&list).Error
+	}
+
 	if err != nil {
 		log.Error().Msgf(err.Error())
 		return err

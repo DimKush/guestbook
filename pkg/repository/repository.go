@@ -12,7 +12,6 @@ import (
 type Authorization interface {
 	CreateUser(user User.User) (int, error)
 	GetUser(username, password string) (User.User, error)
-	GetUserByUsername(username string) (User.User, error)
 	GetUserByUserIn(userIn UserIn.UserIn) (User.User, error)
 }
 
@@ -40,6 +39,7 @@ type ListService interface {
 
 type UsersService interface {
 	GetAllUsernames() ([]UserIn.UserIn, error)
+	GetUserByUsername(username string) (User.User, error)
 }
 
 type Repository struct {

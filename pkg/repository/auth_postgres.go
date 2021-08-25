@@ -58,18 +58,6 @@ func (data *AuthPostgres) GetUser(username, password string) (User.User, error) 
 	return user, nil
 }
 
-func (data *AuthPostgres) GetUserByUsername(username string) (User.User, error) {
-	var user User.User
-
-	if err := data.db.Table(users).Where("username = ?", username).Scan(&user).Error; err != nil {
-		return User.User{}, fmt.Errorf("SQL : Cannot select from table %s: Reason : %s", users, err.Error())
-	}
-	if user.Username == "" {
-		log.Error().Msgf("SQL : No rows in result set with username : %s", username)
-	}
-	return user, nil
-}
-
 func (data *AuthPostgres) GetUserByUserIn(userIn UserIn.UserIn) (User.User, error) {
 	user := &User.User{
 		Id:       userIn.Id,

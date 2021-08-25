@@ -1,6 +1,9 @@
 package repository
 
 import (
+	"fmt"
+
+	"github.com/DimKush/guestbook/tree/main/internal/entities/User"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/UserIn"
 	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
@@ -28,6 +31,18 @@ func (data *UsersReposWorker) GetAllUsernames() ([]UserIn.UserIn, error) {
 	}
 
 	return dbUsers, nil
+}
+
+func (data *UsersReposWorker) GetUserByUsername(username string) (User.User, error) {
+	var user User.User
+
+	if err := data.db.Table(users).Where("username = ?", username).Scan(&user).Error; err != nil {
+		return User.User{}, fmt.Errorf("SQL : Cannot select from table %s: Reason : %s", users, err.Error())
+	}
+	if user.Username == "" {
+		log.Error().Msgf("SQL : No rows in result set with username : %s", username)
+	}
+	return user, nil
 }
 
 func InitUsersRepos(db *gorm.DB) *UsersReposWorker {

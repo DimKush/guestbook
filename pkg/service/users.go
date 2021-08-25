@@ -1,6 +1,9 @@
 package service
 
 import (
+	"fmt"
+
+	"github.com/DimKush/guestbook/tree/main/internal/entities/User"
 	"github.com/DimKush/guestbook/tree/main/pkg/repository"
 )
 
@@ -20,6 +23,19 @@ func (data *UsersServiceWorker) GetAllUsernames() ([]string, error) {
 	}
 
 	return usernames, nil
+}
+
+func (data *UsersServiceWorker) GetUserByUsername(username string) (User.User, error) {
+	user, err := data.db_users.GetUserByUsername(username)
+
+	if err != nil {
+		return User.User{}, err
+	}
+	if (user == User.User{}) {
+		return User.User{}, fmt.Errorf("User with username = %s doesn't exists.", username)
+	}
+
+	return user, nil
 }
 
 func InitUsersServiceWorker(repos repository.UsersService) *UsersServiceWorker {
