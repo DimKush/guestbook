@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import "./create-list-style.scss"
 import { cookies } from "../../App";
+import Modal from "../modal/modal.jsx";
 
 function ColumnCreateList ( {column, ref_current, blocked=false} ) {
 	return(
@@ -19,9 +20,16 @@ function ColumnCreateList ( {column, ref_current, blocked=false} ) {
 
 
 export default function CreateList() {
-	const[idCheckboxBlocked, setIdCheckboxBlocked]= useState(false);
+	const[idCheckboxBlocked, setIdCheckboxBlocked]= useState(true);
 	const[ownerCheckboxBlocked, setOwnerCheckboxBlocked] = useState(false);
-	const[Owners, setOwners] = useState([])
+	const[Owners, setOwners] = useState([]);
+	const[currentUser, setCurrentUser] = useState("");
+	
+	const[modalMsgHead, setModalMsgHead] = React.useState("");
+	const[modalMsg, setModalMsg] = React.useState("");
+	const[modalActive, setModalActive] = React.useState(false);
+	const[listOwner, setListOwner] = useState("");
+
 	let idInput = React.createRef();
 	let ownerInput = React.createRef();
 	let titleInput = React.createRef();
@@ -42,42 +50,52 @@ export default function CreateList() {
 			const content = await responce.json();
 
 			if(content.Status === "OK"){
-				setOwners(content.Result)
+				setOwners(content.Result);
 			  //setAuthStatus(true);
 			} else {
 			  //setAuthStatus(false);
 			}
 		  }
 		)();
+		
+		(async () => {
+			const responce = await fetch("http://localhost:8007/auth/user", {
+			  headers : { "Content-type" : "application/json",
+						"Authorization" :`Bearer ${cookies.get("jwt")}`},
+			  credentials : "include",
+			});
+
+			const content = await responce.json();
+
+			if(content.Status === "OK"){
+				setCurrentUser(content.username);
+			} else {
+				// TODO: Modal error
+			}
+		})();
+
 	});
 
+	
+
 	const handleCreateClick = () => {
-		let username = "";
-		if (auto_owner_checkbox.current.value === "on"){
-			(async () => {
-				const responce = await fetch("http://localhost:8007/auth/user", {
-			  	headers : { "Content-type" : "application/json",
-							"Authorization" :`Bearer ${cookies.get("jwt")}`},
-			  	credentials : "include",
-				});
-
-				const content = await responce.json();
-
-				if(content.Status === "OK"){
-						username = content.username
-				} else {
-					// TODO: Modal error
-				}
-			})();
+		if(listOwner === "" && !ownerCheckboxBlocked){ 
+			setModalMsg("Owner cannot be empty.");
+			setModalMsgHead("Error");
+			setModalActive(true);
 		}
-		
+		if(titleInput.current.value === ""){ 
+			setModalMsg("The title field cannot be empty.");
+			setModalMsgHead("Error");
+			setModalActive(true);
+		}
 
 		const obj = {
 			"id" : idInput.current.value,
-			"owner" : username,
+			"owner" :  ownerCheckboxBlocked ? currentUser : listOwner,
 			"title" : titleInput.current.value,
 			"description" : descriptionInput.current.value,
-		}
+		};
 		
 		console.log(JSON.stringify(obj));
 	}
@@ -89,19 +107,19 @@ export default function CreateList() {
 			</div>
 			<div className="row-form">
 				<div className="search-field id checkbox">
-					<input type="checkbox" id="autoId" defaultValue="off" ref={auto_id_checkbox} onChange={() =>
+					<input type="checkbox" id="autoId" defaultChecked="true" ref={auto_id_checkbox} onChange={() =>
 						{
 							setIdCheckboxBlocked(!idCheckboxBlocked)
 							idInput.current.value = "";
-						}}></input>
+						}}>
+						</input>
 					<label for ="autoId">Auto-increment Id</label>
 				</div>
+
 				<div className="search-field id checkbox">
-					
-					<input type="checkbox" id="autoOwner"  defaultValue="off" ref={auto_owner_checkbox} onChange={()=>
-					{
+					<input type="checkbox" id="autoOwner"   ref={auto_owner_checkbox} onChange ={() =>{
 						setOwnerCheckboxBlocked(!ownerCheckboxBlocked);
-					}}></input>
+					}}/>
 
 					<label for ="autoOwner">I'm the owner</label>
 				</div>
@@ -117,14 +135,16 @@ export default function CreateList() {
 				<div className="search-field owner" >
 				<div className="form-group">
 					<span>Owner</span>
-						<select className="form-field pagesSize" disabled={ownerCheckboxBlocked}>
-						{
-							Owners.map(Owner => (
-								<option value={Owner}>
-									{Owner}
-								</option>
-							))
-						}
+						<select className="form-field ownerSelect" ref={ownerInput} disabled={ownerCheckboxBlocked} onChange={e => setListOwner(e.target.value)}> 
+						<option disabled selected value>{ownerCheckboxBlocked ? currentUser : "-- Select an owner --"}</option>
+							{
+								
+								Owners.map(Owner => (
+									<option value={Owner}>
+										{Owner}
+									</option>
+								))
+							}
 			</select>
 					</div>
 				</div>
@@ -138,6 +158,7 @@ export default function CreateList() {
 				<button className="control-but" onClick={handleCreateClick}>Create List</button>
 				<button className="control-but">Clean fields</button>
 			</div>
+			<Modal active={modalActive} setActive={setModalActive} head={modalMsgHead} msg={modalMsg} isError={false}/>
 		</div>
 	);
 } 
