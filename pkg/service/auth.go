@@ -156,7 +156,6 @@ func (data *AuthService) ParseToken(accessToken string) (int, string, error) {
 }
 
 func (data *AuthService) CheckUserExitstsWithPass(userIn UserIn.UserIn) error {
-	fmt.Println("log1")
 	user_db, err := data.users.GetUserByUsername(userIn.Username)
 	if err != nil {
 		return err

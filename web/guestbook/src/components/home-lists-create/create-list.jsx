@@ -80,7 +80,9 @@ export default function CreateList() {
 			setModalMsgHead("Error");
 			setModalActive(true);
 		}
+
 		if(titleInput.current.value === ""){ 
+			console.log("log");
 			setModalMsg("The title field cannot be empty.");
 			setModalMsgHead("Error");
 			setModalActive(true);
@@ -118,6 +120,16 @@ export default function CreateList() {
 		)();
 	}
 
+	const handleCleanFieldsClick = () => {
+		idInput.current.value = "";
+		titleInput.current.value = "";
+		descriptionInput.current.value = "";
+
+		setOwnerCheckboxBlocked(false);
+		auto_owner_checkbox.current.checked = false;
+
+	}
+
 	return(
 		<div className="list-card-main">
 			<div className="row-form">
@@ -125,7 +137,7 @@ export default function CreateList() {
 			</div>
 			<div className="row-form">
 				<div className="search-field id checkbox">
-					<input type="checkbox" id="autoId" defaultChecked="true" ref={auto_id_checkbox} onChange={() =>
+					<input type="checkbox" id="autoId" defaultChecked={idCheckboxBlocked} ref={auto_id_checkbox} onChange={() =>
 						{
 							setIdCheckboxBlocked(!idCheckboxBlocked)
 							idInput.current.value = "";
@@ -135,8 +147,9 @@ export default function CreateList() {
 				</div>
 
 				<div className="search-field id checkbox">
-					<input type="checkbox" id="autoOwner"   ref={auto_owner_checkbox} onChange ={() =>{
+					<input type="checkbox" id="autoOwner" defaultChecked={ownerCheckboxBlocked} ref={auto_owner_checkbox} onChange ={() =>{
 						setOwnerCheckboxBlocked(!ownerCheckboxBlocked);
+						
 					}}/>
 
 					<label for ="autoOwner">I'm the owner</label>
@@ -173,7 +186,7 @@ export default function CreateList() {
 			</div>
 			<div className="row-form">
 				<button className="control-but" onClick={handleCreateClick}>Create List</button>
-				<button className="control-but">Clean fields</button>
+				<button className="control-but" onClick={handleCleanFieldsClick}>Clean fields</button>
 			</div>
 			<Modal active={modalActive} setActive={setModalActive} head={modalMsgHead} msg={modalMsg} isError={false}/>
 		</div>

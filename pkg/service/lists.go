@@ -123,9 +123,7 @@ func (data *ListsServiceWorker) CreateList(newList List.List) error {
 }
 
 func (data *ListsServiceWorker) GetListById(list_id int) (List.List, error) {
-	fmt.Println(list_id)
 	return data.db_lists.GetListById(list_id)
-
 }
 
 func InitListsServiceWorker(repos repository.ListService, repos_users repository.UsersService) *ListsServiceWorker {

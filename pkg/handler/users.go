@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -9,7 +8,6 @@ import (
 )
 
 func (h *Handler) getAllUsernames(context *gin.Context) {
-	fmt.Println("LOL")
 	log.Info().Msg("Handler GetAllUsernames process request.")
 
 	users, err := h.services.GetAllUsernames()
