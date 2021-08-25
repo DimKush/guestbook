@@ -86,7 +86,7 @@ func (data *ListServiceRepo) GetAutoListId() (int, error) {
 func (data *ListServiceRepo) GetListById(list_id int) (List.List, error) {
 	var list List.List
 
-	data.db.Debug().Table(events_lists).Select("events_lists.*, users.username as owner").
+	data.db.Table(events_lists).Select("events_lists.*, users.username as owner").
 		Joins("left join users on users.id=owner_user_id").
 		Where("events_lists.id=?", list_id).
 		Scan(&list)
