@@ -9,11 +9,13 @@ import (
 	"github.com/rs/zerolog/log"
 
 	"github.com/DimKush/guestbook/tree/main/internal/entities/List"
+	"github.com/DimKush/guestbook/tree/main/internal/entities/User"
 	"github.com/DimKush/guestbook/tree/main/pkg/repository"
 )
 
 type ListsServiceWorker struct {
 	db_lists repository.ListService
+	db_users repository.UsersService
 }
 
 func (data *ListsServiceWorker) GetAllLists() ([]List.List, error) {
@@ -88,16 +90,30 @@ func (data *ListsServiceWorker) GetAutoListId() (int, error) {
 }
 
 func (data *ListsServiceWorker) CreateList(newList List.List) error {
+	//get owner's id
+	user, err := data.db_users.GetUserByUsername(newList.Owner)
+
+	if err != nil {
+		return err
+	}
+	if (user == User.User{}) {
+		return fmt.Errorf("The username %s doesn't exists.", newList.Owner)
+	}
+
+	newList.OwnerUserId = user.Id
+
 	// check if list with list_id exists
 	list_id := newList.Id
 
-	if list, _ := data.GetListById(list_id); (list != List.List{}) {
-		err := fmt.Errorf("Cannot create new list. List with id = %d already exists.", list_id)
+	list, _ := data.GetListById(list_id)
+
+	if (list != List.List{}) {
+		err := fmt.Errorf("Cannot create a new list.The list with id = %d already exists.", list_id)
 		log.Error().Msgf(err.Error())
 		return err
 	}
 
-	err := data.db_lists.CreateList(newList)
+	err = data.db_lists.CreateList(newList)
 	if err != nil {
 		log.Error().Msg(err.Error())
 		return err
@@ -107,10 +123,11 @@ func (data *ListsServiceWorker) CreateList(newList List.List) error {
 }
 
 func (data *ListsServiceWorker) GetListById(list_id int) (List.List, error) {
+	fmt.Println(list_id)
 	return data.db_lists.GetListById(list_id)
 
 }
 
-func InitListsServiceWorker(repos repository.ListService) *ListsServiceWorker {
-	return &ListsServiceWorker{db_lists: repos}
+func InitListsServiceWorker(repos repository.ListService, repos_users repository.UsersService) *ListsServiceWorker {
+	return &ListsServiceWorker{db_lists: repos, db_users: repos_users}
 }

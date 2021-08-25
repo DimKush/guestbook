@@ -22,14 +22,14 @@ func (h *Handler) createList(context *gin.Context) {
 
 	//get the user's id - owner of the new list
 
-	user, err := h.services.GetUserByUsername(newList.Owner)
+	// user, err := h.services.GetUserByUsername(newList.Owner)
 
-	if err != nil {
-		initErrorResponce(context, http.StatusInternalServerError, err.Error())
-		return
-	}
+	// if err != nil {
+	// 	initErrorResponce(context, http.StatusInternalServerError, err.Error())
+	// 	return
+	// }
 
-	newList.OwnerUserId = user.Id
+	// newList.OwnerUserId = user.Id
 
 	if err := h.services.CreateList(newList); err != nil {
 		initErrorResponce(context, http.StatusInternalServerError, err.Error())

@@ -15,7 +15,6 @@ type Authorization interface {
 	GenerateToken(username, password string) (string, error)
 	ParseToken(accessToken string) (int, string, error)
 	GetUser(userIn UserIn.UserIn) (User.User, error)
-	GetUserByUsername(username string) (User.User, error)
 }
 
 type Event interface {
@@ -35,6 +34,7 @@ type ListService interface {
 
 type UsersSevice interface {
 	GetAllUsernames() ([]string, error)
+	GetUserByUsername(username string) (User.User, error)
 }
 
 type Service struct {
@@ -47,8 +47,8 @@ type Service struct {
 
 func ServiceInit(repos *repository.Repository) *Service {
 	return &Service{
-		Authorization: InitAuthService(repos.Authorization, repos.EmailService),
-		ListService:   InitListsServiceWorker(repos.ListService),
+		Authorization: InitAuthService(repos.Authorization, repos.UsersService, repos.EmailService),
+		ListService:   InitListsServiceWorker(repos.ListService, repos.UsersService),
 		UsersSevice:   InitUsersServiceWorker(repos.UsersService),
 	}
 }

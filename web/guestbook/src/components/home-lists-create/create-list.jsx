@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import "./create-list-style.scss"
 import { cookies } from "../../App";
 import Modal from "../modal/modal.jsx";
+import { Redirect } from 'react-router-dom';
 
 function ColumnCreateList ( {column, ref_current, blocked=false} ) {
 	return(
@@ -46,14 +47,11 @@ export default function CreateList() {
 			  credentials : "include",
 			  
 			});
-			
 			const content = await responce.json();
-
 			if(content.Status === "OK"){
 				setOwners(content.Result);
-			  //setAuthStatus(true);
 			} else {
-			  //setAuthStatus(false);
+				// TODO : ERROR!
 			}
 		  }
 		)();
@@ -73,10 +71,8 @@ export default function CreateList() {
 				// TODO: Modal error
 			}
 		})();
-
-	});
-
-	
+		
+	}, []);
 
 	const handleCreateClick = () => {
 		if(listOwner === "" && !ownerCheckboxBlocked){ 
@@ -90,14 +86,36 @@ export default function CreateList() {
 			setModalActive(true);
 		}
 
-		const obj = {
-			"id" : idInput.current.value,
-			"owner" :  ownerCheckboxBlocked ? currentUser : listOwner,
+		const CreateObjList = {
+			"id" : Number(idInput.current.value),
+			"owner" : ownerCheckboxBlocked ? currentUser : listOwner,
 			"title" : titleInput.current.value,
 			"description" : descriptionInput.current.value,
 		};
 		
-		console.log(JSON.stringify(obj));
+		console.log(JSON.stringify(CreateObjList));
+
+		(
+			async() => {
+				const responce = await fetch("http://localhost:8007/api/lists/create", {
+				method : "POST",
+				headers : { "Content-type" : "application/json",
+							"Authorization" :`Bearer ${cookies.get("jwt")}`},
+				credentials : "include",
+				body : JSON.stringify(CreateObjList),
+				});
+				const content = await responce.json();
+				if(content.Status === "OK"){
+					setModalMsg("Record was created.");
+					setModalMsgHead("OK");
+					setModalActive(true);
+				} else {
+					setModalMsg(content.Message);
+					setModalMsgHead(content.Status);
+					setModalActive(true);
+				}
+			}
+		)();
 	}
 
 	return(
@@ -136,16 +154,15 @@ export default function CreateList() {
 				<div className="form-group">
 					<span>Owner</span>
 						<select className="form-field ownerSelect" ref={ownerInput} disabled={ownerCheckboxBlocked} onChange={e => setListOwner(e.target.value)}> 
-						<option disabled selected value>{ownerCheckboxBlocked ? currentUser : "-- Select an owner --"}</option>
-							{
-								
-								Owners.map(Owner => (
-									<option value={Owner}>
-										{Owner}
-									</option>
-								))
-							}
-			</select>
+							<option disabled selected value>{ownerCheckboxBlocked ? currentUser : "-- Select an owner --"}</option>
+								{
+									Owners.map(Owner => (
+										<option value={Owner}>
+											{Owner}
+										</option>
+									))
+								}
+						</select>
 					</div>
 				</div>
 			</div>

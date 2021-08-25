@@ -30,11 +30,8 @@ type tokenClaims struct {
 }
 type AuthService struct {
 	auth         repository.Authorization
+	users        repository.UsersService
 	email_sender EmailServiceAuth
-}
-
-func InitAuthService(repos repository.Authorization, repos_email repository.EmailService) *AuthService {
-	return &AuthService{auth: repos, email_sender: *InitEmailService(repos_email)}
 }
 
 func (data *AuthService) checkFilledUser(user *User.User) error {
@@ -159,8 +156,8 @@ func (data *AuthService) ParseToken(accessToken string) (int, string, error) {
 }
 
 func (data *AuthService) CheckUserExitstsWithPass(userIn UserIn.UserIn) error {
-	user_db, err := data.auth.GetUserByUsername(userIn.Username)
-
+	fmt.Println("log1")
+	user_db, err := data.users.GetUserByUsername(userIn.Username)
 	if err != nil {
 		return err
 	}
@@ -175,7 +172,7 @@ func (data *AuthService) CheckUserExitstsWithPass(userIn UserIn.UserIn) error {
 }
 
 func (data *AuthService) CheckUserExitsts(userIn UserIn.UserIn) error {
-	if _, err := data.auth.GetUserByUsername(userIn.Username); err != nil {
+	if _, err := data.users.GetUserByUsername(userIn.Username); err != nil {
 		return err
 	}
 	return nil
@@ -191,15 +188,6 @@ func (data *AuthService) GetUser(userIn UserIn.UserIn) (User.User, error) {
 	return user, nil
 }
 
-func (data *AuthService) GetUserByUsername(username string) (User.User, error) {
-	user, err := data.auth.GetUserByUsername(username)
-
-	if err != nil {
-		return User.User{}, err
-	}
-	if (user == User.User{}) {
-		return User.User{}, fmt.Errorf("User with username = %s doesn't exists.", username)
-	}
-
-	return user, nil
+func InitAuthService(repos repository.Authorization, repos_users repository.UsersService, repos_email repository.EmailService) *AuthService {
+	return &AuthService{auth: repos, users: repos_users, email_sender: *InitEmailService(repos_email)}
 }
