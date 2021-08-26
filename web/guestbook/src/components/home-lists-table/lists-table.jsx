@@ -259,6 +259,9 @@ export default function ListsTable({setHeaderDescript}){
 					<input class="form-field pages" type="number" defaultValue={pageIndex + 1} 
 					onChange={e => { 
 						const pageNumber = e.target.value ? Number(e.target.value) -1 : 0;
+						if (Number(e.target.value) < 1) {
+							e.target.value = 1;
+						}
 						gotoPage(pageNumber);
 					}}/>
 				</span>

@@ -92,7 +92,11 @@ func (data *ListsServiceWorker) GetAutoListId() (int, error) {
 func (data *ListsServiceWorker) CreateList(newList List.List) error {
 	// check required fields
 	if newList.Title == "" {
-		return fmt.Errorf("Field Title cannot be empty.")
+		return fmt.Errorf("The Field : Title cannot be empty.")
+	}
+
+	if len(newList.Title) > 255 {
+		return fmt.Errorf("The Field : Title cannot be more that 255 symbols.")
 	}
 
 	if newList.Owner == "" {
