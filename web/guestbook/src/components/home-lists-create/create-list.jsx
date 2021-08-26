@@ -75,19 +75,6 @@ export default function CreateList() {
 	}, []);
 
 	const handleCreateClick = () => {
-		if(listOwner === "" && !ownerCheckboxBlocked){ 
-			setModalMsg("Owner cannot be empty.");
-			setModalMsgHead("Error");
-			setModalActive(true);
-		}
-
-		if(titleInput.current.value === ""){ 
-			console.log("log");
-			setModalMsg("The title field cannot be empty.");
-			setModalMsgHead("Error");
-			setModalActive(true);
-		}
-
 		const CreateObjList = {
 			"id" : Number(idInput.current.value),
 			"owner" : ownerCheckboxBlocked ? currentUser : listOwner,
@@ -95,7 +82,6 @@ export default function CreateList() {
 			"description" : descriptionInput.current.value,
 		};
 		
-		console.log(JSON.stringify(CreateObjList));
 
 		(
 			async() => {
@@ -124,6 +110,9 @@ export default function CreateList() {
 		idInput.current.value = "";
 		titleInput.current.value = "";
 		descriptionInput.current.value = "";
+		
+		setIdCheckboxBlocked(true);
+		auto_id_checkbox.current.checked = true; 
 
 		setOwnerCheckboxBlocked(false);
 		auto_owner_checkbox.current.checked = false;

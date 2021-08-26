@@ -90,7 +90,16 @@ func (data *ListsServiceWorker) GetAutoListId() (int, error) {
 }
 
 func (data *ListsServiceWorker) CreateList(newList List.List) error {
-	//get owner's id
+	// check required fields
+	if newList.Title == "" {
+		return fmt.Errorf("Field Title cannot be empty.")
+	}
+
+	if newList.Owner == "" {
+		return fmt.Errorf("Field Owner cannot be empty.")
+	}
+
+	// get owner's id
 	user, err := data.db_users.GetUserByUsername(newList.Owner)
 
 	if err != nil {
