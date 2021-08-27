@@ -107,7 +107,28 @@
 			color: #99A3BA;
 			background-color: #EEF4FF;
 			transition: 400ms;
+
+			&.back{ 
+				float: left;
+			}
+
+			svg{
+				position: relative;
+				float: left;
+				margin-right: 0.3vh;
+				margin-left: 0vh;
+				height: 18px;
+				width: 18px;
+				margin-top: 0.25vh;
+			}
+			.but-tab-hight-text{
+				position: relative;
+				float: left;
+				margin-top: 0.2vh;
+			}
 		}
+
+		
 	}
 
 }
