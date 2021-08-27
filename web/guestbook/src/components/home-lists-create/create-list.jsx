@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import "./create-list-style.scss"
 import { cookies } from "../../App";
 import Modal from "../modal/modal.jsx";
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
+import { AiOutlineDoubleLeft } from 'react-icons/ai'
 
 function ColumnCreateList ( {column, ref_current, blocked=false} ) {
 	return(
@@ -71,7 +72,6 @@ export default function CreateList() {
 				// TODO: Modal error
 			}
 		})();
-		
 	}, []);
 
 	const handleCreateClick = () => {
@@ -117,6 +117,17 @@ export default function CreateList() {
 		setOwnerCheckboxBlocked(false);
 		auto_owner_checkbox.current.checked = false;
 
+		ownerInput.current.selectedIndex = 0;
+
+	}
+
+	const handleOwnerCheckboxClicked = () => {
+		setOwnerCheckboxBlocked(!ownerCheckboxBlocked);
+		
+		if(setOwnerCheckboxBlocked) {
+			// show owner
+			ownerInput.current.selectedIndex = 0;
+		}
 	}
 
 	return(
@@ -136,10 +147,7 @@ export default function CreateList() {
 				</div>
 
 				<div className="search-field id checkbox">
-					<input type="checkbox" id="autoOwner" defaultChecked={ownerCheckboxBlocked} ref={auto_owner_checkbox} onChange ={() =>{
-						setOwnerCheckboxBlocked(!ownerCheckboxBlocked);
-						
-					}}/>
+					<input type="checkbox" id="autoOwner" defaultChecked={ownerCheckboxBlocked} ref={auto_owner_checkbox} onChange ={handleOwnerCheckboxClicked} />
 
 					<label for ="autoOwner">I'm the owner</label>
 				</div>
@@ -156,7 +164,7 @@ export default function CreateList() {
 				<div className="form-group">
 					<span>Owner</span>
 						<select className="form-field ownerSelect" ref={ownerInput} disabled={ownerCheckboxBlocked} onChange={e => setListOwner(e.target.value)}> 
-							<option disabled selected value>{ownerCheckboxBlocked ? currentUser : "-- Select an owner --"}</option>
+							<option disabled selected value>-- Select an owner --</option>
 								{
 									Owners.map(Owner => (
 										<option value={Owner}>
@@ -174,6 +182,9 @@ export default function CreateList() {
 				</div>
 			</div>
 			<div className="row-form">
+				<Link to="/lists">
+						<button className="control-but back"><AiOutlineDoubleLeft/><div className="but-tab-hight-text">Back</div></button>
+				</Link>
 				<button className="control-but" onClick={handleCreateClick}>Create List</button>
 				<button className="control-but" onClick={handleCleanFieldsClick}>Clean fields</button>
 			</div>
