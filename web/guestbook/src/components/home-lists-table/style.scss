@@ -152,7 +152,15 @@
 			background-color: #be44b6;
 			color: white;
 		}
-		
+
+		.trMarked{
+			background-color: #be44b6;
+			color: white;
+		}
+		.trMarked:nth-child(even){
+			background-color: #be44b6;
+			color: white;
+		}
 	
 		th{
 			position: sticky;
