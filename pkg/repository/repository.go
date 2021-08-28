@@ -35,6 +35,7 @@ type ListService interface {
 	GetListById(list_id int) (List.List, error)
 	GetAutoListId() (int, error)
 	CreateList(List.List) error
+	DeleteListById(list_id int) error
 }
 
 type UsersService interface {

@@ -139,6 +139,37 @@ func (data *ListsServiceWorker) GetListById(list_id int) (List.List, error) {
 	return data.db_lists.GetListById(list_id)
 }
 
+func (data *ListsServiceWorker) DeleteListById(list_id int) error {
+
+	audit_ch := make(chan error)
+
+	go func(list_id int) {
+		audit_ch <- Audit.WriteEventParams("ListsServiceWorker",
+			"DeleteListById",
+			AUDIT_INFO,
+			time.Now(),
+			false,
+			fmt.Sprintf("Delete list with id =  %d", list_id),
+		)
+	}(list_id)
+
+	list, err := data.GetListById(list_id)
+	if err != nil {
+		return err
+	}
+
+	if (list == List.List{}) {
+		return fmt.Errorf("List with id %d doesn't exist.", list_id)
+	}
+
+	err = data.db_lists.DeleteListById(list_id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func InitListsServiceWorker(repos repository.ListService, repos_users repository.UsersService) *ListsServiceWorker {
 	return &ListsServiceWorker{db_lists: repos, db_users: repos_users}
 }
