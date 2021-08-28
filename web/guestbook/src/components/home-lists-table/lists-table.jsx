@@ -47,7 +47,7 @@ export default function ListsTable({setHeaderDescript}){
 	const[loadingDonut , setLoadingDonut] = React.useState(false);
 	const[mpValues , setMapValues] = React.useState(new Map());
 	const[timelineLoaded, setTimelineloaded] = React.useState(false);
-	
+	const[currentUser, setCurrentUser] = React.useState("");
 	const[selectedRow, setSelectedRow] = React.useState({});
 	const[rowIndex,setRowIndex] = React.useState(0);
 
@@ -58,6 +58,22 @@ export default function ListsTable({setHeaderDescript}){
 	const columns = useMemo(() => COLUMNS , []);
 	
 	useEffect(() => {
+		(async () => {
+			const responce = await fetch("http://localhost:8007/auth/user", {
+			  headers : { "Content-type" : "application/json",
+						"Authorization" :`Bearer ${cookies.get("jwt")}`},
+			  credentials : "include",
+			});
+
+			const content = await responce.json();
+
+			if(content.Status === "OK"){
+				setCurrentUser(content.username);
+			} else {
+				// TODO: Modal error
+			}
+		})();
+
 		if (!timelineLoaded) {
 			(async () => {
 				setLoadingDonut(true);
@@ -208,7 +224,7 @@ export default function ListsTable({setHeaderDescript}){
 
 	const handleDeleteClick = () => {
 		let selectedRowList = selectedRow;
-		const delRes = DeleteList(selectedRowList);
+		const delRes = DeleteList(selectedRowList, currentUser);
 		if ( delRes.Status !== "OK") { 
 			setModalMsgHead("Error");
 			setModalMsg(delRes.Message);
