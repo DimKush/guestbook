@@ -224,12 +224,17 @@ export default function ListsTable({setHeaderDescript}){
 
 	const handleDeleteClick = () => {
 		let selectedRowList = selectedRow;
-		const delRes = DeleteList(selectedRowList, currentUser);
-		if ( delRes.Status !== "OK") { 
-			setModalMsgHead("Error");
-			setModalMsg(delRes.Message);
-			setModalActive(true);
+		
+		(async() => {
+			const delRes = await DeleteList(selectedRowList, currentUser);
+			console.log("delRes",delRes);
+			if ( delRes.Status !== "OK") { 
+				setModalMsgHead("Error");
+				setModalMsg(delRes.Message);
+				setModalActive(true);
+			}
 		}
+		)();
 	}
 
 	const dropMarked = () => {
