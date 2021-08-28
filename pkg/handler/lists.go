@@ -101,7 +101,15 @@ func (h *Handler) updateListById(context *gin.Context) {
 }
 
 func (h *Handler) dropListById(context *gin.Context) {
+	log.Info().Msg("Handler dropListById process request.")
 
+	list_id, err := strconv.Atoi(context.Param("list_id"))
+	if err != nil {
+		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	err = h.services.DeleteListById(list_id)
 }
 
 func (h *Handler) getAutoListId(context *gin.Context) {

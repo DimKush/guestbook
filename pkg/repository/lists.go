@@ -115,6 +115,11 @@ func (data *ListServiceRepo) CreateList(list List.List) error {
 	return nil
 }
 
+func (data *ListServiceRepo) DeleteListById(list_id int) error {
+	err := data.db.Table(events_lists).Delete(&List.List{}, list_id).Error
+	return err
+}
+
 func InitListsRep(database *gorm.DB) *ListServiceRepo {
 	return &ListServiceRepo{db: database}
 }

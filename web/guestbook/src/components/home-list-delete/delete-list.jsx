@@ -23,12 +23,24 @@ async function getUsername() {
 	}
 }
 
+async function DropListBack(list_id){ 
+	console.log("list_id", list_id);
+	const responce = await fetch(`http://localhost:8007/api/lists/${list_id}`, {
+		method : "DELETE",
+		headers : { "Content-type" : "application/json",
+						"Authorization" :`Bearer ${cookies.get("jwt")}`},
+		credentials : "include",
+	});
+
+	const content = await responce.json();
+
+	return {Status : content.Status, Message : content.Message}
+}
+
 export default async function DeleteList(selectedRow) {
 	let result = {Status : "", Message : ""};
 
 	const currentUser = await getUsername();
-	
-	console.log("currentUser", currentUser);
 
 	if(currentUser !== selectedRow.owner){
 		result.Status = "Error";
@@ -36,8 +48,14 @@ export default async function DeleteList(selectedRow) {
 
 		return result;
 	}
-	result.Status="OK";
-	result.Message="Record deleted";
+
+	result = await DropListBack(selectedRow.id);
+
+	if (result.Status === "OK") {
+		result.Message=`List ${selectedRow.id} was delete.`;
+	} else {
+		result.Message=`Cannot delete record. Backend problem : ${result.Message}`;
+	}
 
 	return result;
 }
