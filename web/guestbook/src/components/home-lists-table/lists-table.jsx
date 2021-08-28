@@ -1,6 +1,6 @@
 import React, { useMemo, useRef , useEffect} from 'react'
 import './style.scss'
-import { useTable, useFilters, usePagination } from 'react-table'
+import { useTable, useFilters, usePagination, useRowSelect } from 'react-table'
 import { COLUMNS } from './columns'
 import { AiOutlineSearch, AiOutlineForm, AiOutlinePlusSquare, AiOutlineMinusSquare} from 'react-icons/ai'
 import { BsBoxArrowInRight } from "react-icons/bs";
@@ -8,7 +8,9 @@ import { Link } from "react-router-dom";
 import "./filters-styles.scss"
 import { cookies } from '../../App'
 import ModalLoading from '../modal/modal-loading'
-
+import IndeterminateCheckbox from './selector-checkbox.jsx'
+import DeleteList from '../home-list-delete/delete-list'
+import Modal from "../modal/modal.jsx";
 
 const refershTable = async(listFilters) => {
 	// from GO : json: invalid use of ,string struct tag, trying to unmarshal "" into int
@@ -45,9 +47,33 @@ export default function ListsTable({setHeaderDescript}){
 	const[loadingDonut , setLoadingDonut] = React.useState(false);
 	const[mpValues , setMapValues] = React.useState(new Map());
 	const[timelineLoaded, setTimelineloaded] = React.useState(false);
-	const columns = useMemo(() => COLUMNS , []);
+	const[currentUser, setCurrentUser] = React.useState("");
+	const[selectedRow, setSelectedRow] = React.useState({});
+	const[rowIndex,setRowIndex] = React.useState(0);
 
+	const[modalMsgHead, setModalMsgHead] = React.useState("");
+	const[modalMsg, setModalMsg] = React.useState("");
+	const[modalActive, setModalActive] = React.useState(false);
+
+	const columns = useMemo(() => COLUMNS , []);
+	
 	useEffect(() => {
+		(async () => {
+			const responce = await fetch("http://localhost:8007/auth/user", {
+			  headers : { "Content-type" : "application/json",
+						"Authorization" :`Bearer ${cookies.get("jwt")}`},
+			  credentials : "include",
+			});
+
+			const content = await responce.json();
+
+			if(content.Status === "OK"){
+				setCurrentUser(content.username);
+			} else {
+				// TODO: Modal error
+			}
+		})();
+
 		if (!timelineLoaded) {
 			(async () => {
 				setLoadingDonut(true);
@@ -75,11 +101,13 @@ export default function ListsTable({setHeaderDescript}){
 		canNextPage,
 		canPreviousPage,
 		pageOptions,
+		subRows,
 		prepareRow,
 		gotoPage,
 		pageCount,
 		setPageSize,
 		state,
+		selectedFlatRows,
 	} =  useTable(
 		{
 			columns, 
@@ -88,6 +116,7 @@ export default function ListsTable({setHeaderDescript}){
 		},
 		useFilters,
 		usePagination,
+		useRowSelect,
 	);
 	
 
@@ -96,7 +125,7 @@ export default function ListsTable({setHeaderDescript}){
 	const { pageIndex, pageSize } = state;
 	inputRef.current = [];
 
-	const addToRefs = (el) => {
+	const addToRefs = (el) => { 
 		if(el && !inputRef.current.includes(el)){
 			inputRef.current.push(el);
 		}
@@ -192,6 +221,21 @@ export default function ListsTable({setHeaderDescript}){
 		);
 	} 
 
+
+	const handleDeleteClick = () => {
+		let selectedRowList = selectedRow;
+		const delRes = DeleteList(selectedRowList, currentUser);
+		if ( delRes.Status !== "OK") { 
+			setModalMsgHead("Error");
+			setModalMsg(delRes.Message);
+			setModalActive(true);
+		}
+	}
+
+	const dropMarked = () => {
+		page.map(row => { row.isSelected = false; });
+	}
+
 	return(
 	<div className="form-container">
 		<Sidebar/>
@@ -202,7 +246,9 @@ export default function ListsTable({setHeaderDescript}){
 					<button className="but-tab-hight"><AiOutlinePlusSquare/><div className="but-tab-hight-text">New List</div></button>
 				</Link>
 				<button className="but-tab-hight"><AiOutlineForm/><div className="but-tab-hight-text">Edit List</div></button>
-				<button className="but-tab-hight"><AiOutlineMinusSquare/><div className="but-tab-hight-text">Delete List</div></button>
+				<button className="but-tab-hight" onClick={handleDeleteClick}><AiOutlineMinusSquare/>
+					<div className="but-tab-hight-text">Delete List</div>
+				</button>
 			</div>
 		</div>
 		<table {...getTableProps()} > 
@@ -225,7 +271,21 @@ export default function ListsTable({setHeaderDescript}){
 					page.map(row => {
 						prepareRow(row)
 						return(
-							<tr {...row.getRowProps()}>
+							<tr className={row.isSelected ? "trMarked" : "trNoMarked"} {...row.getRowProps({
+								// on a row click action
+								onClick : () => {
+									page.map(rowSelected => {
+										if(rowSelected !== row){
+											rowSelected.isSelected = false;
+										} else{
+											row.isSelected = true;
+										}
+									});
+									
+									setSelectedRow(row.original);
+									console.log(row.original);
+								},
+							})}>
 								{
 									row.cells.map((cell) => {
 										return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -237,6 +297,11 @@ export default function ListsTable({setHeaderDescript}){
 				}
 			</tbody>
 		</table>
+		{/* <pre>
+			<code>
+				{JSON.stringify(selectedRow)}
+			</code>
+		</pre> */}
 		<div className="tableNavigator">
 		<select className="form-field pagesSize" value={pageSize} onChange={e => setPageSize(Number(e.target.value))}>
 				{
@@ -266,14 +331,15 @@ export default function ListsTable({setHeaderDescript}){
 					}}/>
 				</span>
 				<div className="tableButtons">
-					<button className="but-tab-nav" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>{'<<'}</button>
-					<button className="but-tab-nav" onClick={() => previousPage()} disabled={!canPreviousPage} >Prev</button>
-					<button className="but-tab-nav" onClick={() => nextPage()} disabled={!canNextPage}>Next</button>
-					<button className="but-tab-nav" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>{'>>'}</button>
+					<button className="but-tab-nav" onClick={() => {gotoPage(0); dropMarked(); }} disabled={!canPreviousPage}>{'<<'}</button>
+					<button className="but-tab-nav" onClick={() => {previousPage(); dropMarked(); }} disabled={!canPreviousPage} >Prev</button>
+					<button className="but-tab-nav" onClick={() => {nextPage(); dropMarked(); }} disabled={!canNextPage}>Next</button>
+					<button className="but-tab-nav" onClick={() => {gotoPage(pageCount - 1);  dropMarked(); }} disabled={!canNextPage}>{'>>'}</button>
 				</div>
 			</div>
 		</div>
 	</div>
+	<Modal active={modalActive} setActive={setModalActive} head={modalMsgHead} msg={modalMsg} isError={false}/>
 	<ModalLoading active={loadingDonut}/>
 	</div>
 
