@@ -44,7 +44,7 @@ export default async function DeleteList(selectedRow) {
 
 	if(currentUser !== selectedRow.owner){
 		result.Status = "Error";
-		result.Message = `Access denied. You don't have permissions to delete with list. Owner of the record is ${selectedRow.owner}.`;
+		result.Message = `Access denied. You don't have permissions to delete this list. Owner of the record is ${selectedRow.owner}.`;
 
 		return result;
 	}
