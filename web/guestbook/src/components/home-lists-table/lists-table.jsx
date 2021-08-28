@@ -227,12 +227,19 @@ export default function ListsTable({setHeaderDescript}){
 		
 		(async() => {
 			const delRes = await DeleteList(selectedRowList, currentUser);
-			console.log("delRes",delRes);
-			if ( delRes.Status !== "OK") { 
-				setModalMsgHead("Error");
-				setModalMsg(delRes.Message);
-				setModalActive(true);
+			
+			setModalMsgHead("Error");
+			setModalMsg(delRes.Message);
+			setModalActive(true);
+			setTimelineloaded(false);
+
+			setLoadingDonut(true);
+			const empty = {} 
+			let tableData = await refershTable(empty);
+			if (tableData != null) {
+				setDataTable(tableData);
 			}
+			setLoadingDonut(false);
 		}
 		)();
 	}

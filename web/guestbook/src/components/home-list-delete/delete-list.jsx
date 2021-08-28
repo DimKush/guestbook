@@ -44,16 +44,14 @@ export default async function DeleteList(selectedRow) {
 
 	if(currentUser !== selectedRow.owner){
 		result.Status = "Error";
-		result.Message = `Access denied. You don't have permissions to delete with list. Owner of the record is ${selectedRow.owner}.`;
+		result.Message = `Access denied. You don't have permissions to delete this list. Owner of the record is ${selectedRow.owner}.`;
 
 		return result;
 	}
 
 	result = await DropListBack(selectedRow.id);
 
-	if (result.Status === "OK") {
-		result.Message=`List ${selectedRow.id} was delete.`;
-	} else {
+	if (result.Status !== "OK") {
 		result.Message=`Cannot delete record. Backend problem : ${result.Message}`;
 	}
 
