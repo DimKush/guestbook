@@ -51,9 +51,7 @@ export default async function DeleteList(selectedRow) {
 
 	result = await DropListBack(selectedRow.id);
 
-	if (result.Status === "OK") {
-		result.Message=`List ${selectedRow.id} was delete.`;
-	} else {
+	if (result.Status !== "OK") {
 		result.Message=`Cannot delete record. Backend problem : ${result.Message}`;
 	}
 

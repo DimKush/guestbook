@@ -109,7 +109,14 @@ func (h *Handler) dropListById(context *gin.Context) {
 		return
 	}
 
-	err = h.services.DeleteListById(list_id)
+	if err = h.services.DeleteListById(list_id); err != nil {
+		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	initOkResponce(context, map[string]interface{}{
+		"Message": fmt.Sprintf("List (id = %d) has been deleted.", list_id),
+	})
 }
 
 func (h *Handler) getAutoListId(context *gin.Context) {
