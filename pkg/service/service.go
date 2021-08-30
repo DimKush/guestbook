@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/DimKush/guestbook/tree/main/internal/entities/EmailEventDb"
+	"github.com/DimKush/guestbook/tree/main/internal/entities/EventItem"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/List"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/User"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/UserIn"
@@ -31,6 +32,10 @@ type ListService interface {
 	GetAutoListId() (int, error)
 	CreateList(List.List) error
 	DeleteListById(list_id int) error
+}
+
+type EventService interface {
+	GetEventsByParams(EventItem.EventItem) ([]EventItem.EventItem, error)
 }
 
 type UsersSevice interface {

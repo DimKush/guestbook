@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 import "./filters-styles.scss"
 import { cookies } from '../../App'
 import ModalLoading from '../modal/modal-loading'
-import IndeterminateCheckbox from './selector-checkbox.jsx'
 import DeleteList from '../home-list-delete/delete-list'
 import Modal from "../modal/modal.jsx";
 
@@ -39,8 +38,8 @@ const refershTable = async(listFilters) => {
 }
 
 
-export default function ListsTable({setHeaderDescript}){
-	setHeaderDescript("Lists");
+export default function EventsTable({setHeaderDescript}){
+	setHeaderDescript("Events");
 	const[sidebar, setSidebar] = React.useState(false);
 	const[clearInput, setClearInput] = React.useState(false);
 	const[dataTable, setDataTable] = React.useState([]);
@@ -255,13 +254,13 @@ export default function ListsTable({setHeaderDescript}){
 		<div className="ControlContainer">
 			<div className="butControl">
 				<Link to="/lists/create">
-					<button className="but-tab-hight"><AiOutlinePlusSquare/><div className="but-tab-hight-text">New List</div></button>
+					<button className="but-tab-hight"><AiOutlinePlusSquare/><div className="but-tab-hight-text">New Event</div></button>
 				</Link>
 				<Link to="/lists/${}/edit">
-					<button className="but-tab-hight"><AiOutlineForm/><div className="but-tab-hight-text">Edit List</div></button>
+					<button className="but-tab-hight"><AiOutlineForm/><div className="but-tab-hight-text">Edit Event</div></button>
 				</Link>
 				<button className="but-tab-hight" onClick={handleDeleteClick}><AiOutlineMinusSquare/>
-					<div className="but-tab-hight-text">Delete List</div>
+					<div className="but-tab-hight-text">Delete Event</div>
 				</button>
 			</div>
 		</div>

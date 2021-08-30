@@ -25,11 +25,13 @@ export default function HomeMain({username , setHeaderDescript}) {
 				<div className="bigButtonFooter"></div>
 			</div>
 			</Link>
-			<div className="bigButton">
-				<img className="ButtonLogo" src={weventsImg} alt="Logo"/>
-				<div className="ButtonText">All events</div>
-				<div className="bigButtonFooter"></div>
-			</div>
+			<Link to="/events" className="linkButton">
+				<div className="bigButton">
+					<img className="ButtonLogo" src={weventsImg} alt="Logo"/>
+					<div className="ButtonText">All events</div>
+					<div className="bigButtonFooter"></div>
+				</div>
+			</Link>
 			<div className="bigButton">
 				<img className="ButtonLogo" src={wlogImg} alt="Logo"/>
 				<div className="ButtonText">Show audit events</div>

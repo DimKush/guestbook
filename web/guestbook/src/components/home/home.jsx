@@ -5,6 +5,7 @@ import Modal from '../modal/modal';
 import HomeMain from '../home-main/HomeMain';
 import { cookies } from "../../App";
 import  ListsTable from "../home-lists-table/lists-table.jsx";
+import  EventsTable from "../home-events-table/events-table.jsx";
 import {BrowserRouter, Route, Link} from "react-router-dom";
 import CreateList from '../home-lists-create/create-list';
 import LoginComponent from '../login/login.jsx'
@@ -102,6 +103,7 @@ export default function Home({isAuth , setAuthStatus}) {
 					<Route path="/login" exact component ={()  => <LoginComponent isAuth={isAuth} setAuthStatus={setAuthStatus}/>}/>
 					<Route path="/lists" exact component= {() => <ListsTable setHeaderDescript={setHeaderDescript}/>}/>
 					<Route path="/lists/create" component={() => <CreateList/>} />
+					<Route path="/events" component={() => <EventsTable setHeaderDescript={setHeaderDescript}/>}/>
 				</Switch>
 				</div>
 			</div>

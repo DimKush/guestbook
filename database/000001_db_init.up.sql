@@ -17,12 +17,18 @@ CREATE TABLE events_lists
 );
 
 
+CREATE TABLE event_type (
+	type_id serial not null unique,
+	systemname varchar(50) not null,
+	fullname varchar(255) not null 
+);
+
 CREATE TABLE event_item
 (
 	id serial not null unique,
 	list_id int references events_lists(id) on delete cascade not null,
-	title varchar(255) not null,
-	description varchar(255)
+	event_type_id int references event_type(type_id) on delete cascade not null,
+	description text not null
 );
 
 
