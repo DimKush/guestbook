@@ -3,6 +3,7 @@ package repository
 import (
 	"github.com/DimKush/guestbook/tree/main/internal/entities/AuditEvent"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/EmailEventDb"
+	"github.com/DimKush/guestbook/tree/main/internal/entities/EventItem"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/List"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/User"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/UserIn"
@@ -38,6 +39,10 @@ type ListService interface {
 	DeleteListById(list_id int) error
 }
 
+type EventsService interface {
+	GetEventsByParams(EventItem.EventItem) ([]EventItem.EventItem, error)
+}
+
 type UsersService interface {
 	GetAllUsernames() ([]UserIn.UserIn, error)
 	GetUserByUsername(username string) (User.User, error)
@@ -50,6 +55,7 @@ type Repository struct {
 	AuditInt
 	EmailService
 	ListService
+	EventsService
 	UsersService
 }
 
@@ -59,6 +65,7 @@ func RepositoryInit(db *gorm.DB) *Repository {
 		AuditInt:      InitAuditRep(db),
 		EmailService:  InitEmailEventRep(db),
 		ListService:   InitListsRep(db),
+		EventsService: InitEventsRep(db),
 		UsersService:  InitUsersRepos(db),
 	}
 }

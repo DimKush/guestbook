@@ -49,6 +49,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			lists.PUT("/:list_id", h.updateListById)
 			lists.DELETE("/:list_id", h.dropListById)
 
+			lists.POST("/items/params", h.getEventsByParams)
 			events := router.Group(":id/items")
 			{
 				events.POST("/", h.createEvent)
