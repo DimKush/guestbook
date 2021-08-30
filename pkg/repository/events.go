@@ -10,6 +10,27 @@ type EventsRepo struct {
 }
 
 func (data *EventsRepo) GetEventsByParams(item EventItem.EventItem) ([]EventItem.EventItem, error) {
+	query := data.db.Debug().Table(event_item).Select("event_item.*, event_type.type_id as fullname, events_lists.title").
+		Joins("left join events_lists lst on lst.id = event_item.list_id").
+		Joins("left join event_type tp on tp.id = event_item.event_type_id")
+
+	if (item != EventItem.EventItem{}) {
+		if item.Id != 0 {
+			query.Where("event_item.id = ?", item.Id)
+		}
+		if item.ListTile != "" {
+			listLike := "%" + item.ListTile + "%"
+			query.Where("lst.title like ?", listLike)
+		}
+		if item.EventTypeName != "" {
+			eventTypeLike := "%" + item.EventTypeName + "%"
+			query.Where("tp.fullname like ?", eventTypeLike)
+		}
+		if item.Description != "" {
+			description := "%" + item.EventTypeName + "%"
+			query.Where("event_item.description like ?", description)
+		}
+	}
 
 	return nil, nil
 }

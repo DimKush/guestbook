@@ -10,7 +10,6 @@ import (
 const (
 	users        = "users"
 	events_lists = "events_lists"
-	users_lists  = "users_lists"
 	event_item   = "event_item"
 	audit_events = "audit_events"
 )
