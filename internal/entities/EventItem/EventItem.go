@@ -7,4 +7,5 @@ type EventItem struct {
 	EventTypeName string `json:"event_type" gorm:"fullname"`
 	EventTypeId   int    `json:"-" gorm:"type_id"`
 	Description   string `json:"description" gorm:"description"`
+	EventOwnerId  int
 }

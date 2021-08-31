@@ -2,6 +2,11 @@ import React, { useEffect } from 'react'
 import wlogImg from "../../assets/wlog.png"
 import wlistImg from "../../assets/wlist.png"
 import weventsImg from "../../assets/wevents.png"
+
+import { FaList } from 'react-icons/fa'
+import { FiUsers } from 'react-icons/fi'
+import { MdEvent } from 'react-icons/md'
+import { AiOutlineAudit } from 'react-icons/ai'
 import Clock from 'react-live-clock';
 import "./main-style.scss";
 import { Redirect } from 'react-router';
@@ -20,25 +25,25 @@ export default function HomeMain({username , setHeaderDescript}) {
 			</div>
 			<Link to="/lists" className="linkButton">
 			<div className="bigButton" onClick={handleListsClick} >
-				<img className="ButtonLogo" src={wlistImg} alt="Logo"/>
+				<div className="ButtonLogo"><FaList/></div>
 				<div className="ButtonText">All lists</div>
 				<div className="bigButtonFooter"></div>
 			</div>
 			</Link>
 			<Link to="/events" className="linkButton">
 				<div className="bigButton">
-					<img className="ButtonLogo" src={weventsImg} alt="Logo"/>
-					<div className="ButtonText">All events</div>
+					<div className="ButtonLogo"><MdEvent/> </div>
+					<div className="ButtonText">{username} events</div>
 					<div className="bigButtonFooter"></div>
 				</div>
 			</Link>
 			<div className="bigButton">
-				<img className="ButtonLogo" src={wlogImg} alt="Logo"/>
+				<div className="ButtonLogo"><AiOutlineAudit/></div>
 				<div className="ButtonText">Show audit events</div>
 				<div className="bigButtonFooter"></div>
 			</div>
 			<div className="bigButton">
-				<img className="ButtonLogo" src={wlogImg} alt="Logo"/>
+				<div className="ButtonLogo"><FiUsers/></div>
 				<div className="ButtonText">Show Users</div>
 				<div className="bigButtonFooter"></div>
 			</div>

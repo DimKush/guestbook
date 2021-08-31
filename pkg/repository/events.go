@@ -12,7 +12,10 @@ type EventsRepo struct {
 func (data *EventsRepo) GetEventsByParams(item EventItem.EventItem) ([]EventItem.EventItem, error) {
 	query := data.db.Debug().Table(event_item).Select("event_item.*, event_type.type_id as fullname, events_lists.title").
 		Joins("left join events_lists lst on lst.id = event_item.list_id").
-		Joins("left join event_type tp on tp.id = event_item.event_type_id")
+		Joins("left join event_type tp on tp.id = event_item.event_type_id").
+		Joins("left hoin users us on us.id = lst.owner_user_id")
+
+	query.Where("us.id = ?", item.EventOwnerId)
 
 	if (item != EventItem.EventItem{}) {
 		if item.Id != 0 {

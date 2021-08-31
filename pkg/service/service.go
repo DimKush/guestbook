@@ -49,6 +49,7 @@ type Service struct {
 	EmailService
 	ListService
 	UsersSevice
+	EventService
 }
 
 func ServiceInit(repos *repository.Repository) *Service {
@@ -56,5 +57,6 @@ func ServiceInit(repos *repository.Repository) *Service {
 		Authorization: InitAuthService(repos.Authorization, repos.UsersService, repos.EmailService),
 		ListService:   InitListsServiceWorker(repos.ListService, repos.UsersService),
 		UsersSevice:   InitUsersServiceWorker(repos.UsersService),
+		EventService:  InitEventsServiceWorker(repos.EventsService),
 	}
 }

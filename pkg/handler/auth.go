@@ -9,10 +9,6 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-const (
-	cookieName = "jwt"
-)
-
 func (h *Handler) signUp(context *gin.Context) {
 	var user User.User
 	log.Info().Msg("signUp process request.")
