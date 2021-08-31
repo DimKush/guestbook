@@ -61,13 +61,8 @@ func (data *ListsServiceWorker) GetListsByParams(list List.List) ([]List.List, e
 		sort.Slice(lists, func(i, j int) bool {
 			return lists[i].Id < lists[j].Id
 		})
-	}
-
-	//output log
-	log.Info().Msg("Database output:")
-
-	for _, val := range lists {
-		log.Info().Msgf("\n%v", val)
+	} else {
+		lists = []List.List{}
 	}
 
 	if err := <-audit_ch; err != nil {

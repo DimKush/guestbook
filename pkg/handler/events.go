@@ -14,7 +14,7 @@ func (h *Handler) getEventsByParams(context *gin.Context) {
 	// get current user
 	h.userIdentity(context)
 	var user UserIn.UserIn
-	if userId, exists := context.Get("userCTX"); exists {
+	if userId, exists := context.Get(userCTX); exists {
 		if convertedId, ok := userId.(int); !ok {
 			err := fmt.Errorf("Error parsing userId %v", userId)
 			log.Error().Msgf("Error during parsing userIdentity : %s", err.Error())
@@ -22,7 +22,6 @@ func (h *Handler) getEventsByParams(context *gin.Context) {
 		} else {
 			user.Id = convertedId
 		}
-
 	} else {
 		err := fmt.Errorf("Incorrect current username.")
 		log.Error().Msgf("Error during parsing json : %s", err.Error())
@@ -32,7 +31,7 @@ func (h *Handler) getEventsByParams(context *gin.Context) {
 
 	// parse json
 	var event EventItem.EventItem
-	if err := context.BindJSON(event); err != nil {
+	if err := context.BindJSON(&event); err != nil {
 		log.Error().Msgf("Error during parsing json : %s", err.Error())
 		initErrorResponce(context, http.StatusBadRequest, err.Error())
 		return
@@ -44,11 +43,6 @@ func (h *Handler) getEventsByParams(context *gin.Context) {
 	if err != nil {
 		initErrorResponce(context, http.StatusBadRequest, "")
 		return
-	}
-
-	if len(events) == 0 {
-		err := fmt.Errorf("Didn't find anything.")
-		initErrorResponce(context, http.StatusOK, err.Error())
 	}
 
 	initOkResponce(context, map[string]interface{}{

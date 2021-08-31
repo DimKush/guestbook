@@ -1,6 +1,8 @@
 package service
 
 import (
+	"sort"
+
 	"github.com/DimKush/guestbook/tree/main/internal/entities/EventItem"
 	"github.com/DimKush/guestbook/tree/main/pkg/repository"
 )
@@ -14,6 +16,14 @@ func (data *EventsServiceWorker) GetEventsByParams(event EventItem.EventItem) ([
 
 	if err != nil {
 		return nil, err
+	}
+
+	if len(events) != 0 {
+		sort.Slice(events, func(i int, j int) bool {
+			return events[i].Id < events[j].Id
+		})
+	} else {
+		events = []EventItem.EventItem{}
 	}
 
 	return events, nil
