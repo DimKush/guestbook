@@ -7,7 +7,7 @@
 		padding-top: 4vh;
 	}
 	.linkButton{
-		color: #000000;
+		color: #6e1e69;
 	}
 
 	.bigButton{
@@ -33,13 +33,16 @@
 			font-family: "Roboto", sans-serif;
 			flex-direction: column;
 			position: relative;
-			font-size: 30px;
+			font-size: 25px;
 			font-weight: bold;
 		}
 
 		.ButtonLogo{
-			max-width: 15vh;
-			max-height: 15vh;
+			svg{
+			// color:#6e1e69;
+			width: 45px;
+			height: 45px;
+			}
 		}
 	}
 	.bigButton:hover{

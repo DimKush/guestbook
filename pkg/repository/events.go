@@ -1,7 +1,10 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/DimKush/guestbook/tree/main/internal/entities/EventItem"
+	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
 )
 
@@ -10,9 +13,14 @@ type EventsRepo struct {
 }
 
 func (data *EventsRepo) GetEventsByParams(item EventItem.EventItem) ([]EventItem.EventItem, error) {
-	query := data.db.Debug().Table(event_item).Select("event_item.*, event_type.type_id as fullname, events_lists.title").
+	var allEvents []EventItem.EventItem
+
+	query := data.db.Debug().Table(event_item).Select("event_item.*, tp.fullname as event_type_name, lst.title as title").
 		Joins("left join events_lists lst on lst.id = event_item.list_id").
-		Joins("left join event_type tp on tp.id = event_item.event_type_id")
+		Joins("left join event_type tp on tp.type_id = event_item.event_type_id").
+		Joins("left join users us on us.id = lst.owner_user_id")
+
+	query.Where("us.id = ?", item.EventOwnerId)
 
 	if (item != EventItem.EventItem{}) {
 		if item.Id != 0 {
@@ -32,7 +40,20 @@ func (data *EventsRepo) GetEventsByParams(item EventItem.EventItem) ([]EventItem
 		}
 	}
 
-	return nil, nil
+	rows, err := query.Rows()
+	if err != nil {
+		log.Error().Msg(err.Error())
+		return nil, fmt.Errorf("Error during execute query.")
+	}
+
+	var event EventItem.EventItem
+
+	for rows.Next() {
+		data.db.ScanRows(rows, &event)
+		allEvents = append(allEvents, event)
+	}
+
+	return allEvents, nil
 }
 
 func InitEventsRep(database *gorm.DB) *EventsRepo {
