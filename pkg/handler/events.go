@@ -11,6 +11,7 @@ import (
 )
 
 func (h *Handler) getEventsByParams(context *gin.Context) {
+	log.Info().Msg("Handler getEventsByParams process request.")
 	// get current user
 	h.userIdentity(context)
 	var user UserIn.UserIn
@@ -51,7 +52,9 @@ func (h *Handler) getEventsByParams(context *gin.Context) {
 }
 
 func (h *Handler) createEvent(context *gin.Context) {
+	log.Info().Msg("Handler createEvent process request.")
 
+	//list_id, err := strconv.Atoi(context.Param("list_id"))
 }
 
 func (h *Handler) getAllEvents(context *gin.Context) {
