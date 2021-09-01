@@ -16,7 +16,7 @@ func (h *Handler) createList(context *gin.Context) {
 	var newList List.List
 
 	if err := context.BindJSON(&newList); err != nil {
-		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		initErrorResponce(context, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -45,7 +45,9 @@ func (h *Handler) getListsByParams(context *gin.Context) {
 	var listsParams List.List
 
 	if err := context.BindJSON(&listsParams); err != nil {
-		listsParams = List.List{}
+		//listsParams = List.List{}
+		initErrorResponce(context, http.StatusBadRequest, err.Error())
+		return
 	}
 
 	lists, err := h.services.GetListsByParams(listsParams)
@@ -70,7 +72,7 @@ func (h *Handler) getListById(context *gin.Context) {
 
 	list_id, err := strconv.Atoi(context.Param("list_id"))
 	if err != nil {
-		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		initErrorResponce(context, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -94,7 +96,7 @@ func (h *Handler) dropListById(context *gin.Context) {
 
 	list_id, err := strconv.Atoi(context.Param("list_id"))
 	if err != nil {
-		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		initErrorResponce(context, http.StatusBadRequest, err.Error())
 		return
 	}
 

@@ -2,7 +2,7 @@ package service
 
 import (
 	"github.com/DimKush/guestbook/tree/main/internal/entities/EmailEventDb"
-	"github.com/DimKush/guestbook/tree/main/internal/entities/EventItem"
+	"github.com/DimKush/guestbook/tree/main/internal/entities/Item"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/List"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/User"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/UserIn"
@@ -34,8 +34,9 @@ type ListService interface {
 	DeleteListById(list_id int) error
 }
 
-type EventService interface {
-	GetEventsByParams(EventItem.EventItem) ([]EventItem.EventItem, error)
+type ItemsService interface {
+	GetItemsByParams(Item.Item) ([]Item.Item, error)
+	//CreateNewItem()
 }
 
 type UsersSevice interface {
@@ -49,7 +50,7 @@ type Service struct {
 	EmailService
 	ListService
 	UsersSevice
-	EventService
+	ItemsService
 }
 
 func ServiceInit(repos *repository.Repository) *Service {
@@ -57,6 +58,6 @@ func ServiceInit(repos *repository.Repository) *Service {
 		Authorization: InitAuthService(repos.Authorization, repos.UsersService, repos.EmailService),
 		ListService:   InitListsServiceWorker(repos.ListService, repos.UsersService),
 		UsersSevice:   InitUsersServiceWorker(repos.UsersService),
-		EventService:  InitEventsServiceWorker(repos.EventsService),
+		ItemsService:  InitItemsServiceWorker(repos.ItemsService),
 	}
 }
