@@ -23,6 +23,9 @@ func (data *EventsRepo) GetEventsByParams(item EventItem.EventItem) ([]EventItem
 	query.Where("us.id = ?", item.EventOwnerId)
 
 	if (item != EventItem.EventItem{}) {
+		if item.ListId != 0 {
+			query.Where("lst.id = ?", item.ListId)
+		}
 		if item.Id != 0 {
 			query.Where("event_item.id = ?", item.Id)
 		}
