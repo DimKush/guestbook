@@ -50,9 +50,10 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			lists.DELETE("/:list_id", h.dropListById)
 
 			lists.POST("/items/params", h.getEventsByParams)
+
 			events := router.Group(":list_id/items")
 			{
-				events.POST("/", h.createEvent)
+				events.GET("/create", h.createEvent)
 				events.GET("/", h.getAllEvents)
 				events.GET("/:item_id", h.getEventById)
 				events.PUT("/:item_id", h.updateEventById)

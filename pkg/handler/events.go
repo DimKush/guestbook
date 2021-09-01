@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/DimKush/guestbook/tree/main/internal/entities/EventItem"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/UserIn"
@@ -52,9 +53,21 @@ func (h *Handler) getEventsByParams(context *gin.Context) {
 }
 
 func (h *Handler) createEvent(context *gin.Context) {
+	fmt.Println("WOW")
 	log.Info().Msg("Handler createEvent process request.")
 
-	//list_id, err := strconv.Atoi(context.Param("list_id"))
+	list_id, err := strconv.Atoi(context.Param("list_id"))
+	if err != nil {
+		initErrorResponce(context, http.StatusBadRequest, "Incorrect list_id in the url.")
+		return
+	}
+	if list_id == 0 {
+		initErrorResponce(context, http.StatusBadRequest, "In the url list_id cannot be 0.")
+		return
+	}
+
+	fmt.Println(list_id)
+	initOkResponce(context, map[string]interface{}{})
 }
 
 func (h *Handler) getAllEvents(context *gin.Context) {
