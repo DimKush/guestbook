@@ -13,6 +13,60 @@ import (
 
 func (h *Handler) getEventsByParams(context *gin.Context) {
 	log.Info().Msg("Handler getEventsByParams process request.")
+
+	list_id, err := strconv.Atoi(context.Param("list_id"))
+	if err != nil {
+		initErrorResponce(context, http.StatusBadRequest, "Incorrect list_id in the url.")
+		return
+	}
+	if list_id == 0 {
+		initErrorResponce(context, http.StatusBadRequest, "In the url list_id cannot be 0.")
+		return
+	}
+
+	// get current user
+	h.userIdentity(context)
+	var user UserIn.UserIn
+	if userId, exists := context.Get(userCTX); exists {
+		if convertedId, ok := userId.(int); !ok {
+			err := fmt.Errorf("Error parsing userId %v", userId)
+			log.Error().Msgf("Error during parsing userIdentity : %s", err.Error())
+			initErrorResponce(context, http.StatusBadRequest, err.Error())
+		} else {
+			user.Id = convertedId
+		}
+	} else {
+		err := fmt.Errorf("Incorrect current username.")
+		log.Error().Msgf("Error during parsing json : %s", err.Error())
+		initErrorResponce(context, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	// parse json
+	var event EventItem.EventItem
+	if err := context.BindJSON(&event); err != nil {
+		log.Error().Msgf("Error during parsing json : %s", err.Error())
+		initErrorResponce(context, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	event.ListId = list_id
+	event.EventOwnerId = user.Id
+
+	events, err := h.services.GetEventsByParams(event)
+	if err != nil {
+		initErrorResponce(context, http.StatusBadRequest, "")
+		return
+	}
+
+	initOkResponce(context, map[string]interface{}{
+		"Result": events,
+	})
+}
+
+func (h *Handler) getAllUsersEvents(context *gin.Context) {
+	log.Info().Msg("Handler getAllUsersEvents process request.")
+
 	// get current user
 	h.userIdentity(context)
 	var user UserIn.UserIn
@@ -53,7 +107,6 @@ func (h *Handler) getEventsByParams(context *gin.Context) {
 }
 
 func (h *Handler) createEvent(context *gin.Context) {
-	fmt.Println("WOW")
 	log.Info().Msg("Handler createEvent process request.")
 
 	list_id, err := strconv.Atoi(context.Param("list_id"))
@@ -66,7 +119,6 @@ func (h *Handler) createEvent(context *gin.Context) {
 		return
 	}
 
-	fmt.Println(list_id)
 	initOkResponce(context, map[string]interface{}{})
 }
 
