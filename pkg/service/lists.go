@@ -38,9 +38,13 @@ func (data *ListsServiceWorker) GetListsByParams(list List.List) ([]List.List, e
 
 	go func() {
 		out, err := json.Marshal(list)
+
 		if err != nil {
 			log.Error().Msg(err.Error())
+			audit_ch <- err
+			return
 		}
+
 		audit_ch <- Audit.WriteEventParams("ListsServiceWorker",
 			"GetListsByParams",
 			AUDIT_INFO,

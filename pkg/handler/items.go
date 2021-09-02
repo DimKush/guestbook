@@ -123,7 +123,7 @@ func (h *Handler) createEvent(context *gin.Context) {
 	// check if list exists
 	list, err := h.services.GetListById(list_id)
 	if err != nil {
-		initErrorResponce(context, http.StatusBadRequest, "List_id = %s doesn't exists")
+		initErrorResponce(context, http.StatusInternalServerError, "Error, during get list by id.")
 		return
 	}
 
@@ -138,7 +138,7 @@ func (h *Handler) createEvent(context *gin.Context) {
 		return
 	}
 
-	// err := h.services.CreateItem()
+	err = h.services.CreateNewItem(item)
 	// 	initOkResponce(context, map[string]interface{}{})
 }
 
