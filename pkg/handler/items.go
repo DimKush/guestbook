@@ -5,14 +5,15 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/DimKush/guestbook/tree/main/internal/entities/EventItem"
+	"github.com/DimKush/guestbook/tree/main/internal/entities/Item"
+	"github.com/DimKush/guestbook/tree/main/internal/entities/List"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/UserIn"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
 )
 
-func (h *Handler) getEventsByParams(context *gin.Context) {
-	log.Info().Msg("Handler getEventsByParams process request.")
+func (h *Handler) GetItemsByParams(context *gin.Context) {
+	log.Info().Msg("Handler GetItemsByParams process request.")
 
 	list_id, err := strconv.Atoi(context.Param("list_id"))
 	if err != nil {
@@ -31,36 +32,36 @@ func (h *Handler) getEventsByParams(context *gin.Context) {
 		if convertedId, ok := userId.(int); !ok {
 			err := fmt.Errorf("Error parsing userId %v", userId)
 			log.Error().Msgf("Error during parsing userIdentity : %s", err.Error())
-			initErrorResponce(context, http.StatusBadRequest, err.Error())
+			initErrorResponce(context, http.StatusInternalServerError, err.Error())
 		} else {
 			user.Id = convertedId
 		}
 	} else {
 		err := fmt.Errorf("Incorrect current username.")
 		log.Error().Msgf("Error during parsing json : %s", err.Error())
-		initErrorResponce(context, http.StatusBadRequest, err.Error())
+		initErrorResponce(context, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	// parse json
-	var event EventItem.EventItem
-	if err := context.BindJSON(&event); err != nil {
+	var item Item.Item
+	if err := context.BindJSON(&item); err != nil {
 		log.Error().Msgf("Error during parsing json : %s", err.Error())
 		initErrorResponce(context, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	event.ListId = list_id
-	event.EventOwnerId = user.Id
+	item.ListId = list_id
+	item.ItemOwnerId = user.Id
 
-	events, err := h.services.GetEventsByParams(event)
+	items, err := h.services.GetItemsByParams(item)
 	if err != nil {
-		initErrorResponce(context, http.StatusBadRequest, "")
+		initErrorResponce(context, http.StatusInternalServerError, "")
 		return
 	}
 
 	initOkResponce(context, map[string]interface{}{
-		"Result": events,
+		"Result": items,
 	})
 }
 
@@ -86,23 +87,23 @@ func (h *Handler) getAllUsersEvents(context *gin.Context) {
 	}
 
 	// parse json
-	var event EventItem.EventItem
-	if err := context.BindJSON(&event); err != nil {
+	var item Item.Item
+	if err := context.BindJSON(&item); err != nil {
 		log.Error().Msgf("Error during parsing json : %s", err.Error())
-		initErrorResponce(context, http.StatusBadRequest, err.Error())
+		initErrorResponce(context, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	event.EventOwnerId = user.Id
+	item.ItemOwnerId = user.Id
 
-	events, err := h.services.GetEventsByParams(event)
+	items, err := h.services.GetItemsByParams(item)
 	if err != nil {
-		initErrorResponce(context, http.StatusBadRequest, "")
+		initErrorResponce(context, http.StatusInternalServerError, "")
 		return
 	}
 
 	initOkResponce(context, map[string]interface{}{
-		"Result": events,
+		"Result": items,
 	})
 }
 
@@ -119,7 +120,26 @@ func (h *Handler) createEvent(context *gin.Context) {
 		return
 	}
 
-	initOkResponce(context, map[string]interface{}{})
+	// check if list exists
+	list, err := h.services.GetListById(list_id)
+	if err != nil {
+		initErrorResponce(context, http.StatusBadRequest, "List_id = %s doesn't exists")
+		return
+	}
+
+	if (list == List.List{}) {
+		initErrorResponce(context, http.StatusBadRequest, "List_id = %s doesn't exists")
+		return
+	}
+
+	var item Item.Item
+	if err := context.Bind(item); err != nil {
+		initErrorResponce(context, http.StatusInternalServerError, "Server error.")
+		return
+	}
+
+	// err := h.services.CreateItem()
+	// 	initOkResponce(context, map[string]interface{}{})
 }
 
 func (h *Handler) getAllEvents(context *gin.Context) {
