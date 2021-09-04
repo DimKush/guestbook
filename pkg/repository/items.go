@@ -15,7 +15,7 @@ type ItemsRepo struct {
 func (data *ItemsRepo) GetItemsByParams(item Item.Item) ([]Item.Item, error) {
 	var allEvents []Item.Item
 
-	query := data.db.Table(items).Select("items.*, lst.title as list_title, tp.fullname as event_type_name").
+	query := data.db.Table(items).Select("items.*, lst.title as list_title, tp.fullname as item_type_name").
 		Joins("left join events_lists lst on lst.id = items.list_id").
 		Joins("left join item_type tp on tp.type_id = items.item_type_id").
 		Joins("left join users us on us.id = lst.owner_user_id")
@@ -57,6 +57,20 @@ func (data *ItemsRepo) GetItemsByParams(item Item.Item) ([]Item.Item, error) {
 	}
 
 	return allEvents, nil
+}
+
+func (data *ItemsRepo) CreateNewItem(item Item.Item) error {
+	err := data.db.Table(items).Create(&item).Error
+	if err != nil {
+		return fmt.Errorf("Error during execute query in database.")
+	} else {
+		return nil
+	}
+}
+
+func (data *ItemsRepo) GetTypeIdByName(string) (error, int) {
+	//query.
+	return nil, 0
 }
 
 func InitItemsRep(database *gorm.DB) *ItemsRepo {

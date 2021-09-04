@@ -138,8 +138,14 @@ func (h *Handler) createEvent(context *gin.Context) {
 		return
 	}
 
-	err = h.services.CreateNewItem(item)
-	// 	initOkResponce(context, map[string]interface{}{})
+	item.ListId = list_id
+
+	if err = h.services.CreateNewItem(item); err != nil {
+		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	initOkResponce(context, map[string]interface{}{})
 }
 
 func (h *Handler) getAllEvents(context *gin.Context) {

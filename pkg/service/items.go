@@ -53,8 +53,12 @@ func (data *ItemsServiceWorker) CreateNewItem(item Item.Item) error {
 			fmt.Sprintf("Create new item %s", string(out)),
 		)
 	}()
+	// get item_type by the name
+	itemTypeName := 
 
-	return nil
+	err := data.items_repo.CreateNewItem(item)
+
+	return err
 }
 
 func InitItemsServiceWorker(items repository.ItemsService) *ItemsServiceWorker {

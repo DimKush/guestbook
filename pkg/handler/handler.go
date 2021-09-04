@@ -52,7 +52,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			events := lists.Group(":list_id/items")
 			{
 				events.POST("/params", h.GetItemsByParams)
-				events.GET("/create", h.createEvent)
+				events.POST("/create", h.createEvent)
 				events.GET("/", h.getAllEvents)
 				events.GET("/:item_id", h.getEventById)
 				events.PUT("/:item_id", h.updateEventById)
