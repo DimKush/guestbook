@@ -55,7 +55,6 @@ func (data *ItemsServiceWorker) CreateNewItem(item Item.Item) error {
 	}()
 
 	// get item_type by the name
-	fmt.Printf("item_val: %v", item)
 	if types, err := data.GetItemTypesByParams(Item.ItemType{Fullname: item.ItemTypeName}); err != nil {
 		return err
 	} else {

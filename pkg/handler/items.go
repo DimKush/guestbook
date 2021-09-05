@@ -112,18 +112,18 @@ func (h *Handler) createEvent(context *gin.Context) {
 	var list_id int
 	if id, status, err := h.ControlListExist(context); err != nil {
 		initErrorResponce(context, status, err.Error())
+		return
 	} else {
 		list_id = id
 	}
 
 	var item Item.Item
 	if err := context.BindJSON(&item); err != nil {
-		fmt.Println(err)
 		initErrorResponce(context, http.StatusInternalServerError, "Server error.")
 		return
 	}
 
-	item.Id = list_id
+	item.ListId = list_id
 
 	if err := h.services.CreateNewItem(item); err != nil {
 		initErrorResponce(context, http.StatusInternalServerError, err.Error())
