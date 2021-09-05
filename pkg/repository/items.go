@@ -68,9 +68,38 @@ func (data *ItemsRepo) CreateNewItem(item Item.Item) error {
 	}
 }
 
-func (data *ItemsRepo) GetTypeIdByName(string) (error, int) {
-	//query.
-	return nil, 0
+func (data *ItemsRepo) GetItemTypesByParams(item Item.ItemType) ([]Item.ItemType, error) {
+	var item_types []Item.ItemType
+	query := data.db.Debug().Table(item_type)
+
+	fmt.Printf("\nitem : %v", item)
+	if item.TypeId != 0 {
+		query.Where("type_id = ?", item.TypeId)
+	}
+	if item.Systemname != "" {
+		fmt.Println("systemname")
+		likeConst := "%" + item.Systemname + "%"
+		query.Where("systemname like ?", likeConst)
+	}
+	if item.Fullname != "" {
+		fmt.Println("fullname")
+		likeConst := "%" + item.Fullname + "%"
+		query.Where("fullname like ?", likeConst)
+	}
+
+	rows, err := query.Debug().Rows()
+	if err != nil {
+		log.Error().Msg(err.Error())
+		return nil, fmt.Errorf("Error during execute query.")
+	}
+
+	var element Item.ItemType
+	for rows.Next() {
+		data.db.ScanRows(rows, &element)
+		item_types = append(item_types, element)
+	}
+
+	return item_types, nil
 }
 
 func InitItemsRep(database *gorm.DB) *ItemsRepo {

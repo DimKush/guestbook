@@ -53,12 +53,34 @@ func (data *ItemsServiceWorker) CreateNewItem(item Item.Item) error {
 			fmt.Sprintf("Create new item %s", string(out)),
 		)
 	}()
+
 	// get item_type by the name
-	itemTypeName := 
+	fmt.Printf("item_val: %v", item)
+	if types, err := data.GetItemTypesByParams(Item.ItemType{Fullname: item.ItemTypeName}); err != nil {
+		return err
+	} else {
+		if len(types) != 1 {
+			err := fmt.Errorf("Incorrect return type from a returned result. Returned %d. Must return 1", len(types))
+			log.Error().Msg(err.Error())
+			return err
+		}
+
+		item.ItemTypeId = types[0].TypeId
+	}
 
 	err := data.items_repo.CreateNewItem(item)
 
 	return err
+}
+
+func (data *ItemsServiceWorker) GetItemTypesByParams(item Item.ItemType) ([]Item.ItemType, error) {
+	items, err := data.items_repo.GetItemTypesByParams(item)
+	if err != nil {
+		log.Error().Msg(err.Error())
+		return nil, fmt.Errorf("Internal database error.")
+	}
+
+	return items, nil
 }
 
 func InitItemsServiceWorker(items repository.ItemsService) *ItemsServiceWorker {

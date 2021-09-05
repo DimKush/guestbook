@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"github.com/DimKush/guestbook/tree/main/internal/entities/Item"
-	"github.com/DimKush/guestbook/tree/main/internal/entities/List"
 	"github.com/DimKush/guestbook/tree/main/internal/entities/UserIn"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
@@ -110,42 +109,50 @@ func (h *Handler) getAllUsersEvents(context *gin.Context) {
 func (h *Handler) createEvent(context *gin.Context) {
 	log.Info().Msg("Handler createEvent process request.")
 
-	list_id, err := strconv.Atoi(context.Param("list_id"))
-	if err != nil {
-		initErrorResponce(context, http.StatusBadRequest, "Incorrect list_id in the url.")
-		return
-	}
-	if list_id == 0 {
-		initErrorResponce(context, http.StatusBadRequest, "In the url list_id cannot be 0.")
-		return
-	}
-
-	// check if list exists
-	list, err := h.services.GetListById(list_id)
-	if err != nil {
-		initErrorResponce(context, http.StatusInternalServerError, "Error, during get list by id.")
-		return
-	}
-
-	if (list == List.List{}) {
-		initErrorResponce(context, http.StatusBadRequest, "List_id = %s doesn't exists")
-		return
+	var list_id int
+	if id, status, err := h.ControlListExist(context); err != nil {
+		initErrorResponce(context, status, err.Error())
+	} else {
+		list_id = id
 	}
 
 	var item Item.Item
-	if err := context.Bind(item); err != nil {
+	if err := context.BindJSON(&item); err != nil {
+		fmt.Println(err)
 		initErrorResponce(context, http.StatusInternalServerError, "Server error.")
 		return
 	}
 
-	item.ListId = list_id
+	item.Id = list_id
 
-	if err = h.services.CreateNewItem(item); err != nil {
+	if err := h.services.CreateNewItem(item); err != nil {
 		initErrorResponce(context, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	initOkResponce(context, map[string]interface{}{})
+}
+
+func (h *Handler) GetItemsTypes(context *gin.Context) {
+	if _, status, err := h.ControlListExist(context); err != nil {
+		initErrorResponce(context, status, err.Error())
+	}
+
+	var item_type Item.ItemType
+	if err := context.BindJSON(&item_type); err != nil {
+		initErrorResponce(context, http.StatusInternalServerError, "Server error.")
+		return
+	}
+
+	types, err := h.services.GetItemTypesByParams(item_type)
+	if err != nil {
+		initErrorResponce(context, http.StatusInternalServerError, "Server error.")
+		return
+	}
+
+	initOkResponce(context, map[string]interface{}{
+		"Result": types,
+	})
 }
 
 func (h *Handler) getAllEvents(context *gin.Context) {

@@ -11,6 +11,7 @@ const (
 	users        = "users"
 	events_lists = "events_lists"
 	items        = "items"
+	item_type    = "item_type"
 	audit_events = "audit_events"
 )
 

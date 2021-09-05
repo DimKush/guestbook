@@ -37,7 +37,7 @@ type ListService interface {
 type ItemsService interface {
 	GetItemsByParams(Item.Item) ([]Item.Item, error)
 	CreateNewItem(Item.Item) error
-	GetTypeIdByName(string) (error, int)
+	GetItemTypesByParams(Item.ItemType) ([]Item.ItemType, error)
 }
 
 type UsersSevice interface {
