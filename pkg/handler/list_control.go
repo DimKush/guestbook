@@ -20,6 +20,7 @@ func (h *Handler) ControlListExist(context *gin.Context) (int, int, error) {
 
 	// check if list exists
 	list, err := h.services.GetListById(list_id)
+
 	if err != nil {
 		return 0, http.StatusInternalServerError, fmt.Errorf("Error, during get list by id.")
 	}

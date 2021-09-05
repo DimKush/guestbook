@@ -60,7 +60,7 @@ func (data *ItemsRepo) GetItemsByParams(item Item.Item) ([]Item.Item, error) {
 }
 
 func (data *ItemsRepo) CreateNewItem(item Item.Item) error {
-	err := data.db.Table(items).Create(&item).Error
+	err := data.db.Table(items).Select("list_id", "item_type_id", "description").Create(&item).Error
 	if err != nil {
 		return fmt.Errorf("Error during execute query in database.")
 	} else {
@@ -70,24 +70,21 @@ func (data *ItemsRepo) CreateNewItem(item Item.Item) error {
 
 func (data *ItemsRepo) GetItemTypesByParams(item Item.ItemType) ([]Item.ItemType, error) {
 	var item_types []Item.ItemType
-	query := data.db.Debug().Table(item_type)
+	query := data.db.Table(item_type)
 
-	fmt.Printf("\nitem : %v", item)
 	if item.TypeId != 0 {
 		query.Where("type_id = ?", item.TypeId)
 	}
 	if item.Systemname != "" {
-		fmt.Println("systemname")
 		likeConst := "%" + item.Systemname + "%"
 		query.Where("systemname like ?", likeConst)
 	}
 	if item.Fullname != "" {
-		fmt.Println("fullname")
 		likeConst := "%" + item.Fullname + "%"
 		query.Where("fullname like ?", likeConst)
 	}
 
-	rows, err := query.Debug().Rows()
+	rows, err := query.Rows()
 	if err != nil {
 		log.Error().Msg(err.Error())
 		return nil, fmt.Errorf("Error during execute query.")
