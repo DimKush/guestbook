@@ -16,7 +16,7 @@ const refershTable = async(listFilters) => {
 	console.log("JSON.stringify(listFilters)",JSON.stringify(listFilters))
 
 	listFilters.id = Number(listFilters.id)
-	const responce = await fetch("http://localhost:8007/api/lists/params", {
+	const responce = await fetch("http://localhost:8007/api/lists/items/all", {
 				method: 'POST',
 				credentials: 'include',
 				headers : {
@@ -38,7 +38,7 @@ const refershTable = async(listFilters) => {
 }
 
 
-export default function EventsTable({setHeaderDescript}){
+export default function ItemsTable({setHeaderDescript}){
 	setHeaderDescript("Events");
 	const[sidebar, setSidebar] = React.useState(false);
 	const[clearInput, setClearInput] = React.useState(false);

@@ -6,16 +6,16 @@ export const COLUMNS = [
 		accessor: 'id',
 	},
 	{
-		Header: 'Event Type',
-		accessor: 'event_type',
+		Header: 'Item Type',
+		accessor: 'item_type_name',
 	},
 	{
 		Header: 'Description',
 		accessor: 'description',
 	},
 	{
-		Header: 'Main list',
-		accessor: 'main_list',
+		Header: 'List title',
+		accessor: 'list_title',
 	},
 
 ]

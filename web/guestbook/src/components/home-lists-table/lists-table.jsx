@@ -4,7 +4,7 @@ import { useTable, useFilters, usePagination, useRowSelect } from 'react-table'
 import { COLUMNS } from './columns'
 import { AiOutlineSearch, AiOutlineForm, AiOutlinePlusSquare, AiOutlineMinusSquare} from 'react-icons/ai'
 import { BsBoxArrowInRight } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, Redirect} from "react-router-dom";
 import "./filters-styles.scss"
 import { cookies } from '../../App'
 import ModalLoading from '../modal/modal-loading'
@@ -221,7 +221,6 @@ export default function ListsTable({setHeaderDescript}){
 		);
 	} 
 
-
 	const handleDeleteClick = () => {
 		let selectedRowList = selectedRow;
 		
@@ -244,6 +243,11 @@ export default function ListsTable({setHeaderDescript}){
 		)();
 	}
 
+	const handleEditClick = () => {
+		console.log(selectedRow.id);
+		return <Redirect to={`lists/${selectedRow.id}`}/>;
+	}
+ 
 	const dropMarked = () => {
 		page.map(row => { row.isSelected = false; });
 	}
@@ -257,7 +261,7 @@ export default function ListsTable({setHeaderDescript}){
 				<Link to="/lists/create">
 					<button className="but-tab-hight"><AiOutlinePlusSquare/><div className="but-tab-hight-text">New List</div></button>
 				</Link>
-				<Link to="/lists/${}/edit">
+				<Link to={selectedRow.id ? `/lists/${selectedRow.id}` : `/lists` }>
 					<button className="but-tab-hight"><AiOutlineForm/><div className="but-tab-hight-text">Edit List</div></button>
 				</Link>
 				<button className="but-tab-hight" onClick={handleDeleteClick}><AiOutlineMinusSquare/>
