@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import "./create-list-style.scss"
+import "./edit-list-style.scss"
 import { cookies } from "../../App";
 import Modal from "../modal/modal.jsx";
 import { Redirect, Link } from 'react-router-dom';
@@ -21,7 +21,7 @@ function ColumnCreateList ( {column, ref_current, blocked=false} ) {
 }
 
 
-export default function CreateList() {
+export default function EditList() {
 	const[idCheckboxBlocked, setIdCheckboxBlocked]= useState(true);
 	const[ownerCheckboxBlocked, setOwnerCheckboxBlocked] = useState(false);
 	const[Owners, setOwners] = useState([]);
@@ -133,7 +133,7 @@ export default function CreateList() {
 	return(
 		<div className="list-card-main">
 			<div className="row-form">
-				<h1>Create new list</h1>
+				<h1>Edit list</h1>
 			</div>
 			<div className="row-form">
 				<div className="search-field id checkbox">
@@ -185,7 +185,7 @@ export default function CreateList() {
 				<Link to="/lists">
 						<button className="control-but back"><AiOutlineDoubleLeft/><div className="but-tab-hight-text">Back</div></button>
 				</Link>
-				<button className="control-but" onClick={handleCreateClick}>Create List</button>
+				<button className="control-but" onClick={handleCreateClick}>Edit List</button>
 				<button className="control-but" onClick={handleCleanFieldsClick}>Clean fields</button>
 			</div>
 			<Modal active={modalActive} setActive={setModalActive} head={modalMsgHead} msg={modalMsg} isError={false}/>

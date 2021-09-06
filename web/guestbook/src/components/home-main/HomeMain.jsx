@@ -30,7 +30,7 @@ export default function HomeMain({username , setHeaderDescript}) {
 				<div className="bigButtonFooter"></div>
 			</div>
 			</Link>
-			<Link to="/events" className="linkButton">
+			<Link to="/items" className="linkButton">
 				<div className="bigButton">
 					<div className="ButtonLogo"><MdEvent/> </div>
 					<div className="ButtonText">{username} events</div>
