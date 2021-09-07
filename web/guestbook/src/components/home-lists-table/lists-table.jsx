@@ -242,12 +242,7 @@ export default function ListsTable({setHeaderDescript}){
 		}
 		)();
 	}
-
-	const handleEditClick = () => {
-		console.log(selectedRow.id);
-		return <Redirect to={`lists/${selectedRow.id}`}/>;
-	}
- 
+	 
 	const dropMarked = () => {
 		page.map(row => { row.isSelected = false; });
 	}

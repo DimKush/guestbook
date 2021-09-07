@@ -169,6 +169,25 @@ func (data *ListsServiceWorker) DeleteListById(list_id int) error {
 	return nil
 }
 
+func (data *ListsServiceWorker) UpdateListById(listUpdated *List.List) error {
+	if (*listUpdated == List.List{}) {
+		return fmt.Errorf("List cannot be empty.")
+	}
+
+	// a little bit optimization:)
+	lst, err := data.GetListById(listUpdated.Id)
+	if err != nil {
+		return err
+	}
+
+	if lst.Description == listUpdated.Description && lst.Title == listUpdated.Title {
+		log.Info().Msg("The same records")
+		return nil
+	}
+
+	return nil
+}
+
 func InitListsServiceWorker(repos repository.ListService, repos_users repository.UsersService) *ListsServiceWorker {
 	return &ListsServiceWorker{db_lists: repos, db_users: repos_users}
 }

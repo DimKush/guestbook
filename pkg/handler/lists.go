@@ -88,7 +88,27 @@ func (h *Handler) getListById(context *gin.Context) {
 }
 
 func (h *Handler) updateListById(context *gin.Context) {
+	log.Info().Msg("Handler updateEventById process request.")
 
+	id, http_code, err := h.ControlListExist(context)
+	if err != nil {
+		initErrorResponce(context, http_code, err.Error())
+		return
+	}
+
+	// unmarshall json
+	var lst List.List
+
+	if err := context.BindJSON(&lst); err != nil {
+		initErrorResponce(context, http.StatusInternalServerError, "Internal server error.")
+		return
+	}
+
+	lst.Id = id
+
+	// if h.services.Up
+
+	// context.Status(http.StatusOK)
 }
 
 func (h *Handler) dropListById(context *gin.Context) {

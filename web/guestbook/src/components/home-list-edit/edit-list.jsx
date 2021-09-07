@@ -5,12 +5,13 @@ import Modal from "../modal/modal.jsx";
 import { Redirect, Link } from 'react-router-dom';
 import { AiOutlineDoubleLeft } from 'react-icons/ai'
 
-function ColumnCreateList ( {column, ref_current, blocked=false} ) {
+function ColumnCreateList ( {column, ref_current, blocked=false, defaultValue} ) {
 	return(
 		<div className="form-group">
 		<span>{column}</span>
 			
 			<input class="form-field"
+				defaultValue={defaultValue}
 				type="text"
 				id={column}
 				ref={ref_current}
@@ -21,12 +22,12 @@ function ColumnCreateList ( {column, ref_current, blocked=false} ) {
 }
 
 
-export default function EditList() {
+export default function EditList({match}) {
 	const[idCheckboxBlocked, setIdCheckboxBlocked]= useState(true);
-	const[ownerCheckboxBlocked, setOwnerCheckboxBlocked] = useState(false);
+	const[ownerCheckboxBlocked, setOwnerCheckboxBlocked] = useState(true);
 	const[Owners, setOwners] = useState([]);
 	const[currentUser, setCurrentUser] = useState("");
-	
+	const[listObject, setListObject] = useState({});
 	const[modalMsgHead, setModalMsgHead] = React.useState("");
 	const[modalMsg, setModalMsg] = React.useState("");
 	const[modalActive, setModalActive] = React.useState(false);
@@ -39,10 +40,13 @@ export default function EditList() {
 	let auto_id_checkbox = React.createRef();
 	let auto_owner_checkbox = React.createRef();
 
+	console.log(match.params.id)
 	useEffect(() => {
 		(
 		  async () => {
-			const responce = await fetch("http://localhost:8007/api/users/GetAllUsernames", {
+			const url = `http://localhost:8007/api/lists/${match.params.id}` 
+			const responce = await fetch(url, 
+			{
 			  headers : {"Content-type" : "application/json",
 						 "Authorization" :`Bearer ${cookies.get("jwt")}`},
 			  credentials : "include",
@@ -50,7 +54,7 @@ export default function EditList() {
 			});
 			const content = await responce.json();
 			if(content.Status === "OK"){
-				setOwners(content.Result);
+				setListObject(content.Result);
 			} else {
 				// TODO : ERROR!
 			}
@@ -74,30 +78,27 @@ export default function EditList() {
 		})();
 	}, []);
 
-	const handleCreateClick = () => {
-		const CreateObjList = {
-			"id" : Number(idInput.current.value),
-			"owner" : ownerCheckboxBlocked ? currentUser : listOwner,
-			"title" : titleInput.current.value,
-			"description" : descriptionInput.current.value,
-		};
-		
-
+	const handleEditClick = () => {
 		(
 			async() => {
-				const responce = await fetch("http://localhost:8007/api/lists/create", {
-				method : "POST",
-				headers : { "Content-type" : "application/json",
-							"Authorization" :`Bearer ${cookies.get("jwt")}`},
-				credentials : "include",
-				body : JSON.stringify(CreateObjList),
+				const responce = await fetch( `http://localhost:8007/api/lists/${match.params.id}`,
+				{
+					method : "PUT",
+					headers : { "Content-type" : "application/json",
+								"Authorization" :`Bearer ${cookies.get("jwt")}`},
+					credentials : "include",
+					body : JSON.stringify({
+						"title" : titleInput.current.value,
+						"description" : descriptionInput.current.value
+					}),
 				});
-				const content = await responce.json();
-				if(content.Status === "OK"){
-					setModalMsg("Record was created.");
+				const status = await responce.status;
+				if(status === 200){
+					setModalMsg("List has been edited.");
 					setModalMsgHead("OK");
 					setModalActive(true);
 				} else {
+					const content = await responce.json();
 					setModalMsg(content.Message);
 					setModalMsgHead(content.Status);
 					setModalActive(true);
@@ -106,29 +107,7 @@ export default function EditList() {
 		)();
 	}
 
-	const handleCleanFieldsClick = () => {
-		idInput.current.value = "";
-		titleInput.current.value = "";
-		descriptionInput.current.value = "";
-		
-		setIdCheckboxBlocked(true);
-		auto_id_checkbox.current.checked = true; 
 
-		setOwnerCheckboxBlocked(false);
-		auto_owner_checkbox.current.checked = false;
-
-		ownerInput.current.selectedIndex = 0;
-
-	}
-
-	const handleOwnerCheckboxClicked = () => {
-		setOwnerCheckboxBlocked(!ownerCheckboxBlocked);
-		
-		if(setOwnerCheckboxBlocked) {
-			// show owner
-			ownerInput.current.selectedIndex = 0;
-		}
-	}
 
 	return(
 		<div className="list-card-main">
@@ -136,35 +115,20 @@ export default function EditList() {
 				<h1>Edit list</h1>
 			</div>
 			<div className="row-form">
-				<div className="search-field id checkbox">
-					<input type="checkbox" id="autoId" defaultChecked={idCheckboxBlocked} ref={auto_id_checkbox} onChange={() =>
-						{
-							setIdCheckboxBlocked(!idCheckboxBlocked)
-							idInput.current.value = "";
-						}}>
-						</input>
-					<label for ="autoId">Auto-increment Id</label>
-				</div>
-
-				<div className="search-field id checkbox">
-					<input type="checkbox" id="autoOwner" defaultChecked={ownerCheckboxBlocked} ref={auto_owner_checkbox} onChange ={handleOwnerCheckboxClicked} />
-
-					<label for ="autoOwner">I'm the owner</label>
-				</div>
 				<div className="search-field id">
-					<ColumnCreateList column={"Id"} ref_current={idInput} blocked={idCheckboxBlocked}/>
+					<ColumnCreateList column={"Id"} ref_current={idInput} blocked={idCheckboxBlocked} defaultValue={listObject.id} />
 				</div>
 			</div>
 			<div className="row-form">
 				
 				<div className="search-field title" >
-					<ColumnCreateList column={"Title"} ref_current={titleInput}/>
+					<ColumnCreateList column={"Title"} ref_current={titleInput} defaultValue={listObject.title}/>
 				</div>
 				<div className="search-field owner" >
 				<div className="form-group">
 					<span>Owner</span>
 						<select className="form-field ownerSelect" ref={ownerInput} disabled={ownerCheckboxBlocked} onChange={e => setListOwner(e.target.value)}> 
-							<option disabled selected value>-- Select an owner --</option>
+							<option disabled selected value>{listObject.owner}</option>
 								{
 									Owners.map(Owner => (
 										<option value={Owner}>
@@ -178,15 +142,14 @@ export default function EditList() {
 			</div>
 			<div className="row-form">
 				<div className="search-field description">
-					<ColumnCreateList column={"Description"} ref_current={descriptionInput}/>
+					<ColumnCreateList column={"Description"} ref_current={descriptionInput} defaultValue={listObject.description }/>
 				</div>
 			</div>
 			<div className="row-form">
 				<Link to="/lists">
 						<button className="control-but back"><AiOutlineDoubleLeft/><div className="but-tab-hight-text">Back</div></button>
 				</Link>
-				<button className="control-but" onClick={handleCreateClick}>Edit List</button>
-				<button className="control-but" onClick={handleCleanFieldsClick}>Clean fields</button>
+				<button className="control-but" onClick={handleEditClick}>Edit List</button>
 			</div>
 			<Modal active={modalActive} setActive={setModalActive} head={modalMsgHead} msg={modalMsg} isError={false}/>
 		</div>

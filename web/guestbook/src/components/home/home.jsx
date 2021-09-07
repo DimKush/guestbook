@@ -104,7 +104,7 @@ export default function Home({isAuth , setAuthStatus}) {
 					<Route path="/login" exact component ={()  => <LoginComponent isAuth={isAuth} setAuthStatus={setAuthStatus}/>}/>
 					<Route path="/lists" exact component= {() => <ListsTable setHeaderDescript={setHeaderDescript}/>}/>
 						<Route path="/lists/create" component={() => <CreateList/>} />
-						<Route path="/lists/:id" component={() =><EditList/>}/>
+						<Route path="/lists/:id" component={EditList}/>
 					<Route path="/items" component={() => <ItemsTable setHeaderDescript={setHeaderDescript}/>}/>
 				</Switch>
 				</div>
