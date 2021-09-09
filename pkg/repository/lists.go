@@ -120,6 +120,16 @@ func (data *ListServiceRepo) DeleteListById(list_id int) error {
 	return err
 }
 
+func (data *ListServiceRepo) UpdateListById(list *List.List) error {
+	err := data.db.Debug().Table(events_lists).Save(&list).Error
+	if err != nil {
+		log.Error().Msg(err.Error())
+		return err
+	}
+
+	return nil
+}
+
 func InitListsRep(database *gorm.DB) *ListServiceRepo {
 	return &ListServiceRepo{db: database}
 }

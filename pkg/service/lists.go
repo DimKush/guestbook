@@ -185,6 +185,10 @@ func (data *ListsServiceWorker) UpdateListById(listUpdated *List.List) error {
 		return nil
 	}
 
+	if err := data.db_lists.UpdateListById(listUpdated); err != nil {
+		log.Info().Msgf(err.Error())
+	}
+
 	return nil
 }
 

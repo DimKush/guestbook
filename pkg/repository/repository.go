@@ -37,6 +37,7 @@ type ListService interface {
 	GetAutoListId() (int, error)
 	CreateList(List.List) error
 	DeleteListById(list_id int) error
+	UpdateListById(*List.List) error
 }
 
 type ItemsService interface {

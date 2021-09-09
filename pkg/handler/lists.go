@@ -106,9 +106,13 @@ func (h *Handler) updateListById(context *gin.Context) {
 
 	lst.Id = id
 
-	// if h.services.Up
-
-	// context.Status(http.StatusOK)
+	err = h.services.UpdateListById(&lst)
+	if err != nil {
+		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		return
+	} else {
+		context.Status(http.StatusOK)
+	}
 }
 
 func (h *Handler) dropListById(context *gin.Context) {
