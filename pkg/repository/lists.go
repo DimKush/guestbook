@@ -121,7 +121,9 @@ func (data *ListServiceRepo) DeleteListById(list_id int) error {
 }
 
 func (data *ListServiceRepo) UpdateListById(list *List.List) error {
-	err := data.db.Debug().Table(events_lists).Save(&list).Error
+	err := data.db.Debug().Table(events_lists).Where("id = ? and owner_user_id = ?", list.Id, list.OwnerUserId).Updates(List.List{Title: list.Title, Description: list.Description}).Error
+	//.Update(map[string]interface{}{"id": list.Id, "title": list.Title, "description": list.Description, "owner_user_id": list.OwnerUserId})
+
 	if err != nil {
 		log.Error().Msg(err.Error())
 		return err

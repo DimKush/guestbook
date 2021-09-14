@@ -185,6 +185,10 @@ func (data *ListsServiceWorker) UpdateListById(listUpdated *List.List) error {
 		return nil
 	}
 
+	// put values in the updated struct
+	listUpdated.Owner = lst.Owner
+	listUpdated.OwnerUserId = lst.OwnerUserId
+
 	if err := data.db_lists.UpdateListById(listUpdated); err != nil {
 		log.Info().Msgf(err.Error())
 	}
