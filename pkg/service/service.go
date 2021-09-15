@@ -39,7 +39,7 @@ type ItemsService interface {
 	GetItemsByParams(Item.Item) ([]Item.Item, error)
 	CreateNewItem(Item.Item) error
 	GetItemTypesByParams(Item.ItemType) ([]Item.ItemType, error)
-	GetItemsAvailability(int) (int, error)
+	GetItemsAvailability(int, UserIn.UserIn) (int, error)
 }
 
 type UsersSevice interface {

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/DimKush/guestbook/tree/main/internal/entities/Item"
+	"github.com/DimKush/guestbook/tree/main/internal/entities/UserIn"
 	"github.com/DimKush/guestbook/tree/main/pkg/repository"
 	"github.com/rs/zerolog/log"
 )
@@ -82,8 +83,8 @@ func (data *ItemsServiceWorker) GetItemTypesByParams(item Item.ItemType) ([]Item
 	return items, nil
 }
 
-func (data *ItemsServiceWorker) GetItemsAvailability(list_id int) (int, error) {
-	item := Item.Item{ListId: list_id}
+func (data *ItemsServiceWorker) GetItemsAvailability(list_id int, user UserIn.UserIn) (int, error) {
+	item := Item.Item{ListId: list_id, ItemOwnerId: user.Id}
 
 	items, err := data.items_repo.GetItemsByParams(item)
 	if err != nil {
