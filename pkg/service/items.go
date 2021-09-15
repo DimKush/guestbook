@@ -86,7 +86,7 @@ func (data *ItemsServiceWorker) GetItemTypesByParams(item Item.ItemType) ([]Item
 func (data *ItemsServiceWorker) GetItemsAvailability(list_id int, user UserIn.UserIn) (int, error) {
 	item := Item.Item{ListId: list_id, ItemOwnerId: user.Id}
 
-	items, err := data.items_repo.GetItemsByParams(item)
+	items, err := data.items_repo.GetItemsByParams(item) // TODO: refactor query (select count )
 	if err != nil {
 		return 0, fmt.Errorf("Error while executing in the database.")
 	}
