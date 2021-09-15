@@ -50,7 +50,7 @@ export default function ListsTable({setHeaderDescript}){
 	const[currentUser, setCurrentUser] = React.useState("");
 	const[selectedRow, setSelectedRow] = React.useState({});
 	const[rowIndex,setRowIndex] = React.useState(0);
-
+	const[editItems, setEditItems] = React.useState(true);
 	const[modalMsgHead, setModalMsgHead] = React.useState("");
 	const[modalMsg, setModalMsg] = React.useState("");
 	const[modalActive, setModalActive] = React.useState(false);
@@ -241,6 +241,9 @@ export default function ListsTable({setHeaderDescript}){
 			setLoadingDonut(false);
 		}
 		)();
+		(async() => {
+			
+		})();
 	}
 	 
 	const dropMarked = () => {
@@ -262,6 +265,9 @@ export default function ListsTable({setHeaderDescript}){
 				<button className="but-tab-hight" onClick={handleDeleteClick}><AiOutlineMinusSquare/>
 					<div className="but-tab-hight-text">Delete List</div>
 				</button>
+				<Link to={selectedRow.id ? `/lists/${selectedRow.id}` : `/lists` }>
+					<button className="but-tab-hight edit" disabled={editItems}><AiOutlineForm/><div className="but-tab-hight-text">Edit Items</div></button>
+				</Link>
 			</div>
 		</div>
 		<table {...getTableProps()} > 
