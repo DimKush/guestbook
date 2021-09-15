@@ -241,15 +241,30 @@ export default function ListsTable({setHeaderDescript}){
 			setLoadingDonut(false);
 		}
 		)();
-		(async() => {
-			
-		})();
 	}
-	 
+	
 	const dropMarked = () => {
 		page.map(row => { row.isSelected = false; });
 	}
 
+	const enableOrDisableItemsBut = () => {
+		console.log("enableOrDisableItemsBut" );
+		(async() => {
+			const responce = await fetch(`http://localhost:8007/lists/${selectedRow.id}/items/`, {
+			  headers : { "Content-type" : "application/json",
+						"Authorization" :`Bearer ${cookies.get("jwt")}`},
+			  credentials : "include",
+			});
+
+			const content = await responce.json();
+
+			if(content.Status === "OK"){
+				//setCurrentUser(content.username);
+			} else {
+				// TODO: Modal error
+			}
+		})();
+	}
 	return(
 	<div className="form-container">
 		<Sidebar/>
@@ -302,6 +317,7 @@ export default function ListsTable({setHeaderDescript}){
 									});
 									
 									setSelectedRow(row.original);
+									enableOrDisableItemsBut();
 									console.log(row.original);
 								},
 							})}>

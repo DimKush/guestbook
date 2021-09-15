@@ -155,6 +155,26 @@ func (h *Handler) GetItemsTypes(context *gin.Context) {
 	})
 }
 
+func (h *Handler) getItemsAvailability(context *gin.Context) {
+	log.Info().Msg("Handler getItemsCount process request.")
+
+	list_id, err := strconv.Atoi(context.Param("list_id"))
+	if err != nil {
+		initErrorResponce(context, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	items_count, err := h.services.GetItemsAvailability(list_id)
+	if err != nil {
+		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	initOkResponce(context, map[string]interface{}{
+		"Count": items_count,
+	})
+}
+
 func (h *Handler) getAllEvents(context *gin.Context) {
 
 }

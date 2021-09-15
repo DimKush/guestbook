@@ -82,6 +82,17 @@ func (data *ItemsServiceWorker) GetItemTypesByParams(item Item.ItemType) ([]Item
 	return items, nil
 }
 
+func (data *ItemsServiceWorker) GetItemsAvailability(list_id int) (int, error) {
+	item := Item.Item{ListId: list_id}
+
+	items, err := data.items_repo.GetItemsByParams(item)
+	if err != nil {
+		return 0, fmt.Errorf("Error while executing in the database.")
+	}
+
+	return len(items), nil
+}
+
 func InitItemsServiceWorker(items repository.ItemsService) *ItemsServiceWorker {
 	return &ItemsServiceWorker{
 		items_repo: items,
