@@ -43,7 +43,7 @@ func (data *ItemsRepo) GetItemsByParams(item Item.Item) ([]Item.Item, error) {
 		}
 	}
 
-	rows, err := query.Rows()
+	rows, err := query.Debug().Rows()
 	if err != nil {
 		log.Error().Msg(err.Error())
 		return nil, fmt.Errorf("Error during execute query.")
