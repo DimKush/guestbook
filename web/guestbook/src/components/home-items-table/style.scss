@@ -304,7 +304,7 @@
 
 	.butControl{
 		min-width: 35%;
-		max-width: 70%;
+		max-width: 100%;
 		margin-left: 0;
 		.but-tab-hight{
 
@@ -332,6 +332,10 @@
 				float: left;
 				margin-top: 0.3vh;
 			}
+		}
+		.but-tab-hight.edit{
+			float: right;
+			margin-right: 0;
 		}
 
 		.but-tab-hight:disabled{
