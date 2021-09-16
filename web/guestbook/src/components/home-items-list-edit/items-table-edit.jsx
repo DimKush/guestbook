@@ -4,11 +4,10 @@ import { useTable, useFilters, usePagination, useRowSelect } from 'react-table'
 import { COLUMNS } from './columns'
 import { AiOutlineSearch, AiOutlineForm, AiOutlinePlusSquare, AiOutlineMinusSquare} from 'react-icons/ai'
 import { BsBoxArrowInRight } from "react-icons/bs";
-import { Link, Redirect} from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./filters-styles.scss"
 import { cookies } from '../../App'
 import ModalLoading from '../modal/modal-loading'
-import IndeterminateCheckbox from './selector-checkbox.jsx'
 import DeleteList from '../home-list-delete/delete-list'
 import Modal from "../modal/modal.jsx";
 
@@ -17,7 +16,7 @@ const refershTable = async(listFilters) => {
 	console.log("JSON.stringify(listFilters)",JSON.stringify(listFilters))
 
 	listFilters.id = Number(listFilters.id)
-	const responce = await fetch("http://localhost:8007/api/lists/params", {
+	const responce = await fetch("http://localhost:8007/api/lists/items/all", {
 				method: 'POST',
 				credentials: 'include',
 				headers : {
@@ -39,8 +38,8 @@ const refershTable = async(listFilters) => {
 }
 
 
-export default function ListsTable({setHeaderDescript}){
-	setHeaderDescript("Lists");
+export default function ItemsTableEdit({setHeaderDescript}){
+	setHeaderDescript("Events");
 	const[sidebar, setSidebar] = React.useState(false);
 	const[clearInput, setClearInput] = React.useState(false);
 	const[dataTable, setDataTable] = React.useState([]);
@@ -50,7 +49,7 @@ export default function ListsTable({setHeaderDescript}){
 	const[currentUser, setCurrentUser] = React.useState("");
 	const[selectedRow, setSelectedRow] = React.useState({});
 	const[rowIndex,setRowIndex] = React.useState(0);
-	const[editItemsButtonOn, setEditItemsButtonOn] = React.useState(true);
+
 	const[modalMsgHead, setModalMsgHead] = React.useState("");
 	const[modalMsg, setModalMsg] = React.useState("");
 	const[modalActive, setModalActive] = React.useState(false);
@@ -221,6 +220,7 @@ export default function ListsTable({setHeaderDescript}){
 		);
 	} 
 
+
 	const handleDeleteClick = () => {
 		let selectedRowList = selectedRow;
 		
@@ -242,35 +242,11 @@ export default function ListsTable({setHeaderDescript}){
 		}
 		)();
 	}
-	
+
 	const dropMarked = () => {
 		page.map(row => { row.isSelected = false; });
 	}
 
-	const enableOrDisableItemsBut = (id) => {
-		console.log("enableOrDisableItemsBut" );
-		(async() => {
-			const responce = await fetch(`http://localhost:8007/api/lists/${id}/items/availability`, {
-			  headers : { "Content-type" : "application/json",
-						"Authorization" :`Bearer ${cookies.get("jwt")}`},
-			  credentials : "include",
-			});
-
-			const content = await responce.json();
-
-			if(content.Status === "OK"){
-				if(content.Count > 0) {
-					console.log("false");
-					setEditItemsButtonOn(false);
-				} else {
-					console.log("false");
-					setEditItemsButtonOn(true);
-				}
-			} else {
-				// TODO: Modal error
-			}
-		})();
-	}
 	return(
 	<div className="form-container">
 		<Sidebar/>
@@ -278,17 +254,14 @@ export default function ListsTable({setHeaderDescript}){
 		<div className="ControlContainer">
 			<div className="butControl">
 				<Link to="/lists/create">
-					<button className="but-tab-hight"><AiOutlinePlusSquare/><div className="but-tab-hight-text">New List</div></button>
+					<button className="but-tab-hight"><AiOutlinePlusSquare/><div className="but-tab-hight-text">New Event</div></button>
 				</Link>
-				<Link to={selectedRow.id ? `/lists/${selectedRow.id}` : `/lists` }>
-					<button className="but-tab-hight"><AiOutlineForm/><div className="but-tab-hight-text">Edit List</div></button>
+				<Link to="/lists/${}/edit">
+					<button className="but-tab-hight"><AiOutlineForm/><div className="but-tab-hight-text">Edit Event</div></button>
 				</Link>
 				<button className="but-tab-hight" onClick={handleDeleteClick}><AiOutlineMinusSquare/>
-					<div className="but-tab-hight-text">Delete List</div>
+					<div className="but-tab-hight-text">Delete Event</div>
 				</button>
-				<Link to={!editItemsButtonOn ? `/lists/${selectedRow.id}/items` : `/lists` }>
-					<button className="but-tab-hight edit" disabled={editItemsButtonOn}><AiOutlineForm/><div className="but-tab-hight-text">Edit Items</div></button>
-				</Link>
 			</div>
 		</div>
 		<table {...getTableProps()} > 
@@ -323,7 +296,7 @@ export default function ListsTable({setHeaderDescript}){
 									});
 									
 									setSelectedRow(row.original);
-									enableOrDisableItemsBut(row.original.id);
+									console.log(row.original);
 								},
 							})}>
 								{
