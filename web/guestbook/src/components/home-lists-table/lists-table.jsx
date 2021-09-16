@@ -167,7 +167,7 @@ export default function ListsTable({setHeaderDescript}){
 
 		return(
 			<div className="form-group">
-			<span>{column.id}</span>
+			<span>{column.Header}</span>
 				
 				<input class="form-field"
 					defaultValue={mpValues.get(column.id)}

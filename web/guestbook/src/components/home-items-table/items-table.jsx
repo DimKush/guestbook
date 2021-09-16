@@ -14,11 +14,12 @@ import { useParams } from "react-router-dom";
 
 
 
-const ControlMenu = ({selectedRow}) => {
+const ControlMenu = ({selectedRow, id}) => {
 
 	const handleDeleteClick = () => {
 
 	}
+	if (id !== 0) {
 	return(
 		<div className="ControlContainer">
 		<div className="butControl">
@@ -34,12 +35,18 @@ const ControlMenu = ({selectedRow}) => {
 		</div>
 	</div>
 	);
+	} else {
+		return (
+			<div/>
+		)
+	}
 }
 
 
 const refershTable = async(listFilters, list_id) => {
 	// from GO : json: invalid use of ,string struct tag, trying to unmarshal "" into int
-	if (list_id !== 0){
+	console.log("refreshTable list_id ", list_id);
+	if (list_id === 0){
 		console.log("JSON.stringify(listFilters)",JSON.stringify(listFilters))
 
 		listFilters.id = Number(listFilters.id)
@@ -63,14 +70,13 @@ const refershTable = async(listFilters, list_id) => {
 			return null;
 		}
 	} else {
-		const responce = await fetch(`http://localhost:8007/api/lists/${list_id}/params`, {
-			method: 'POST',
+		const responce = await fetch(`http://localhost:8007/api/lists/${list_id}/items/`, {
+			method: 'GET',
 			credentials: 'include',
 			headers : {
 					"Content-type" : "application/json", 
 					"Authorization" :`Bearer ${cookies.get("jwt")}`
 			},
-			body :JSON.stringify(listFilters)
 		})
 	
 		const content = await responce.json();
@@ -108,9 +114,7 @@ export default function ItemsTable({setHeaderDescript}){
 
 	const columns = useMemo(() => COLUMNS , []);
 	
-	if ( id !== undefined ) {
-		setListId(id)
-	}
+	
 
 	console.log(listId);
 	useEffect(() => {
@@ -134,7 +138,7 @@ export default function ItemsTable({setHeaderDescript}){
 			(async () => {
 				setLoadingDonut(true);
 				const empty = {} 
-				let tableData = await refershTable(empty);
+				let tableData = await refershTable(empty, id !== undefined ? id : 0);
 				if (tableData != null) {
 					setDataTable(tableData);
 				}
@@ -220,10 +224,9 @@ export default function ItemsTable({setHeaderDescript}){
 				handleClickFind();
 			}
 		}
-
 		return(
 			<div className="form-group">
-			<span>{column.id}</span>
+			<span>{column.Header}</span>
 				
 				<input class="form-field"
 					defaultValue={mpValues.get(column.id)}
@@ -277,44 +280,15 @@ export default function ItemsTable({setHeaderDescript}){
 		);
 	} 
 
-
-	const handleDeleteClick = () => {
-		let selectedRowList = selectedRow;
-		
-		(async() => {
-			const delRes = await DeleteList(selectedRowList, currentUser);
-			
-			setModalMsgHead("Error");
-			setModalMsg(delRes.Message);
-			setModalActive(true);
-			setTimelineloaded(false);
-
-			setLoadingDonut(true);
-			const empty = {} 
-			let tableData = await refershTable(empty);
-			if (tableData != null) {
-				setDataTable(tableData);
-			}
-			setLoadingDonut(false);
-		}
-		)();
-	}
-
 	const dropMarked = () => {
 		page.map(row => { row.isSelected = false; });
 	}
 
-	let controls;
-	if(listId !== 0) {
-		controls = <ControlMenu/>
-	} else {
-		controls = <div/>
-	}
 	return(
 	<div className="form-container">
 		<Sidebar/>
 	<div className={sidebar ? "form-events active" : "form-events"}>
-		{controls}
+		<ControlMenu selectedRow={selectedRow} id={id !== undefined ? id : 0}/>
 		<table {...getTableProps()} > 
 			<thead>
 				{

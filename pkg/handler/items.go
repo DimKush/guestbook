@@ -193,8 +193,46 @@ func (h *Handler) getItemsAvailability(context *gin.Context) {
 	})
 }
 
-func (h *Handler) getAllEvents(context *gin.Context) {
+func (h *Handler) getAllItemsByListId(context *gin.Context) {
+	log.Info().Msg("Handler getAllItems process request.")
 
+	// get current user
+	h.userIdentity(context)
+	var user UserIn.UserIn
+	if userId, exists := context.Get(userCTX); exists {
+		if convertedId, ok := userId.(int); !ok {
+			err := fmt.Errorf("Error parsing userId %v", userId)
+			log.Error().Msgf("Error during parsing userIdentity : %s", err.Error())
+			initErrorResponce(context, http.StatusBadRequest, err.Error())
+		} else {
+			user.Id = convertedId
+		}
+	} else {
+		err := fmt.Errorf("Incorrect current username.")
+		log.Error().Msgf("Error during parsing json : %s", err.Error())
+		initErrorResponce(context, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	list_id, err := strconv.Atoi(context.Param("list_id"))
+
+	fmt.Printf("\n list_id : %d", list_id)
+	if err != nil {
+		initErrorResponce(context, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	var item Item.Item = Item.Item{ListId: list_id, ItemOwnerId: user.Id}
+
+	items, err := h.services.GetItemsByParams(item)
+	if err != nil {
+		initErrorResponce(context, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	initOkResponce(context, map[string]interface{}{
+		"Result": items,
+	})
 }
 
 func (h *Handler) getEventById(context *gin.Context) {

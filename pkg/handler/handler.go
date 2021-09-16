@@ -56,7 +56,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 				events.POST("/params", h.GetItemsByParams)
 				events.POST("/types", h.GetItemsTypes)
 				events.POST("/create", h.createEvent)
-				events.GET("/", h.getAllEvents)
+				events.GET("/", h.getAllItemsByListId)
 				events.GET("/:item_id", h.getEventById)
 				events.PUT("/:item_id", h.updateEventById)
 				events.DELETE("/:item_id", h.dropEventById)
