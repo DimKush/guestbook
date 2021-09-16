@@ -40,7 +40,7 @@ export default function EditList({match}) {
 	let auto_id_checkbox = React.createRef();
 	let auto_owner_checkbox = React.createRef();
 
-	console.log(match.params.id)
+	console.log(match.params.id);
 	useEffect(() => {
 		(
 		  async () => {

@@ -10,36 +10,87 @@ import { cookies } from '../../App'
 import ModalLoading from '../modal/modal-loading'
 import DeleteList from '../home-list-delete/delete-list'
 import Modal from "../modal/modal.jsx";
+import { useParams } from "react-router-dom";
 
-const refershTable = async(listFilters) => {
+
+
+const ControlMenu = ({selectedRow}) => {
+
+	const handleDeleteClick = () => {
+
+	}
+	return(
+		<div className="ControlContainer">
+		<div className="butControl">
+			<Link to="/lists/create">
+				<button className="but-tab-hight"><AiOutlinePlusSquare/><div className="but-tab-hight-text">New Item</div></button>
+			</Link>
+			<Link to="/lists/${}/edit">
+				<button className="but-tab-hight"><AiOutlineForm/><div className="but-tab-hight-text">Edit Item</div></button>
+			</Link>
+			<button className="but-tab-hight" onClick={handleDeleteClick}><AiOutlineMinusSquare/>
+				<div className="but-tab-hight-text">Delete Item</div>
+			</button>
+		</div>
+	</div>
+	);
+}
+
+
+const refershTable = async(listFilters, list_id) => {
 	// from GO : json: invalid use of ,string struct tag, trying to unmarshal "" into int
-	console.log("JSON.stringify(listFilters)",JSON.stringify(listFilters))
+	if (list_id !== 0){
+		console.log("JSON.stringify(listFilters)",JSON.stringify(listFilters))
 
-	listFilters.id = Number(listFilters.id)
-	const responce = await fetch("http://localhost:8007/api/lists/items/all", {
-				method: 'POST',
-				credentials: 'include',
-				headers : {
-						"Content-type" : "application/json", 
-						"Authorization" :`Bearer ${cookies.get("jwt")}`
-				},
-				body :JSON.stringify(listFilters)
-			})
+		listFilters.id = Number(listFilters.id)
+		const responce = await fetch("http://localhost:8007/api/lists/items/all", {
+			method: 'POST',
+			credentials: 'include',
+			headers : {
+					"Content-type" : "application/json", 
+					"Authorization" :`Bearer ${cookies.get("jwt")}`
+			},
+			body :JSON.stringify(listFilters)
+		})
+	
+		const content = await responce.json();
 		
-			const content = await responce.json();
-			
-			if(content.Status === "OK" && content.Result !== null ){
-				return content.Result;
-				//setDataTable(content.Result);
-			} else if( content.Status === "Error") {
-				console.log("Message");
-				return null;
-			}
+		if(content.Status === "OK" && content.Result !== null ){
+			return content.Result;
+			//setDataTable(content.Result);
+		} else if( content.Status === "Error") {
+			console.log("Message");
+			return null;
+		}
+	} else {
+		const responce = await fetch(`http://localhost:8007/api/lists/${list_id}/params`, {
+			method: 'POST',
+			credentials: 'include',
+			headers : {
+					"Content-type" : "application/json", 
+					"Authorization" :`Bearer ${cookies.get("jwt")}`
+			},
+			body :JSON.stringify(listFilters)
+		})
+	
+		const content = await responce.json();
+		
+		if(content.Status === "OK" && content.Result !== null ){
+			return content.Result;
+			//setDataTable(content.Result);
+		} else if( content.Status === "Error") {
+			console.log("Message");
+			return null;
+		}
+	}
 }
 
 
 export default function ItemsTable({setHeaderDescript}){
-	setHeaderDescript("Events");
+	let { id } = useParams();
+
+	setHeaderDescript("Items");
+	
 	const[sidebar, setSidebar] = React.useState(false);
 	const[clearInput, setClearInput] = React.useState(false);
 	const[dataTable, setDataTable] = React.useState([]);
@@ -49,6 +100,7 @@ export default function ItemsTable({setHeaderDescript}){
 	const[currentUser, setCurrentUser] = React.useState("");
 	const[selectedRow, setSelectedRow] = React.useState({});
 	const[rowIndex,setRowIndex] = React.useState(0);
+	const[listId, setListId] = React.useState(0);
 
 	const[modalMsgHead, setModalMsgHead] = React.useState("");
 	const[modalMsg, setModalMsg] = React.useState("");
@@ -56,6 +108,11 @@ export default function ItemsTable({setHeaderDescript}){
 
 	const columns = useMemo(() => COLUMNS , []);
 	
+	if ( id !== undefined ) {
+		setListId(id)
+	}
+
+	console.log(listId);
 	useEffect(() => {
 		(async () => {
 			const responce = await fetch("http://localhost:8007/auth/user", {
@@ -142,7 +199,7 @@ export default function ItemsTable({setHeaderDescript}){
 
 		(async () => {
 			setLoadingDonut(true);
-			const tableData = await refershTable(Object.fromEntries(values));
+			const tableData = await refershTable(Object.fromEntries(values), listId);
 			if (tableData != null) {
 				setDataTable(tableData);
 			}
@@ -247,23 +304,17 @@ export default function ItemsTable({setHeaderDescript}){
 		page.map(row => { row.isSelected = false; });
 	}
 
+	let controls;
+	if(listId !== 0) {
+		controls = <ControlMenu/>
+	} else {
+		controls = <div/>
+	}
 	return(
 	<div className="form-container">
 		<Sidebar/>
 	<div className={sidebar ? "form-events active" : "form-events"}>
-		<div className="ControlContainer">
-			<div className="butControl">
-				<Link to="/lists/create">
-					<button className="but-tab-hight"><AiOutlinePlusSquare/><div className="but-tab-hight-text">New Event</div></button>
-				</Link>
-				<Link to="/lists/${}/edit">
-					<button className="but-tab-hight"><AiOutlineForm/><div className="but-tab-hight-text">Edit Event</div></button>
-				</Link>
-				<button className="but-tab-hight" onClick={handleDeleteClick}><AiOutlineMinusSquare/>
-					<div className="but-tab-hight-text">Delete Event</div>
-				</button>
-			</div>
-		</div>
+		{controls}
 		<table {...getTableProps()} > 
 			<thead>
 				{

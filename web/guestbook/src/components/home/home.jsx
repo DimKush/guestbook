@@ -6,7 +6,6 @@ import HomeMain from '../home-main/HomeMain';
 import { cookies } from "../../App";
 import  ListsTable from "../home-lists-table/lists-table.jsx";
 import  ItemsTable from "../home-items-table/items-table.jsx";
-import  ItemsTableEdit from "../home-items-list-edit/items-table-edit.jsx";
 import {BrowserRouter, Route, Link} from "react-router-dom";
 import CreateList from '../home-lists-create/create-list';
 import EditList from '../home-list-edit/edit-list';
@@ -106,7 +105,7 @@ export default function Home({isAuth , setAuthStatus}) {
 					<Route path="/lists" exact component= {() => <ListsTable setHeaderDescript={setHeaderDescript}/>}/>
 						<Route path="/lists/create" component={() => <CreateList/>} />
 						<Route path="/lists/:id" exact component={EditList}/>
-						<Route path="/lists/:id/items" exact component={ItemsTableEdit}/>
+						<Route path="/lists/:id/items" exact component={() => <ItemsTable setHeaderDescript={setHeaderDescript}/>}/>
 					<Route path="/items" component={() => <ItemsTable setHeaderDescript={setHeaderDescript}/>}/>
 				</Switch>
 				</div>
