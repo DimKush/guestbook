@@ -48,16 +48,16 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			lists.GET("/:list_id", h.getListById)
 			lists.GET("/GetAutoListId", h.getAutoListId)
 			lists.PUT("/:list_id", h.updateListById)
-			lists.DELETE("/:list_id", h.dropListById)
+			lists.DELETE("/:list_id", h.dropListById) // TODO : Need to delete items too
 
-			events := lists.Group(":list_id/items")
+			events := lists.Group(":list_id/items", h.getListById)
 			{
 				events.GET("/availability", h.getItemsAvailability)
 				events.POST("/params", h.GetItemsByParams)
 				events.POST("/types", h.GetItemsTypes)
 				events.POST("/create", h.createEvent)
 				events.GET("/", h.getAllItemsByListId)
-				events.GET("/:item_id", h.getEventById)
+				events.GET("/:item_id", h.getItemById)
 				events.PUT("/:item_id", h.updateEventById)
 				events.DELETE("/:item_id", h.dropEventById)
 			}

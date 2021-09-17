@@ -99,6 +99,17 @@ func (data *ItemsRepo) GetItemTypesByParams(item Item.ItemType) ([]Item.ItemType
 	return item_types, nil
 }
 
+func (data *ItemsRepo) GetItemById(item_id int) (Item.Item, error) {
+	var item Item.Item
+	data.db.Table(items).Where("id = ?", item_id).Scan(&item)
+
+	if (item == Item.Item{}) {
+		return Item.Item{}, fmt.Errorf("Cannot find item with id = %d", item_id)
+	}
+
+	return item, nil
+}
+
 func InitItemsRep(database *gorm.DB) *ItemsRepo {
 	return &ItemsRepo{
 		db: *database,
