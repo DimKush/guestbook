@@ -94,6 +94,10 @@ func (data *ItemsServiceWorker) GetItemsAvailability(list_id int, user UserIn.Us
 	return len(items), nil
 }
 
+func (data *ItemsServiceWorker) GetItemById(item_id int) (Item.Item, error) {
+	return data.items_repo.GetItemById(item_id)
+}
+
 func InitItemsServiceWorker(items repository.ItemsService) *ItemsServiceWorker {
 	return &ItemsServiceWorker{
 		items_repo: items,

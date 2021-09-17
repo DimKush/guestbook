@@ -216,7 +216,6 @@ func (h *Handler) getAllItemsByListId(context *gin.Context) {
 
 	list_id, err := strconv.Atoi(context.Param("list_id"))
 
-	fmt.Printf("\n list_id : %d", list_id)
 	if err != nil {
 		initErrorResponce(context, http.StatusBadRequest, err.Error())
 		return
@@ -235,7 +234,44 @@ func (h *Handler) getAllItemsByListId(context *gin.Context) {
 	})
 }
 
-func (h *Handler) getEventById(context *gin.Context) {
+func (h *Handler) getItemById(context *gin.Context) {
+	log.Info().Msg("Handler getItemById process request.")
+
+	// get current user
+	h.userIdentity(context)
+	var user UserIn.UserIn
+	if userId, exists := context.Get(userCTX); exists {
+		if convertedId, ok := userId.(int); !ok {
+			err := fmt.Errorf("Error parsing userId %v", userId)
+			log.Error().Msgf("Error during parsing userIdentity : %s", err.Error())
+			initErrorResponce(context, http.StatusBadRequest, err.Error())
+		} else {
+			user.Id = convertedId
+		}
+	} else {
+		err := fmt.Errorf("Incorrect current username.")
+		log.Error().Msgf("Error during parsing json : %s", err.Error())
+		initErrorResponce(context, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	// get item id
+	item_id, err := strconv.Atoi(context.Param("item_id"))
+
+	if err != nil {
+		initErrorResponce(context, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if itemRes, err := h.services.GetItemById(item_id); err != nil {
+		initErrorResponce(context, http.StatusBadRequest, err.Error())
+		return
+	} else {
+		initOkResponce(context, map[string]interface{}{
+			"Result": itemRes,
+		})
+		return
+	}
 
 }
 
