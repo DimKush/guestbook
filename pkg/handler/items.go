@@ -182,12 +182,13 @@ func (h *Handler) getItemsAvailability(context *gin.Context) {
 		return
 	}
 
-	items_count, err := h.services.GetItemsAvailability(list_id, user)
+	items_count, err := h.services.GetItemsAvailability(list_id)
 	if err != nil {
 		initErrorResponce(context, http.StatusInternalServerError, err.Error())
 		return
 	}
 
+	fmt.Println(items_count)
 	initOkResponce(context, map[string]interface{}{
 		"Count": items_count,
 	})
