@@ -275,10 +275,48 @@ func (h *Handler) getItemById(context *gin.Context) {
 
 }
 
-func (h *Handler) updateEventById(context *gin.Context) {
+func (h *Handler) updateItemById(context *gin.Context) {
+	log.Info().Msg("Handler updateItemById process request.")
 
+	var item Item.Item
+
+	if err := context.BindJSON(&item); err != nil {
+		initErrorResponce(context, http.StatusBadRequest, "Bad request.")
+		return
+	}
+
+	if err := h.services.UpdateItemById(&item); err != nil {
+		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		return
+	} else {
+		initOkResponce(context, map[string]interface{}{})
+		return
+	}
 }
 
-func (h *Handler) dropEventById(context *gin.Context) {
+func (h *Handler) deleteItemById(context *gin.Context) {
+	log.Info().Msg("Handler deleteItemById process request.")
+
+	// get item id
+	item_id, err := strconv.Atoi(context.Param("item_id"))
+	if err != nil {
+		initErrorResponce(context, http.StatusBadRequest, "Internal server error.")
+		return
+	}
+
+	item, err := h.services.GetItemById(item_id)
+
+	if (item == Item.Item{}) {
+		initErrorResponce(context, http.StatusInternalServerError, "Internal server error.")
+		return
+	}
+
+	if err := h.services.DeleteItemById(item_id); err != nil {
+		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		return
+	} else {
+		initOkResponce(context, map[string]interface{}{})
+		return
+	}
 
 }

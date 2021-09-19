@@ -103,3 +103,23 @@ func InitItemsServiceWorker(items repository.ItemsService) *ItemsServiceWorker {
 		items_repo: items,
 	}
 }
+
+func (data *ItemsServiceWorker) UpdateItemById(item *Item.Item) error {
+	err := data.items_repo.UpdateItemById(item)
+	if err != nil {
+		log.Error().Msg(err.Error())
+		return fmt.Errorf("Error while executing in the database.")
+	} else {
+		return nil
+	}
+}
+
+func (data *ItemsServiceWorker) DeleteItemById(item_id int) error {
+	err := data.items_repo.DeleteItemById(item_id)
+	if err != nil {
+		log.Error().Msg(err.Error())
+		return fmt.Errorf("Error while executing in the database.")
+	} else {
+		return nil
+	}
+}
