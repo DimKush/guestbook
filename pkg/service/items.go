@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/DimKush/guestbook/tree/main/internal/entities/Item"
-	"github.com/DimKush/guestbook/tree/main/internal/entities/UserIn"
 	"github.com/DimKush/guestbook/tree/main/pkg/repository"
 	"github.com/rs/zerolog/log"
 )
@@ -83,15 +82,14 @@ func (data *ItemsServiceWorker) GetItemTypesByParams(item Item.ItemType) ([]Item
 	return items, nil
 }
 
-func (data *ItemsServiceWorker) GetItemsAvailability(list_id int, user UserIn.UserIn) (int, error) {
-	item := Item.Item{ListId: list_id, ItemOwnerId: user.Id}
+func (data *ItemsServiceWorker) GetItemsAvailability(list_id int) (int64, error) {
 
-	items, err := data.items_repo.GetItemsByParams(item) // TODO: refactor query (select count )
+	items_count, err := data.items_repo.GetItemsAvailability(list_id) // TODO: refactor query (select count )
 	if err != nil {
 		return 0, fmt.Errorf("Error while executing in the database.")
 	}
 
-	return len(items), nil
+	return items_count, nil
 }
 
 func (data *ItemsServiceWorker) GetItemById(item_id int) (Item.Item, error) {

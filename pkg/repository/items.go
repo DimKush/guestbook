@@ -122,6 +122,18 @@ func (data *ItemsRepo) DeleteItemById(item_id int) error {
 	return err
 }
 
+func (data *ItemsRepo) GetItemsAvailability(list_id int) (int64, error) {
+	var items_count int64
+
+	err := data.db.Debug().Table(items).Where("list_id = ?", list_id).Count(&items_count).Error
+
+	if err != nil {
+		return 0, err
+	} else {
+		return items_count, nil
+	}
+}
+
 func InitItemsRep(database *gorm.DB) *ItemsRepo {
 	return &ItemsRepo{
 		db: *database,
