@@ -110,6 +110,18 @@ func (data *ItemsRepo) GetItemById(item_id int) (Item.Item, error) {
 	return item, nil
 }
 
+func (data *ItemsRepo) UpdateItemById(item *Item.Item) error {
+	err := data.db.Debug().Table(items).Where("id = ?", item.Id).Updates(Item.Item{ItemTypeName: item.ItemTypeName, Description: item.Description}).Error
+
+	return err
+}
+
+func (data *ItemsRepo) DeleteItemById(item_id int) error {
+	err := data.db.Table(items).Delete(&Item.Item{}, item_id).Error
+
+	return err
+}
+
 func InitItemsRep(database *gorm.DB) *ItemsRepo {
 	return &ItemsRepo{
 		db: *database,

@@ -45,6 +45,8 @@ type ItemsService interface {
 	GetItemsByParams(Item.Item) ([]Item.Item, error)
 	CreateNewItem(Item.Item) error
 	GetItemTypesByParams(Item.ItemType) ([]Item.ItemType, error)
+	UpdateItemById(*Item.Item) error
+	DeleteItemById(item_id int) error
 }
 
 type UsersService interface {
