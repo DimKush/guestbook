@@ -8,6 +8,7 @@ import  ListsTable from "../home-lists-table/lists-table.jsx";
 import  ItemsTable from "../home-items-table/items-table.jsx";
 import {BrowserRouter, Route, Link} from "react-router-dom";
 import CreateList from '../home-lists-create/create-list';
+import CreateItem from '../home-item-create/create-item';
 import EditList from '../home-list-edit/edit-list';
 import EditItem from '../home-item-edit/edit-item';
 import LoginComponent from '../login/login.jsx'
@@ -107,6 +108,7 @@ export default function Home({isAuth , setAuthStatus}) {
 						<Route path="/lists/create" component={() => <CreateList/>} />
 						<Route path="/lists/:id" exact component={EditList}/>
 						<Route path="/lists/:id/items" exact component={() => <ItemsTable setHeaderDescript={setHeaderDescript}/>}/>
+						<Route path="/lists/:id/items/create" exact component={() => <CreateItem/>}/>
 						<Route path="/lists/:id/items/:item_id" exact component={() => <EditItem/>}/>
 					<Route path="/items" component={() => <ItemsTable setHeaderDescript={setHeaderDescript}/>}/>
 				</Switch>

@@ -275,7 +275,7 @@ export default function ItemsTable({setHeaderDescript}){
 		return(
 			<div className="ControlContainer">
 			<div className="butControl">
-				<Link to="/lists/create">
+				<Link to={`/lists/${id}/items/create`}>
 					<button className="but-tab-hight"><AiOutlinePlusSquare/><div className="but-tab-hight-text">New Item</div></button>
 				</Link>
 				<Link to="/lists/${}/edit">
