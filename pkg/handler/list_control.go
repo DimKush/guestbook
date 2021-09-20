@@ -7,6 +7,7 @@ import (
 
 	"github.com/DimKush/guestbook/tree/main/internal/entities/List"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 )
 
 func (h *Handler) ControlListExist(context *gin.Context) (int, int, error) {
@@ -30,4 +31,31 @@ func (h *Handler) ControlListExist(context *gin.Context) (int, int, error) {
 	}
 
 	return list_id, http.StatusOK, nil
+}
+
+func (h *Handler) listAvailability(context *gin.Context) {
+	log.Info().Msg("listAvailability process request.")
+
+	list_id, err := strconv.Atoi(context.Param("list_id"))
+	if err != nil {
+		log.Error().Msgf("Error during listAvailability. Reason : %s", err.Error())
+		initErrorResponce(context, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	list, err := h.services.GetListById(list_id)
+	if err != nil {
+		log.Error().Msgf("Error during listAvailability. Reason : %s", err.Error())
+		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if (list == List.List{}) {
+		log.Error().Msgf("List doesn't exist.")
+		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		return
+	} else {
+		context.Set("list_id", list_id)
+		return
+	}
+
 }

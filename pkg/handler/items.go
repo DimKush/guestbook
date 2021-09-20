@@ -176,13 +176,14 @@ func (h *Handler) getItemsAvailability(context *gin.Context) {
 		return
 	}
 
-	list_id, err := strconv.Atoi(context.Param("list_id"))
-	if err != nil {
+	list_id, exist := context.Get("list_id")
+	if !exist {
+		err := fmt.Errorf("List_id doesn't exist.")
 		initErrorResponce(context, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	items_count, err := h.services.GetItemsAvailability(list_id)
+	items_count, err := h.services.GetItemsAvailability(list_id.(int))
 	if err != nil {
 		initErrorResponce(context, http.StatusInternalServerError, err.Error())
 		return
