@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import "./create-item-style.scss"
 import { cookies } from "../../App";
 import Modal from "../modal/modal.jsx";
-import { Redirect, Link } from 'react-router-dom';
+import { Redirect, Link, useParams} from 'react-router-dom';
 import { AiOutlineDoubleLeft } from 'react-icons/ai'
 
 function ColumnCreateList ( {column, ref_current, blocked=false} ) {
@@ -38,6 +38,8 @@ export default function CreateList() {
 	let descriptionInput = React.createRef();
 	let auto_id_checkbox = React.createRef();
 	let auto_owner_checkbox = React.createRef();
+
+	let { id } = useParams();
 
 	useEffect(() => {
 		(
@@ -175,7 +177,7 @@ export default function CreateList() {
 				</div>
 			</div>
 			<div className="row-form">
-				<Link to="/lists">
+				<Link to={`/lists/${id}/items`}>
 						<button className="control-but back"><AiOutlineDoubleLeft/><div className="but-tab-hight-text">Back</div></button>
 				</Link>
 				<button className="control-but" onClick={handleCreateClick}>Create List</button>
