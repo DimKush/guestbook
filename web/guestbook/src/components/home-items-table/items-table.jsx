@@ -13,51 +13,6 @@ import { useParams } from "react-router-dom";
 import  DeleteItem  from '../home-item-delete/delete-item.jsx'
 
 
-const ControlMenu = ({selectedRow, setModalMsgHead, setModalMsg, setModalActive, setLoadingDonut, setDataTable}) => {
-	let { id } = useParams();
-	
-	const handleDeleteClick = () => {
-		(async() => {
-			const delRes = await DeleteItem(id, selectedRow);
-
-			setModalMsgHead(delRes.Status);
-			setModalMsg(delRes.Message);
-			setModalActive(true);
-
-			setLoadingDonut(true);
-			const empty = {} 
-			let tableData = await refershTable(empty);
-			if (tableData != null) {
-				setDataTable(tableData);
-			}
-			setLoadingDonut(false);
-
-		})();
-	}
-
-	console.log("list_id", id)
-	if (id !== 0 && id !== undefined) {
-	return(
-		<div className="ControlContainer">
-		<div className="butControl">
-			<Link to="/lists/create">
-				<button className="but-tab-hight"><AiOutlinePlusSquare/><div className="but-tab-hight-text">New Item</div></button>
-			</Link>
-			<Link to="/lists/${}/edit">
-				<button className="but-tab-hight"><AiOutlineForm/><div className="but-tab-hight-text">Edit Item</div></button>
-			</Link>
-			<button className="but-tab-hight" onClick={handleDeleteClick}><AiOutlineMinusSquare/>
-				<div className="but-tab-hight-text">Delete Item</div>
-			</button>
-		</div>
-	</div>
-	);
-	} else {
-		return (
-			<div/>
-		)
-	}
-}
 
 
 const refershTable = async(listFilters, list_id) => {
@@ -301,11 +256,50 @@ export default function ItemsTable({setHeaderDescript}){
 		page.map(row => { row.isSelected = false; });
 	}
 
+	const ControlMenu = () => {
+		const handleDeleteClick = () => {
+			(async() => {
+				const delRes = await DeleteItem(id, selectedRow);
+
+				setModalMsgHead(delRes.Status);
+				setModalMsg(delRes.Message);
+				setModalActive(true);
+				setTimelineloaded(false);
+
+				window.location.reload();
+			})();
+		}
+
+		console.log("list_id", id)
+		if (id !== 0 && id !== undefined) {
+		return(
+			<div className="ControlContainer">
+			<div className="butControl">
+				<Link to="/lists/create">
+					<button className="but-tab-hight"><AiOutlinePlusSquare/><div className="but-tab-hight-text">New Item</div></button>
+				</Link>
+				<Link to="/lists/${}/edit">
+					<button className="but-tab-hight"><AiOutlineForm/><div className="but-tab-hight-text">Edit Item</div></button>
+				</Link>
+				<button className="but-tab-hight" onClick={handleDeleteClick}><AiOutlineMinusSquare/>
+					<div className="but-tab-hight-text">Delete Item</div>
+				</button>
+			</div>
+		</div>
+		);
+		} else {
+			return (
+				<div/>
+			)
+		}
+	}
+
+
 	return(
 	<div className="form-container">
 		<Sidebar/>
 	<div className={sidebar ? "form-events active" : "form-events"}>
-		<ControlMenu selectedRow={selectedRow} setModalMsgHead={setModalMsgHead} setModalMsg={setModalMsg} setModalActive={setModalActive} setLoadingDonut={setLoadingDonut} setDataTable={setDataTable}/>
+		<ControlMenu/>
 		<table {...getTableProps()} > 
 			<thead>
 				{
