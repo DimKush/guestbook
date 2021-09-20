@@ -143,23 +143,16 @@ export default function CreateList() {
 							idInput.current.value = "";
 						}}>
 						</input>
-					<label for ="autoId">Auto-increment Id</label>
-				</div>
-
-				<div className="search-field id checkbox">
-					<input type="checkbox" id="autoOwner" defaultChecked={ownerCheckboxBlocked} ref={auto_owner_checkbox} onChange ={handleOwnerCheckboxClicked} />
-
-					<label for ="autoOwner">I'm the owner</label>
+					<label for ="autoId">Auto-increment item Id</label>
 				</div>
 				<div className="search-field id">
-					<ColumnCreateList column={"Id"} ref_current={idInput} blocked={idCheckboxBlocked}/>
+					<ColumnCreateList column={"Item Id"} ref_current={idInput} blocked={idCheckboxBlocked}/>
+				</div>
+				<div className="search-field id">
+					<ColumnCreateList column={"List Id"} ref_current={idInput} blocked={idCheckboxBlocked}/>
 				</div>
 			</div>
 			<div className="row-form">
-				
-				<div className="search-field title" >
-					<ColumnCreateList column={"Title"} ref_current={titleInput}/>
-				</div>
 				<div className="search-field owner" >
 				<div className="form-group">
 					<span>Item Type</span>
