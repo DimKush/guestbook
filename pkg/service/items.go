@@ -121,3 +121,15 @@ func (data *ItemsServiceWorker) DeleteItemById(item_id int) error {
 		return nil
 	}
 }
+
+func (data *ItemsServiceWorker) GetAllItemsTypes() ([]Item.ItemType, error) {
+	items, err := data.items_repo.GetAllItemsTypes()
+	if err != nil {
+		return nil, fmt.Errorf("Error while executing in the database.")
+	}
+	if len(items) <= 0 {
+		return nil, fmt.Errorf("Error. Table with items types is empty.")
+	}
+
+	return items, nil
+}
