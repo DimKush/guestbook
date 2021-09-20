@@ -134,6 +134,28 @@ func (data *ItemsRepo) GetItemsAvailability(list_id int) (int64, error) {
 	}
 }
 
+func (data *ItemsRepo) GetAllItemsTypes() ([]Item.ItemType, error) {
+	var allItemTypes []Item.ItemType
+
+	query := data.db.Table(item_type).Select("*")
+
+	rows, err := query.Debug().Rows()
+	if err != nil {
+		log.Error().Msg(err.Error())
+		return nil, fmt.Errorf("Error during execute query.")
+	}
+
+	var itemType Item.ItemType
+
+	for rows.Next() {
+		data.db.ScanRows(rows, &itemType)
+		allItemTypes = append(allItemTypes, itemType)
+	}
+
+	return allItemTypes, nil
+
+}
+
 func InitItemsRep(database *gorm.DB) *ItemsRepo {
 	return &ItemsRepo{
 		db: *database,

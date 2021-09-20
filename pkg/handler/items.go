@@ -322,3 +322,18 @@ func (h *Handler) deleteItemById(context *gin.Context) {
 	}
 
 }
+
+func (h *Handler) getAllItemsTypes(context *gin.Context) {
+	log.Debug().Msg("Handler getAllItemsTypes process request.")
+
+	types, err := h.services.GetAllItemsTypes()
+	if err != nil {
+		initErrorResponce(context, http.StatusInternalServerError, err.Error())
+		return
+	} else {
+		initOkResponce(context, map[string]interface{}{
+			"Result": types,
+		})
+		return
+	}
+}

@@ -61,7 +61,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 				events.PUT("/:item_id", h.updateItemById)
 				events.DELETE("/:item_id", h.deleteItemById)
 			}
-
+			lists.GET("/items/types", h.getAllItemsTypes)
 			lists.POST("/items/all", h.getAllUsersEvents)
 		}
 	}

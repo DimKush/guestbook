@@ -24,7 +24,7 @@ function ColumnCreateList ( {column, ref_current, blocked=false} ) {
 export default function CreateList() {
 	const[idCheckboxBlocked, setIdCheckboxBlocked]= useState(true);
 	const[ownerCheckboxBlocked, setOwnerCheckboxBlocked] = useState(false);
-	const[ItemsTypes, setItemTypes] = useState([]);
+	const[ItemsTypes, setItemsTypes] = useState([]);
 	const[currentUser, setCurrentUser] = useState("");
 	
 	const[modalMsgHead, setModalMsgHead] = React.useState("");
@@ -42,7 +42,7 @@ export default function CreateList() {
 	useEffect(() => {
 		(
 		  async () => {
-			const responce = await fetch("http://localhost:8007/api/users/GetAllUsernames", {
+			const responce = await fetch("http://localhost:8007/api/lists/items/types", {
 			  headers : {"Content-type" : "application/json",
 						 "Authorization" :`Bearer ${cookies.get("jwt")}`},
 			  credentials : "include",
@@ -50,7 +50,7 @@ export default function CreateList() {
 			});
 			const content = await responce.json();
 			if(content.Status === "OK"){
-				setOwners(content.Result);
+				setItemsTypes(content.Result);
 			} else {
 				// TODO : ERROR!
 			}
@@ -133,7 +133,7 @@ export default function CreateList() {
 	return(
 		<div className="list-card-main">
 			<div className="row-form">
-				<h1>Create new list</h1>
+				<h1>Create new Item</h1>
 			</div>
 			<div className="row-form">
 				<div className="search-field id checkbox">
@@ -162,13 +162,13 @@ export default function CreateList() {
 				</div>
 				<div className="search-field owner" >
 				<div className="form-group">
-					<span>Owner</span>
+					<span>Item Type</span>
 						<select className="form-field ownerSelect" ref={ownerInput} disabled={ownerCheckboxBlocked} onChange={e => setListOwner(e.target.value)}> 
-							<option disabled selected value>-- Select an owner --</option>
+							<option disabled selected value>-- Select an item type --</option>
 								{
-									Owners.map(Owner => (
-										<option value={Owner}>
-											{Owner}
+									ItemsTypes.map(element => (
+										<option value={element.fullname}>
+											{element.fullname}
 										</option>
 									))
 								}

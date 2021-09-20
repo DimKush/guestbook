@@ -43,6 +43,7 @@ type ItemsService interface {
 	GetItemsAvailability(int) (int64, error)
 	UpdateItemById(*Item.Item) error
 	DeleteItemById(item_id int) error
+	GetAllItemsTypes() ([]Item.ItemType, error)
 }
 
 type UsersSevice interface {
