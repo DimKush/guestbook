@@ -286,8 +286,8 @@ export default function ListsTable({setHeaderDescript}){
 				<button className="but-tab-hight" onClick={handleDeleteClick}><AiOutlineMinusSquare/>
 					<div className="but-tab-hight-text">Delete List</div>
 				</button>
-				<Link to={!editItemsButtonOn ? `/lists/${selectedRow.id}/items` : `/lists` }>
-					<button className="but-tab-hight edit" disabled={editItemsButtonOn}><AiOutlineForm/><div className="but-tab-hight-text">Edit Items</div></button>
+				<Link to={selectedRow.id !== undefined  ? `/lists/${selectedRow.id}/items` : `/lists` }>
+					<button className="but-tab-hight edit"><AiOutlineForm/><div className="but-tab-hight-text">Edit Items</div></button>
 				</Link>
 			</div>
 		</div>
