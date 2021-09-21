@@ -5,7 +5,7 @@ import Modal from "../modal/modal.jsx";
 import { Redirect, Link, useParams} from 'react-router-dom';
 import { AiOutlineDoubleLeft } from 'react-icons/ai'
 
-function ColumnCreateList ( {column, ref_current, blocked=false} ) {
+function ColumnCreateList ( {column, ref_current, blocked=false, value} ) {
 	return(
 		<div className="form-group">
 		<span>{column}</span>
@@ -15,13 +15,14 @@ function ColumnCreateList ( {column, ref_current, blocked=false} ) {
 				id={column}
 				ref={ref_current}
 				disabled={blocked}
+				defaultValue={value}
 				/>
 		</div>
 	);
 }
 
 
-export default function CreateList() {
+export default function CreateItem() {
 	const[idCheckboxBlocked, setIdCheckboxBlocked]= useState(true);
 	const[ownerCheckboxBlocked, setOwnerCheckboxBlocked] = useState(false);
 	const[ItemsTypes, setItemsTypes] = useState([]);
@@ -32,12 +33,10 @@ export default function CreateList() {
 	const[modalActive, setModalActive] = React.useState(false);
 	const[listOwner, setListOwner] = useState("");
 
-	let idInput = React.createRef();
-	let ownerInput = React.createRef();
-	let titleInput = React.createRef();
+	let idItemInput = React.createRef();
+	let itemTypeInput = React.createRef();
 	let descriptionInput = React.createRef();
 	let auto_id_checkbox = React.createRef();
-	let auto_owner_checkbox = React.createRef();
 
 	let { id } = useParams();
 
@@ -77,22 +76,21 @@ export default function CreateList() {
 	}, []);
 
 	const handleCreateClick = () => {
-		const CreateObjList = {
-			"id" : Number(idInput.current.value),
-			"owner" : ownerCheckboxBlocked ? currentUser : listOwner,
-			"title" : titleInput.current.value,
+		const CreateObjItems = {
+			"id" : Number(idItemInput.current.value),
 			"description" : descriptionInput.current.value,
+			"item_type_name" : itemTypeInput.current.value,//,
 		};
 		
 
 		(
 			async() => {
-				const responce = await fetch("http://localhost:8007/api/lists/create", {
+				const responce = await fetch(`http://localhost:8007/api/lists/${id}/items/create`, {
 				method : "POST",
 				headers : { "Content-type" : "application/json",
 							"Authorization" :`Bearer ${cookies.get("jwt")}`},
 				credentials : "include",
-				body : JSON.stringify(CreateObjList),
+				body : JSON.stringify(CreateObjItems),
 				});
 				const content = await responce.json();
 				if(content.Status === "OK"){
@@ -109,27 +107,13 @@ export default function CreateList() {
 	}
 
 	const handleCleanFieldsClick = () => {
-		idInput.current.value = "";
-		titleInput.current.value = "";
+		idItemInput.current.value = "";
 		descriptionInput.current.value = "";
-		
 		setIdCheckboxBlocked(true);
 		auto_id_checkbox.current.checked = true; 
 
-		setOwnerCheckboxBlocked(false);
-		auto_owner_checkbox.current.checked = false;
+		itemTypeInput.current.selectedIndex = 0;
 
-		ownerInput.current.selectedIndex = 0;
-
-	}
-
-	const handleOwnerCheckboxClicked = () => {
-		setOwnerCheckboxBlocked(!ownerCheckboxBlocked);
-		
-		if(setOwnerCheckboxBlocked) {
-			// show owner
-			ownerInput.current.selectedIndex = 0;
-		}
 	}
 
 	return(
@@ -142,23 +126,23 @@ export default function CreateList() {
 					<input type="checkbox" id="autoId" defaultChecked={idCheckboxBlocked} ref={auto_id_checkbox} onChange={() =>
 						{
 							setIdCheckboxBlocked(!idCheckboxBlocked)
-							idInput.current.value = "";
+							idItemInput.current.value = "";
 						}}>
 						</input>
 					<label for ="autoId">Auto-increment item Id</label>
 				</div>
 				<div className="search-field id">
-					<ColumnCreateList column={"Item Id"} ref_current={idInput} blocked={idCheckboxBlocked}/>
+					<ColumnCreateList column={"Item Id"} ref_current={idItemInput} blocked={idCheckboxBlocked}/>
 				</div>
 				<div className="search-field id">
-					<ColumnCreateList column={"List Id"} ref_current={idInput} blocked={idCheckboxBlocked}/>
+					<ColumnCreateList column={"List Id"} blocked={true} value={id}/>
 				</div>
 			</div>
 			<div className="row-form">
 				<div className="search-field owner" >
 				<div className="form-group">
 					<span>Item Type</span>
-						<select className="form-field ownerSelect" ref={ownerInput} disabled={ownerCheckboxBlocked} onChange={e => setListOwner(e.target.value)}> 
+						<select className="form-field ownerSelect" ref={itemTypeInput} disabled={ownerCheckboxBlocked} onChange={e => setListOwner(e.target.value)}> 
 							<option disabled selected value>-- Select an item type --</option>
 								{
 									ItemsTypes.map(element => (
@@ -180,7 +164,7 @@ export default function CreateList() {
 				<Link to={`/lists/${id}/items`}>
 						<button className="control-but back"><AiOutlineDoubleLeft/><div className="but-tab-hight-text">Back</div></button>
 				</Link>
-				<button className="control-but" onClick={handleCreateClick}>Create List</button>
+				<button className="control-but" onClick={handleCreateClick}>Create Item</button>
 				<button className="control-but" onClick={handleCleanFieldsClick}>Clean fields</button>
 			</div>
 			<Modal active={modalActive} setActive={setModalActive} head={modalMsgHead} msg={modalMsg} isError={false}/>

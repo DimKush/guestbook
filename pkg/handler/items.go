@@ -106,8 +106,8 @@ func (h *Handler) getAllUsersEvents(context *gin.Context) {
 	})
 }
 
-func (h *Handler) createEvent(context *gin.Context) {
-	log.Info().Msg("Handler createEvent process request.")
+func (h *Handler) createItem(context *gin.Context) {
+	log.Info().Msg("Handler createItem process request.")
 
 	var list_id int
 	if id, status, err := h.ControlListExist(context); err != nil {
