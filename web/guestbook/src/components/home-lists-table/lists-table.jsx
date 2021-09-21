@@ -271,6 +271,7 @@ export default function ListsTable({setHeaderDescript}){
 			}
 		})();
 	}
+
 	return(
 	<div className="form-container">
 		<Sidebar/>
@@ -280,14 +281,14 @@ export default function ListsTable({setHeaderDescript}){
 				<Link to="/lists/create">
 					<button className="but-tab-hight"><AiOutlinePlusSquare/><div className="but-tab-hight-text">New List</div></button>
 				</Link>
-				<Link to={selectedRow.id ? `/lists/${selectedRow.id}` : `/lists` }>
-					<button className="but-tab-hight"><AiOutlineForm/><div className="but-tab-hight-text">Edit List</div></button>
+				<Link to={selectedRow.id && selectedRow.owner === currentUser ? `/lists/${selectedRow.id}` : `/lists` }>
+					<button className="but-tab-hight" disabled={selectedRow.owner !== currentUser}><AiOutlineForm/><div className="but-tab-hight-text">Edit List</div></button>
 				</Link>
-				<button className="but-tab-hight" onClick={handleDeleteClick}><AiOutlineMinusSquare/>
+				<button className="but-tab-hight" disabled={selectedRow.owner !== currentUser}  onClick={handleDeleteClick}><AiOutlineMinusSquare/>
 					<div className="but-tab-hight-text">Delete List</div>
 				</button>
-				<Link to={selectedRow.id !== undefined  ? `/lists/${selectedRow.id}/items` : `/lists` }>
-					<button className="but-tab-hight edit"><AiOutlineForm/><div className="but-tab-hight-text">Edit Items</div></button>
+				<Link to={selectedRow.id !== undefined && selectedRow.owner === currentUser ? `/lists/${selectedRow.id}/items` : `/lists` }>
+					<button className="but-tab-hight edit" disabled={selectedRow.owner !== currentUser} ><AiOutlineForm/><div className="but-tab-hight-text">Edit Items</div></button>
 				</Link>
 			</div>
 		</div>
