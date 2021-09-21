@@ -60,7 +60,7 @@ func (data *ItemsRepo) GetItemsByParams(item Item.Item) ([]Item.Item, error) {
 }
 
 func (data *ItemsRepo) CreateNewItem(item Item.Item) error {
-	err := data.db.Table(items).Select("list_id", "item_type_id", "description").Create(&item).Error
+	err := data.db.Table(items).Debug().Select("list_id", "item_type_id", "description").Create(&item).Error
 	if err != nil {
 		return fmt.Errorf("Error during execute query in database.")
 	} else {
