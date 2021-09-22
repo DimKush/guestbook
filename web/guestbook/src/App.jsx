@@ -37,6 +37,7 @@ export default function App() {
   return(
     <div className="App">
       <Home isAuth={isAuth} setAuthStatus={setAuthStatus}/>
+     
     </div>
   );
 }

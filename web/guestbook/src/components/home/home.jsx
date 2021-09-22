@@ -14,7 +14,7 @@ import EditList from '../home-list-edit/edit-list';
 import EditItem from '../home-item-edit/edit-item';
 import LoginComponent from '../login/login.jsx'
 
-const Navigation = ({setAuthStatus, headerDescript}) => {
+const Navigation = ({setAuthStatus, headerDescript, Username}) => {
 	const history = useHistory();
 
 	const handleClickLogout = async() => {
@@ -35,7 +35,7 @@ const Navigation = ({setAuthStatus, headerDescript}) => {
 			<div className="right-side-container">
 				<ul>
 					<div className="top-system-right-btn">
-						<button onClick={handleClickLogout}>Logout</button>
+						<button onClick={handleClickLogout}>{Username} logout</button>
 					</div>
 				</ul>
 			</div>
@@ -99,7 +99,7 @@ export default function Home({isAuth , setAuthStatus}) {
 	return(
 	<div className="home-base-container">
 		<BrowserRouter>
-			{isAuth ? <Navigation setAuthStatus={setAuthStatus} headerDescript={headerDescript}/> : null}
+			{isAuth ? <Navigation setAuthStatus={setAuthStatus} headerDescript={headerDescript} Username={username}/> : null}
 			<div className="home-content-container">
 				<div className="base-container-main">
 				<Switch>
@@ -118,6 +118,10 @@ export default function Home({isAuth , setAuthStatus}) {
 			</div>
 			<Modal active={modalActive} setActive={setModalActive} head={modalMsgHead} msg={modalMsg} isError={isError}/>
 		</BrowserRouter>
+		<footer>
+		
+		</footer>
 	</div>
+	
 	);
 } 

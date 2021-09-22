@@ -56,22 +56,6 @@ export default function AuditTable({setHeaderDescript}){
 	const columns = useMemo(() => COLUMNS , []);
 	
 	useEffect(() => {
-		(async () => {
-			const responce = await fetch("http://localhost:8007/auth/user", {
-			  headers : { "Content-type" : "application/json",
-						"Authorization" :`Bearer ${cookies.get("jwt")}`},
-			  credentials : "include",
-			});
-
-			const content = await responce.json();
-
-			if(content.Status === "OK"){
-				setCurrentUser(content.username);
-			} else {
-				// TODO: Modal error
-			}
-		})();
-
 		if (!timelineLoaded) {
 			(async () => {
 				setLoadingDonut(true);
@@ -218,57 +202,11 @@ export default function AuditTable({setHeaderDescript}){
 
 		);
 	} 
-
-	const handleDeleteClick = () => {
-		let selectedRowList = selectedRow;
-		
-		(async() => {
-			const delRes = await DeleteList(selectedRowList, currentUser);
-			
-			setModalMsgHead("Error");
-			setModalMsg(delRes.Message);
-			setModalActive(true);
-			setTimelineloaded(false);
-
-			setLoadingDonut(true);
-			const empty = {} 
-			let tableData = await refershTable(empty);
-			if (tableData != null) {
-				setDataTable(tableData);
-			}
-			setLoadingDonut(false);
-		}
-		)();
-	}
 	
 	const dropMarked = () => {
 		page.map(row => { row.isSelected = false; });
 	}
 
-	const enableOrDisableItemsBut = (id) => {
-		console.log("enableOrDisableItemsBut" );
-		(async() => {
-			const responce = await fetch(`http://localhost:8007/api/lists/${id}/items/availability`, {
-			  headers : { "Content-type" : "application/json",
-						"Authorization" :`Bearer ${cookies.get("jwt")}`},
-			  credentials : "include",
-			});
-
-			const content = await responce.json();
-
-			if(content.Status === "OK"){
-				if(content.Count > 0) {
-					console.log("false");
-					setEditItemsButtonOn(false);
-				} else {
-					console.log("false");
-					setEditItemsButtonOn(true);
-				}
-			} else {
-				// TODO: Modal error
-			}
-		})();
-	}
 	return(
 	<div className="form-container">
 		<Sidebar/>
@@ -306,7 +244,6 @@ export default function AuditTable({setHeaderDescript}){
 									});
 									
 									setSelectedRow(row.original);
-									enableOrDisableItemsBut(row.original.id);
 								},
 							})}>
 								{
@@ -320,11 +257,6 @@ export default function AuditTable({setHeaderDescript}){
 				}
 			</tbody>
 		</table>
-		{/* <pre>
-			<code>
-				{JSON.stringify(selectedRow)}
-			</code>
-		</pre> */}
 		<div className="tableNavigator">
 		<select className="form-field pagesSize" value={pageSize} onChange={e => setPageSize(Number(e.target.value))}>
 				{

@@ -41,7 +41,7 @@ func (data *AuditEventRep) GetAuditEventByParams(filters *AuditEvent.AuditEvent)
 		}
 	}
 
-	rows, err := query.Rows()
+	rows, err := query.Debug().Rows()
 	if err != nil {
 		return nil, err
 	}
