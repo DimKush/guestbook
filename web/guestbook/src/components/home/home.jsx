@@ -5,6 +5,7 @@ import Modal from '../modal/modal';
 import HomeMain from '../home-main/HomeMain';
 import { cookies } from "../../App";
 import  ListsTable from "../home-lists-table/lists-table.jsx";
+import  AuditTable from "../audit/audit-table";
 import  ItemsTable from "../home-items-table/items-table.jsx";
 import {BrowserRouter, Route, Link} from "react-router-dom";
 import CreateList from '../home-lists-create/create-list';
@@ -111,6 +112,7 @@ export default function Home({isAuth , setAuthStatus}) {
 						<Route path="/lists/:id/items/create" exact component={() => <CreateItem/>}/>
 						<Route path="/lists/:id/items/:item_id" exact component={() => <EditItem/>}/>
 					<Route path="/items" component={() => <ItemsTable setHeaderDescript={setHeaderDescript}/>}/>
+					<Route path="/audit" component={() => <AuditTable setHeaderDescript={setHeaderDescript}/>}/>
 				</Switch>
 				</div>
 			</div>

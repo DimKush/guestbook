@@ -37,11 +37,13 @@ export default function HomeMain({username , setHeaderDescript}) {
 					<div className="bigButtonFooter"></div>
 				</div>
 			</Link>
-			<div className="bigButton">
-				<div className="ButtonLogo"><AiOutlineAudit/></div>
-				<div className="ButtonText">Show audit events</div>
-				<div className="bigButtonFooter"></div>
-			</div>
+			<Link to="/audit" className="linkButton">
+				<div className="bigButton">
+					<div className="ButtonLogo"><AiOutlineAudit/></div>
+					<div className="ButtonText">Show audit events</div>
+					<div className="bigButtonFooter"></div>
+				</div>
+			</Link>
 			<div className="bigButton">
 				<div className="ButtonLogo"><FiUsers/></div>
 				<div className="ButtonText">Show Users</div>
