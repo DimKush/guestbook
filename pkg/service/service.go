@@ -18,9 +18,6 @@ type Authorization interface {
 	GetUser(userIn UserIn.UserIn) (User.User, error)
 }
 
-type Event interface {
-}
-
 type EmailService interface {
 	InitEmailEvent(email_event EmailEventDb.EmailEventDb) error
 }
@@ -53,7 +50,6 @@ type UsersSevice interface {
 
 type Service struct {
 	Authorization
-	Event
 	EmailService
 	ListService
 	UsersSevice

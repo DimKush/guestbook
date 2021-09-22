@@ -181,3 +181,13 @@ func (data *AuditService) writeEvent(event AuditEvent.AuditEvent) error {
 	}
 	return nil
 }
+
+func (data *AuditService) GetAuditEventByParams(filters *AuditEvent.AuditEvent) ([]AuditEvent.AuditEvent, error) {
+	events, err := data.audit.GetAuditEventByParams(filters)
+	if err != nil {
+		log.Error().Msg(err.Error())
+		return nil, fmt.Errorf("Error while executing in the database.")
+	}
+
+	return events, nil
+}
