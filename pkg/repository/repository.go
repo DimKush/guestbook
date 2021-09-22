@@ -28,6 +28,7 @@ type EmailService interface {
 
 type AuditInt interface {
 	WriteEvent(AuditEvent.AuditEvent) error
+	GetAuditEventByParams(*AuditEvent.AuditEvent) ([]AuditEvent.AuditEvent, error)
 }
 
 type ListService interface {

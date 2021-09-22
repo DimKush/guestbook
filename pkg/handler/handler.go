@@ -64,6 +64,12 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			lists.GET("/items/types", h.getAllItemsTypes)
 			lists.POST("/items/all", h.getAllUsersEvents)
 		}
+
+		audit := api.Group("/audit")
+		{
+			audit.GET("/all", h.getAllAuditEvents)
+			audit.POST("/params", h.getAuditEventsByParams)
+		}
 	}
 
 	return router
