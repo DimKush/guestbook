@@ -45,6 +45,40 @@ func (data *UsersReposWorker) GetUserByUsername(username string) (User.User, err
 	return user, nil
 }
 
+func (data *UsersReposWorker) GetUsersByParams(filter *User.User) ([]User.User, error) {
+	var usersArr []User.User
+
+	query := data.db.Table(users)
+	if (*filter != User.User{}) {
+		if filter.Id != 0 {
+			query.Where("id = ?", filter.Id)
+		}
+		if filter.Name != "" {
+			query.Where("name like ?", string("%"+filter.Name+"%"))
+		}
+		if filter.Username != "" {
+			query.Where("username like ?", string("%"+filter.Username+"%"))
+		}
+		if filter.Email != "" {
+			query.Where("email like ?", string("%"+filter.Email+"%s"))
+		}
+		// if filter.Registration_date TODO registration date
+	}
+
+	rows, err := query.Rows()
+	if err != nil {
+		return nil, err
+	}
+
+	var element User.User
+	for rows.Next() {
+		data.db.ScanRows(rows, &element)
+		usersArr = append(usersArr, element)
+	}
+
+	return usersArr, nil
+}
+
 func InitUsersRepos(db *gorm.DB) *UsersReposWorker {
 	return &UsersReposWorker{db: *db}
 }

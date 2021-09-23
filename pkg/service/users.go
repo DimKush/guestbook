@@ -38,6 +38,15 @@ func (data *UsersServiceWorker) GetUserByUsername(username string) (User.User, e
 	return user, nil
 }
 
+func (data *UsersServiceWorker) GetUsersByParams(filter *User.User) ([]User.User, error) {
+	// users, err := data.db_users.GetUsersByParams(filter)
+
+	// if err != nil {
+	// 	log.Error().Msg(err.Error())
+	// }
+	return nil, nil
+}
+
 func InitUsersServiceWorker(repos repository.UsersService) *UsersServiceWorker {
 	return &UsersServiceWorker{
 		db_users: repos,

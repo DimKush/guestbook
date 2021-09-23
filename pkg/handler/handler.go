@@ -38,6 +38,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		users := api.Group("/users")
 		{
 			users.GET("GetAllUsernames", h.getAllUsernames)
+			users.POST("/params", h.getUsersByParams)
 		}
 
 		lists := api.Group("/lists")
