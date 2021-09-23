@@ -55,6 +55,7 @@ type ItemsService interface {
 type UsersService interface {
 	GetAllUsernames() ([]UserIn.UserIn, error)
 	GetUserByUsername(username string) (User.User, error)
+	GetUsersByParams(*User.User) ([]User.User, error)
 }
 
 type Repository struct {
